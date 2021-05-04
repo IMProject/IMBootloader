@@ -25,6 +25,7 @@
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_cdc.h"
+#include "firmware_update.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -859,7 +860,7 @@ USBD_static_free(void* p) {
   */
 static void
 SystemClockConfig_Resume(void) {
-    SystemClock_Config();
+    FirmwareUpdateAdapter_SystemClockConfig();
 }
 /* USER CODE END 5 */
 
