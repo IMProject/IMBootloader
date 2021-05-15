@@ -100,7 +100,7 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
     bool success = true;
     uint32_t packageIndex;
 
-    if  (0 == strcmp((char*)buf, SW_TYPE_STR)) {
+    if  ((0 == strcmp((char*)buf, SW_TYPE_STR)) && (!isFlashing)) {
         CDC_Transmit_FS(im_bootloader, sizeof(im_bootloader));
         s_updateState = fwUpdateState_CMD_ACTION_SELECT;
         flashAddress = FLASH_FIRMWARE_ADDRESS;
