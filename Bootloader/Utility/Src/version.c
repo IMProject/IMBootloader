@@ -20,11 +20,11 @@
 #include "version.h"
 #include <string.h>
 
-#define BOOTLOADER_INFO_STR "Bootloader info:"
+#define VERSION_INFO_STR    "Bootloader info"
 #define BRANCH_NAME_STR     "Branch name: "
 #define COMMIT_HASH_STR     "Commit hash: "
 #define LAST_TAG_STR        "Last tag: "
-#define NEW_RAW_STR         "\r\n"
+#define NEW_ROW_STR         "\r\n"
 
 const char git_branch[20] = GIT_BRANCH;
 const char git_hash[42] = GIT_HASH;
@@ -34,32 +34,32 @@ void
 Version_copyToBuffer(uint8_t* buffer, uint16_t size) {
 
     uint16_t str_size = strlen(BRANCH_NAME_STR) + strlen(COMMIT_HASH_STR) + strlen(LAST_TAG_STR);
-    str_size += (3 * strlen(NEW_RAW_STR)) + strlen(git_branch) + strlen(git_hash) + strlen(git_tag);
+    str_size += (3 * strlen(NEW_ROW_STR)) + strlen(git_branch) + strlen(git_hash) + strlen(git_tag);
 
     if (size >= str_size) {
 
         uint16_t buffer_index = 0;
 
-        memcpy(&buffer[buffer_index], BOOTLOADER_INFO_STR, strlen(BOOTLOADER_INFO_STR));
-        buffer_index += strlen(BOOTLOADER_INFO_STR);
-        memcpy(&buffer[buffer_index], NEW_RAW_STR, strlen(NEW_RAW_STR));
-        buffer_index += strlen(NEW_RAW_STR);
+        memcpy(&buffer[buffer_index], VERSION_INFO_STR, strlen(VERSION_INFO_STR));
+        buffer_index += strlen(VERSION_INFO_STR);
+        memcpy(&buffer[buffer_index], NEW_ROW_STR, strlen(NEW_ROW_STR));
+        buffer_index += strlen(NEW_ROW_STR);
 
         //BRANCH
         memcpy(&buffer[buffer_index], BRANCH_NAME_STR, strlen(BRANCH_NAME_STR));
         buffer_index += strlen(BRANCH_NAME_STR);
         memcpy(&buffer[buffer_index], git_branch, strlen(git_branch));
         buffer_index += strlen(git_branch);
-        memcpy(&buffer[buffer_index], NEW_RAW_STR, strlen(NEW_RAW_STR));
-        buffer_index += strlen(NEW_RAW_STR);
+        memcpy(&buffer[buffer_index], NEW_ROW_STR, strlen(NEW_ROW_STR));
+        buffer_index += strlen(NEW_ROW_STR);
 
         //HASH
         memcpy(&buffer[buffer_index], COMMIT_HASH_STR, strlen(COMMIT_HASH_STR));
         buffer_index += strlen(COMMIT_HASH_STR);
         memcpy(&buffer[buffer_index], git_hash, strlen(git_hash));
         buffer_index += strlen(git_hash);
-        memcpy(&buffer[buffer_index], NEW_RAW_STR, strlen(NEW_RAW_STR));
-        buffer_index += strlen(NEW_RAW_STR);
+        memcpy(&buffer[buffer_index], NEW_ROW_STR, strlen(NEW_ROW_STR));
+        buffer_index += strlen(NEW_ROW_STR);
 
         //TAG
         if (strlen(git_tag) != 0) { // in case tag doesn't exist
@@ -67,11 +67,11 @@ Version_copyToBuffer(uint8_t* buffer, uint16_t size) {
             buffer_index += strlen(LAST_TAG_STR);
             memcpy(&buffer[buffer_index], git_tag, strlen(git_tag));
             buffer_index += strlen(git_tag);
-            memcpy(&buffer[buffer_index], NEW_RAW_STR, strlen(NEW_RAW_STR));
-            buffer_index += strlen(NEW_RAW_STR);
+            memcpy(&buffer[buffer_index], NEW_ROW_STR, strlen(NEW_ROW_STR));
+            buffer_index += strlen(NEW_ROW_STR);
         }
 
-        memcpy(&buffer[buffer_index], "\0", strlen("\0"));
+        buffer[buffer_index] = '\0';
     }
 }
 
