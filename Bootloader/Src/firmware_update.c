@@ -58,7 +58,7 @@
 
 /* Enumeration for bootloader state machine*/
 typedef enum fwUpdateState_ENUM {
-    fwUpdateState_SEND_BOARD_ID,
+    fwUpdateState_INIT,
     fwUpdateState_CMD_ACTION_SELECT,
     fwUpdateState_ERASE,
     fwUpdateState_RX_FW_SIZE,
@@ -76,7 +76,8 @@ typedef enum fwFlashingState_ENUM {
     fwFlashingState_LAST,
 } fwFlashingState_E;
 
-static void FirmwareUpdate_ack(uint8_t* data, uint16_t lenght);
+static void FirmwareUpdate_ack();
+static void FirmwareUpdate_noAck();
 static bool FirmwareUpdate_checkIfHasSignature(uint8_t* buffer);
 
 uint8_t im_bootloader[] = IM_BOOTLOADER_STR;
@@ -87,7 +88,7 @@ uint32_t flashAddress   = 0u;
 static bool isFlashing = false;     //! Flash for main loop indicating flashing state
 static bool isFlashed  = false;     //! Flash for main loop indicating end of the flashing process
 
-static fwUpdateState_E s_updateState = fwUpdateState_SEND_BOARD_ID;
+static fwUpdateState_E s_updateState = fwUpdateState_INIT;
 static fwFlashingState_E s_flashingState = fwFlashingState_SKIP;
 
 uint8_t fwBuffer[BUFFER_SIZE] = {0};
@@ -130,12 +131,12 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
 
             if (0 == strcmp((char*)buf, VERIFY_FLASHER_CMD)) {
                 s_updateState = fwUpdateState_RX_FW_SIZE;
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
 
             } else if (0 == strcmp((char*)buf, CHECK_SINGATURE_CMD)) {
 
                 s_updateState = fwUpdateState_CHECK_SIGNATURE;
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
 
             } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
@@ -160,7 +161,7 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
                 break;
 
             } else {
-                FirmwareUpdate_ack(no_ack_pack, sizeof(no_ack_pack));
+                //FirmwareUpdate_noAck();
             }
 
             break;
@@ -170,9 +171,9 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
 
             if (success) {
                 s_updateState = fwUpdateState_CMD_ACTION_SELECT;
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
             } else {
-                FirmwareUpdate_ack(no_ack_pack, sizeof(no_ack_pack));
+                FirmwareUpdate_noAck();
             }
 
             break;
@@ -183,9 +184,9 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
 
             if (firmwareSize <= FIRMWARE_FLASH_SIZE_LIMIT) {
                 s_updateState = fwUpdateState_ERASE;
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
             } else {
-                FirmwareUpdate_ack(no_ack_pack, sizeof(no_ack_pack));
+                FirmwareUpdate_noAck();
             }
 
             break;
@@ -194,14 +195,14 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
 
             success = FirmwareUpdateAdapter_flashErase(firmwareSize, flashAddress);
             if (success) {
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
             }
 
             if (success) {
                 s_updateState = fwUpdateState_DOWNLOADING;
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
             } else {
-                FirmwareUpdate_ack(no_ack_pack, sizeof(no_ack_pack));
+                FirmwareUpdate_noAck();
             }
 
             break;
@@ -242,11 +243,11 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
             crcReceived = Utils_StringToInt(buf, length);
             s_crcCalculated ^= s_crc_XorValue;
             if (crcReceived == s_crcCalculated) {
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
                 isFlashing = false;
                 isFlashed  = true;
             } else {
-                FirmwareUpdate_ack(no_ack_pack, sizeof(no_ack_pack));
+                FirmwareUpdate_noAck();
             }
             s_updateState = fwUpdateState_END;
 
@@ -266,9 +267,9 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
             success = FirmwareUpdate_flash(&(fwBuffer[0]), flashLenght);
 
             if (success) {
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
             } else {
-                FirmwareUpdate_ack(no_ack_pack, sizeof(no_ack_pack));
+                FirmwareUpdate_noAck();
             }
             break;
 
@@ -277,9 +278,9 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
             success = FirmwareUpdate_flash(&(fwBuffer[0]), flashLenght);
 
             if (success) {
-                FirmwareUpdate_ack(ack_pack, sizeof(ack_pack));
+                FirmwareUpdate_ack();
             } else {
-                FirmwareUpdate_ack(no_ack_pack, sizeof(no_ack_pack));
+                FirmwareUpdate_noAck();
             }
             break;
 
@@ -352,8 +353,15 @@ FirmwareUpdate_isFlashing(uint32_t timeout) {
 }
 
 static void
-FirmwareUpdate_ack(uint8_t* data, uint16_t lenght) {
-    CDC_Transmit_FS(data, lenght);
+FirmwareUpdate_ack() {
+    CDC_Transmit_FS(ack_pack, sizeof(ack_pack));
+}
+
+static void
+FirmwareUpdate_noAck() {
+    isFlashing = false;
+    s_updateState = fwUpdateState_INIT;
+    CDC_Transmit_FS(no_ack_pack, sizeof(no_ack_pack));
 }
 
 static bool

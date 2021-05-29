@@ -42,24 +42,18 @@ extern "C" {
 #define BOARD_MANUFACTURER_STRING "IMBOOT"
 #define WAIT_FOR_FLASH_TIMEOUT      2000
 
-/* Includes ------------------------------------------------------------------*/
-#include "stm32l4xx_hal.h"
+#include "system_clock.h"
+#include "boards_config.h"
 
+#ifdef STM32L4xx
+#include "stm32l4xx.h"
+#include "stm32l4xx_hal.h"
+#elif STM32H7xx
+#include "stm32h7xx.h"
+#include "stm32h7xx_hal.h"
+#endif
 
 void Error_Handler(void);
-
-/* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
-#define LED1_Pin GPIO_PIN_13
-#define LED1_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_14
-#define LED2_GPIO_Port GPIOC
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }

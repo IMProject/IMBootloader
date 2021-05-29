@@ -20,8 +20,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32l4xx.h"
-#include "stm32l4xx_hal.h"
+#include "main.h"
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_cdc.h"
@@ -85,13 +84,19 @@ HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_NOPULL;
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+#ifdef STM32L4xx
         GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
+#elif STM32H7xx
+        GPIO_InitStruct.Alternate = GPIO_AF10_OTG1_FS;
+#endif
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
         /* Peripheral clock enable */
         __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
 
-        /* Enable VDDUSB */
+
+#ifndef STM32H7xx
+        // Enable VDDUSB
         if (__HAL_RCC_PWR_IS_CLK_DISABLED()) {
             __HAL_RCC_PWR_CLK_ENABLE();
             HAL_PWREx_EnableVddUSB();
@@ -99,6 +104,8 @@ HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
         } else {
             HAL_PWREx_EnableVddUSB();
         }
+#endif
+
 
         /* Peripheral interrupt init */
         HAL_NVIC_SetPriority(OTG_FS_IRQn, 1, 1);
@@ -124,6 +131,7 @@ HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle) {
         */
         HAL_GPIO_DeInit(GPIOA, GPIO_PIN_11 | GPIO_PIN_12);
 
+#ifndef STM32H7xx
         /* Disable VDDUSB */
         if (__HAL_RCC_PWR_IS_CLK_DISABLED()) {
             __HAL_RCC_PWR_CLK_ENABLE();
@@ -132,6 +140,7 @@ HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle) {
         } else {
             HAL_PWREx_DisableVddUSB();
         }
+#endif
 
         /* Peripheral interrupt Deinit*/
         HAL_NVIC_DisableIRQ(OTG_FS_IRQn);
@@ -860,7 +869,7 @@ USBD_static_free(void* p) {
   */
 static void
 SystemClockConfig_Resume(void) {
-    FirmwareUpdateAdapter_SystemClockConfig();
+    SystemClock_Config();
 }
 /* USER CODE END 5 */
 

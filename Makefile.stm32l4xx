@@ -54,16 +54,12 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
+-DSTM32L4xx \
 -DSTM32L496xx
 
 # AS includes
 AS_INCLUDES = 
 
 include Makefile.common
-
-#######################################
-# dependencies
-#######################################
--include $(wildcard $(BUILD_DIR)/*.d)
 
 # *** EOF ***

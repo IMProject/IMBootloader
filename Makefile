@@ -14,8 +14,6 @@ export OPT = -Og
 #######################################
 # paths
 #######################################
-# Build path
-export BUILD_DIR = build
 
 export COMMON_SRCS =  \
 Bootloader/Src/main.c \
@@ -28,6 +26,7 @@ Bootloader/Utility/Src/usbd_desc.c \
 Bootloader/Utility/Src/usbd_cdc_if.c \
 Bootloader/Utility/Src/version.c \
 Bootloader/Utility/Src/utils.c \
+Bootloader/STM32/Src/system_clock.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
@@ -62,11 +61,26 @@ endif
 export HEX = $(CP) -O ihex
 export BIN = $(CP) -O binary -S
 
+#######################################
+# Astyle
+#######################################
+.PHONY: check_format format
+
+check_format:
+	$(call colorecho,'Checking formatting with astyle')
+	@Tools/astyle/check_code_style_all.sh
+	@cd  && git diff --check
+
+format:
+	$(call colorecho,'Formatting with astyle')
+	@Tools/astyle/check_code_style_all.sh --fix
+
 #
 # Bootloaders to build
 #
 TARGETS	= \
-	stm32l4xx
+	stm32l4xx \
+	stm32h7xx
 
 all:	$(TARGETS)
 
@@ -75,12 +89,23 @@ clean:
 	rm -rf build # Remove build directories
 
 #
-# Specific bootloader targets.
+# Board specific targets.
+#
+BOARD =
+
+matek_H7_slim:
+	${MAKE} stm32h7xx BOARD=MATEK_H743_SLIM
+
+#
+# Microcontroller specific targets.
 #
 
-stm32h7xx: $(MAKEFILE_LIST)
-	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=Linker/STM32H7xx.ld FLASH=EXTERNAL_FLASH TARGET_FILE_NAME=$@
-	
 stm32l4xx: $(MAKEFILE_LIST)
-	${MAKE} -f Makefile.stm32l4xx LDSCRIPT=Linker/STM32L4xx.ld FLASH=INTERNAL_FLASH TARGET_FILE_NAME=$@
+	${MAKE} -f Makefile.stm32l4xx LDSCRIPT=STM32L4xx.ld FLASH=INTERNAL_FLASH TARGET_FILE_NAME=$@
 
+stm32h7xx: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=INTERNAL_FLASH TARGET_FILE_NAME=$@
+	
+stm32h7xx_ext: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=EXTERNAL_FLASH TARGET_FILE_NAME=$@
+	
