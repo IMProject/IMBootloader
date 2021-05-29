@@ -50,11 +50,17 @@
 #define PACKET_SIZE               256                       //!< amount of memory for collecting data from flashing application. Value is synchronized with Flasher APP.
 #endif
 
-#define NOT_SECURED_MAGIC_STRING "NOT_SECURED_MAGIC_STRING_1234567" //!< 32 bytes magic string, means this board is not secure
+#ifdef STM32L4xx
+#define FLASH_FIRMWARE_ADDRESS  (0x08008000UL)                      //!< Address where firmware will be written
 #define MAGIC_KEY_ADDRESS       (0x08007800UL)                      //!< Place in internal flash for communication between bootloader and firmware
+#elif STM32H7xx
+#define FLASH_FIRMWARE_ADDRESS  (0x08020000UL)                      //!< Address where firmware will be written#endif
+#define MAGIC_KEY_ADDRESS       (0x080202A0UL)
+#endif
+
+#define NOT_SECURED_MAGIC_STRING "NOT_SECURED_MAGIC_STRING_1234567" //!< 32 bytes magic string, means this board is not secure
 #define MAGIC_KEY_VALUE         (0x28101987A5B5C5D5)                //!< Hex value if written in flash bootloader will jump to firmware
 #define SINGATURE_MAGIC_KEY     (0xDEC0DE5528101987)                //!< Hex value if the firmware is signed with bootloader will accept it
-#define FLASH_FIRMWARE_ADDRESS  (0x08008000UL)                      //!< Address where firmware will be written
 
 void FirmwareUpdate_init(void);
 bool FirmwareUpdate_handler(uint8_t* buf, uint32_t length);
@@ -62,7 +68,6 @@ bool FirmwareUpdate_flash(uint8_t* buf, uint32_t flashLength);
 bool FirmwareUpdate_isFlashing(uint32_t timeout);
 
 /* Adapter functions are separated in order to make porting to different systems easier */
-void FirmwareUpdateAdapter_SystemClockConfig(void);
 void FirmwareUpdateAdapter_InitGPIO(void);
 bool FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address);
 bool FirmwareUpdateAdapter_blockErase(uint32_t address);

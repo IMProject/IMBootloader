@@ -1,3 +1,6 @@
+# Build path
+export BUILD_DIR = build/$(TARGET_FILE_NAME)
+
 C_DEFS += \
 -DGIT_BRANCH=\"$(BRANCH)\" \
 -DGIT_HASH=\"$(HASH)\" \
@@ -12,6 +15,10 @@ ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2 -D$(TARGET_FILE_NAME) -D$(FLASH)
 endif
 
+ifdef BOARD
+CFLAGS += -D$(BOARD)
+endif
+
 TARGET := $(TARGET)_$(TARGET_FILE_NAME)
 
 # Generate dependency information
@@ -20,7 +27,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -TLinker/$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
@@ -53,4 +60,11 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(BIN) $< $@	
 	
 $(BUILD_DIR):
-	mkdir $@		
+	mkdir -p $@
+	
+#######################################
+# dependencies
+#######################################
+-include $(wildcard $(BUILD_DIR)/*.d)
+	
+# ** EOF **

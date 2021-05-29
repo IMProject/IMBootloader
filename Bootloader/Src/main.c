@@ -36,6 +36,7 @@
 #include "main.h"
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
+#include "system_clock.h"
 #include "firmware_update.h"
 
 typedef  void (*pFunction)(void);
@@ -44,11 +45,11 @@ pFunction JumpToApplication;
 int
 main(void) {
     HAL_Init();
-    FirmwareUpdateAdapter_SystemClockConfig();
+    SystemClock_Config();
     FirmwareUpdateAdapter_InitGPIO();
     MX_USB_DEVICE_Init();
 
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_ON);
 
     if (*(uint64_t*)MAGIC_KEY_ADDRESS != MAGIC_KEY_VALUE) {
 
@@ -56,7 +57,7 @@ main(void) {
             //wait here until flashing is finished
         }
 
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
         HAL_NVIC_SystemReset();
     }
 
@@ -75,8 +76,5 @@ main(void) {
 
 void
 Error_Handler(void) {
-    /* USER CODE BEGIN Error_Handler_Debug */
-    /* User can add his own implementation to report the HAL error return state */
-
-    /* USER CODE END Error_Handler_Debug */
+    while (true) {}
 }

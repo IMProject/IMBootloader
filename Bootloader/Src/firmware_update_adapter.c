@@ -34,78 +34,44 @@
 
 #include <firmware_update.h>
 #include "main.h"
-#include "stm32l4xx_hal.h"
 #include <string.h>
 
-void
-FirmwareUpdateAdapter_SystemClockConfig(void) {
-    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
-
-    /** Initializes the CPU, AHB and APB busses clocks
-    */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48
-                                       | RCC_OSCILLATORTYPE_HSI;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-    RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-    RCC_OscInitStruct.PLL.PLLM = 1;
-    RCC_OscInitStruct.PLL.PLLN = 10;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-        Error_Handler();
-    }
-    /** Initializes the CPU, AHB and APB busses clocks
-    */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
-                                  | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
-        Error_Handler();
-    }
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
-    PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
-    PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSI;
-    PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
-    PeriphClkInit.PLLSAI1.PLLSAI1N = 10;
-    PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV2;
-    PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
-    PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV2;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
-        Error_Handler();
-    }
-    /** Configure the main internal regulator output voltage
-    */
-    if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK) {
-        Error_Handler();
-    }
-}
+#ifdef STM32L4xx
+uint32_t type_program = FLASH_TYPEPROGRAM_DOUBLEWORD;
+#elif STM32H7xx
+#define FLASH_SECTOR_SIZE  0x00020000UL        /* 128 KB */
+uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
+#endif
 
 void
 FirmwareUpdateAdapter_InitGPIO(void) {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     /* GPIO Ports Clock Enable */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    __HAL_RCC_GPIOE_CLK_ENABLE();
+    __HAL_RCC_GPIOF_CLK_ENABLE();
 
     /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOC, LED1_Pin | LED2_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
+    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, LED_OFF);
 
-    /*Configure GPIO pins : LED1_Pin LED2_Pin*/
-    GPIO_InitStruct.Pin = LED1_Pin | LED2_Pin;
+    /*Configure GPIO pins : LED1_Pin*/
+    GPIO_InitStruct.Pin = LED1_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
+
+    /*Configure GPIO pins : LED2_Pin*/
+    GPIO_InitStruct.Pin = LED2_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);
 }
 
 
@@ -150,7 +116,8 @@ FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address)
         FLASH_EraseInitTypeDef pEraseInit;
         uint32_t               PageError  = 0;
 
-        /* Get the number of pages to erase */
+#ifdef STM32L4xx
+        /* Get the number of PAGES to erase */
         uint32_t number_of_pages = firmware_size / FLASH_PAGE_SIZE;
         if ((firmware_size % FLASH_PAGE_SIZE) != 0) {
             number_of_pages += 1;
@@ -161,6 +128,26 @@ FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address)
         pEraseInit.NbPages   = number_of_pages + 1;
         pEraseInit.Page      = start_page;
         pEraseInit.TypeErase = FLASH_TYPEERASE_PAGES;
+
+#elif STM32H7xx
+
+        /* Get the number of SECTORS to erase */
+        uint32_t number_of_sectors = firmware_size / FLASH_SECTOR_SIZE;
+        if ((number_of_sectors % FLASH_SECTOR_SIZE) != 0) {
+            number_of_sectors += 1;
+            success = true;
+        } else {
+            number_of_sectors = 1;
+        }
+
+        uint32_t start_sector = (flash_address - FLASH_BASE) / FLASH_SECTOR_SIZE;
+
+        pEraseInit.Sector       = start_sector;
+        pEraseInit.NbSectors    = number_of_sectors;
+        pEraseInit.TypeErase    = FLASH_TYPEERASE_SECTORS;
+        pEraseInit.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+#endif
+
         status               = HAL_FLASHEx_Erase(&pEraseInit, &PageError);
 
         if (status == HAL_OK) {
@@ -178,17 +165,20 @@ FirmwareUpdateAdapter_blockErase(uint32_t address) {
     return success;
 }
 
+#ifdef STM32L4xx
 bool
 FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
     uint64_t data = UINT64_MAX;
+
 
     if (length % sizeof(uint64_t) == 0 ) {
 
         for (uint32_t i = 0; i < length / sizeof(uint64_t); i++) {
             uint32_t memory_index = i * sizeof(uint64_t);
             memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(uint64_t));
-            HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, address + memory_index, data);
+            HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, data);
+
             if (status != HAL_OK) {
                 success = false;
                 break;
@@ -198,7 +188,7 @@ FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length
     } else if (length < sizeof(uint64_t)) {
 
         memcpy((void*)&data, (void*)buffer, length);
-        HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, address, data);
+        HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address, data);
         if (status != HAL_OK) {
             success = false;
         }
@@ -206,6 +196,45 @@ FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length
 
     return success;
 }
+
+#elif STM32H7xx
+bool
+FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
+    bool success = true;
+    uint16_t flash_word = 32; //32 bytes (256 bits)
+    uint32_t memory_index = 0;
+
+    if ((length / flash_word) != 0 ) {
+
+        for (uint32_t i = 0; i < length / flash_word; i++) {
+            memory_index = i * flash_word;
+            HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)&buffer[memory_index]);
+
+            if (status != HAL_OK) {
+                success = false;
+                break;
+            }
+        }
+
+        length = length % flash_word;
+        if (length > 0) {
+            memory_index += flash_word;
+        }
+    }
+
+    if ((length != 0) && (length < flash_word)) {
+
+        uint8_t data[32] = {0};
+        memcpy((void*)data, (void*)&buffer[memory_index], length);
+        HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)data);
+        if (status != HAL_OK) {
+            success = false;
+        }
+    }
+
+    return success;
+}
+#endif
 
 bool
 FirmwareUpdateAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
@@ -221,7 +250,14 @@ FirmwareUpdateAdapter_finish(void) {
 
     HAL_FLASH_Unlock();
 
-    HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, MAGIC_KEY_ADDRESS, MAGIC_KEY_VALUE);
+#ifdef STM32L4xx
+    HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, MAGIC_KEY_VALUE);
+#elif STM32H7xx
+    uint8_t data[32] = {0};
+    uint64_t magic_key_value = MAGIC_KEY_VALUE;
+    memcpy((void*)data, (void*)&magic_key_value, sizeof(uint64_t));
+    HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, (uint32_t)data);
+#endif
 
     if (status == HAL_OK) {
 
@@ -231,7 +267,7 @@ FirmwareUpdateAdapter_finish(void) {
 
 void
 FirmwareUpdateAdapter_ledToggle(void) {
-    static GPIO_PinState pinSet = GPIO_PIN_RESET;
+    static GPIO_PinState pinSet = LED_ON;
 
     pinSet ^= 1;
 
