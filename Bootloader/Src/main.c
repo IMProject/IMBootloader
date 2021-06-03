@@ -47,11 +47,11 @@ main(void) {
     HAL_Init();
     SystemClock_Config();
     FirmwareUpdateAdapter_InitGPIO();
-    MX_USB_DEVICE_Init();
-
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_ON);
 
     if (*(uint64_t*)MAGIC_KEY_ADDRESS != MAGIC_KEY_VALUE) {
+
+        MX_USB_DEVICE_Init();
+        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_ON);
 
         while (FirmwareUpdate_isFlashing(0)) {
             //wait here until flashing is finished
