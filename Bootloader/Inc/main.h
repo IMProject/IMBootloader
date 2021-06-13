@@ -51,6 +51,9 @@ extern "C" {
 #elif STM32H7xx
 #include "stm32h7xx.h"
 #include "stm32h7xx_hal.h"
+#elif STM32F7xx
+#include "stm32f7xx.h"
+#include "stm32f7xx_hal.h"
 #endif
 
 void Error_Handler(void);
