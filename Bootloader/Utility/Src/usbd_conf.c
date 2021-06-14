@@ -86,6 +86,8 @@ HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 #ifdef STM32L4xx
         GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
+#elif STM32F7xx
+        GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
 #elif STM32H7xx
         GPIO_InitStruct.Alternate = GPIO_AF10_OTG1_FS;
 #endif
@@ -95,7 +97,7 @@ HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
         __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
 
 
-#ifndef STM32H7xx
+#ifdef STM32L4xx
         // Enable VDDUSB
         if (__HAL_RCC_PWR_IS_CLK_DISABLED()) {
             __HAL_RCC_PWR_CLK_ENABLE();
@@ -131,7 +133,7 @@ HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle) {
         */
         HAL_GPIO_DeInit(GPIOA, GPIO_PIN_11 | GPIO_PIN_12);
 
-#ifndef STM32H7xx
+#ifdef STM32L4xx
         /* Disable VDDUSB */
         if (__HAL_RCC_PWR_IS_CLK_DISABLED()) {
             __HAL_RCC_PWR_CLK_ENABLE();

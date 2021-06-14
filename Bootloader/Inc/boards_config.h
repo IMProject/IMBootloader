@@ -44,6 +44,13 @@
 #define LED2_GPIO_Port GPIOE
 #define LED_ON    GPIO_PIN_RESET
 #define LED_OFF   GPIO_PIN_SET
+#elif PIXHAWK4
+#define LED1_Pin GPIO_PIN_6     // Green
+#define LED1_GPIO_Port GPIOC
+#define LED2_Pin GPIO_PIN_7     // Blue
+#define LED2_GPIO_Port GPIOC
+#define LED_ON    GPIO_PIN_RESET
+#define LED_OFF   GPIO_PIN_SET
 #else
 #define LED1_Pin GPIO_PIN_13
 #define LED1_GPIO_Port GPIOC

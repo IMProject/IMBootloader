@@ -37,10 +37,19 @@
 #include <string.h>
 
 #ifdef STM32L4xx
-uint32_t type_program = FLASH_TYPEPROGRAM_DOUBLEWORD;
+static uint32_t type_program = FLASH_TYPEPROGRAM_DOUBLEWORD;
 #elif STM32H7xx
 #define FLASH_SECTOR_SIZE  0x00020000UL        /* 128 KB */
-uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
+static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
+#elif STM32F7xx
+#define FLASH_SIZE_1_MB     (0x100000U)         //!< 1 MB flash size
+#define FLASH_SIZE_2_MB     (0x200000U)         //!< 2 MB flash size
+#define KB_TO_B             (1024U)             //!< 1 kB = 1024 B
+#define BANK_1_START        (0x08000000U)       //!< Bank 1 start address
+#define BANK_2_START_2MB    (0x08100000U)       //!< Bank 2 start address -> 2 MB flash size
+#define BANK_2_START_1MB    (0x08080000U)       //!< Bank 2 start address -> 1 MB flash size
+#define MAX_NUM_SECT_2MB    (12U)               //!< Maximum number of sectors per bank (2 MB flash size)
+#define MAX_NUM_SECT_1MB    (8U)                //!< Maximum number of sectors per bank (1 MB flash size)
 #endif
 
 void
@@ -114,7 +123,7 @@ FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address)
 
         HAL_StatusTypeDef      status = HAL_OK;
         FLASH_EraseInitTypeDef pEraseInit;
-        uint32_t               PageError  = 0;
+        uint32_t               erase_error = 0U;
 
 #ifdef STM32L4xx
         /* Get the number of PAGES to erase */
@@ -129,13 +138,14 @@ FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address)
         pEraseInit.Page      = start_page;
         pEraseInit.TypeErase = FLASH_TYPEERASE_PAGES;
 
+        success = true;
+
 #elif STM32H7xx
 
         /* Get the number of SECTORS to erase */
         uint32_t number_of_sectors = firmware_size / FLASH_SECTOR_SIZE;
         if ((number_of_sectors % FLASH_SECTOR_SIZE) != 0) {
             number_of_sectors += 1;
-            success = true;
         } else {
             number_of_sectors = 1;
         }
@@ -146,14 +156,180 @@ FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address)
         pEraseInit.NbSectors    = number_of_sectors;
         pEraseInit.TypeErase    = FLASH_TYPEERASE_SECTORS;
         pEraseInit.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+
+        success = true;
+
+#elif STM32F7xx
+
+        bool is_start_sector_in_first_bank = false;
+        bool is_start_sector_in_second_bank = false;
+        bool is_dual_bank;
+        bool is_good_flash_size = true;
+        bool number_of_sectors_found = false;
+        uint32_t temp_size = 0U;
+        uint32_t start_sector = 0U;
+        uint32_t number_of_sectors = 0U;
+        uint32_t max_num_of_sectors;
+        uint32_t bank_2_start_address;
+
+        // Sector sizes when 2 banks are used, in case of 1 bank, sizes have to be doubled
+        const uint32_t sector_sizes_kb[MAX_NUM_SECT_2MB] = { 16U, 16U, 16U, 16U,
+                                                             64U, 128U, 128U, 128U,
+                                                             128U, 128U, 128U, 128U
+                                                           };
+
+#ifdef FLASH_OPTCR_nDBANK
+        is_dual_bank = false;
+#else
+        is_dual_bank = true;
 #endif
 
-        status               = HAL_FLASHEx_Erase(&pEraseInit, &PageError);
+#if defined (FLASH_SIZE) && (FLASH_SIZE == FLASH_SIZE_1_MB)
+        max_num_of_sectors = MAX_NUM_SECT_1_MB;
+        bank_2_start_address = BANK_2_START_1MB;
+#elif defined (FLASH_SIZE) && (FLASH_SIZE == FLASH_SIZE_2_MB)
+        max_num_of_sectors = MAX_NUM_SECT_2MB;
+        bank_2_start_address = BANK_2_START_2MB;
+#else
+        is_good_flash_size = false;
+#endif
 
-        if (status == HAL_OK) {
-            success = true;
+        if (is_good_flash_size) {
+
+            if (is_dual_bank) {
+
+                // Find start sector
+                for (uint32_t i = 0U; i < max_num_of_sectors; ++i) {
+
+                    if (flash_address == (BANK_1_START + temp_size)) {
+                        start_sector = i;
+                        pEraseInit.Banks = FLASH_BANK_1;
+                        is_start_sector_in_first_bank = true;
+                        break;
+                    }
+
+                    if (flash_address == (bank_2_start_address + temp_size)) {
+                        start_sector = i;
+                        pEraseInit.Banks = FLASH_BANK_2;
+                        is_start_sector_in_second_bank = true;
+                        break;
+                    }
+
+                    temp_size = temp_size + (sector_sizes_kb[i] * KB_TO_B);
+                }
+
+                temp_size = 0U;
+
+                if ((is_start_sector_in_first_bank) || (is_start_sector_in_second_bank)) {
+
+                    // Find number of sectors
+                    for (uint32_t i = start_sector; i < max_num_of_sectors; ++i) {
+
+                        if (firmware_size > temp_size) {
+
+                            ++number_of_sectors;
+
+                        } else {
+                            number_of_sectors_found = true;
+                            success = true;
+                            break;
+                        }
+
+                        temp_size = temp_size + (sector_sizes_kb[i] * KB_TO_B);
+                    }
+
+                    if (!number_of_sectors_found) {
+                        // There is overlay between bank 1 and bank 2
+                        // or firmware does not fit in flash memory
+                        if (is_start_sector_in_first_bank) {
+                            pEraseInit.Sector       = start_sector;
+                            pEraseInit.NbSectors    = number_of_sectors;
+                            pEraseInit.TypeErase    = FLASH_TYPEERASE_SECTORS;
+                            pEraseInit.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+
+                            status = HAL_FLASHEx_Erase(&pEraseInit, &erase_error);
+
+                            if (status == HAL_OK) {
+
+                                start_sector = 0U;
+                                number_of_sectors = 0U;
+                                uint32_t rest_firmware_size = firmware_size - temp_size;
+                                temp_size = 0U;
+
+                                for (uint32_t i = start_sector; i < max_num_of_sectors; ++i) {
+
+                                    if (rest_firmware_size > temp_size) {
+
+                                        ++number_of_sectors;
+
+                                    } else {
+                                        number_of_sectors_found = true;
+                                        pEraseInit.Banks = FLASH_BANK_2;
+                                        success = true;
+                                        break;
+                                    }
+
+                                    temp_size = temp_size + (sector_sizes_kb[i] * KB_TO_B);
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+
+            } else {
+                // Find start sector
+                for (uint32_t i = 0U; i < max_num_of_sectors; ++i) {
+
+                    if (flash_address == (BANK_1_START + temp_size)) {
+                        start_sector = i;
+                        is_start_sector_in_first_bank = true;
+                        break;
+                    }
+
+                    temp_size = temp_size + (2U * sector_sizes_kb[i] * KB_TO_B);
+                }
+
+                temp_size = 0U;
+
+                if (is_start_sector_in_first_bank) {
+
+                    // Find number of sectors
+                    for (uint32_t i = start_sector; i < max_num_of_sectors; ++i) {
+
+                        if (firmware_size > temp_size) {
+
+                            ++number_of_sectors;
+
+                        } else {
+                            success = true;
+                            break;
+                        }
+
+                        temp_size = temp_size + (2U * sector_sizes_kb[i] * KB_TO_B);
+                    }
+                }
+            }
         }
 
+        if (success) {
+            pEraseInit.Sector       = start_sector;
+            pEraseInit.NbSectors    = number_of_sectors;
+            pEraseInit.TypeErase    = FLASH_TYPEERASE_SECTORS;
+            pEraseInit.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+        }
+#endif
+
+        if (success) {
+            status = HAL_FLASHEx_Erase(&pEraseInit, &erase_error);
+
+            if (status == HAL_OK) {
+                success = true;
+            } else {
+                success = false;
+            }
+        }
     }
 
     return success;
@@ -234,6 +410,26 @@ FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length
 
     return success;
 }
+
+#elif STM32F7xx
+bool
+FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
+    bool success = true;
+
+    if (length != 0U) {
+
+        for (uint32_t i = 0U; i < length; ++i) {
+            HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, address + i, (uint64_t) buffer[i]);
+
+            if (status != HAL_OK) {
+                success = false;
+                break;
+            }
+        }
+    }
+
+    return success;
+}
 #endif
 
 bool
@@ -249,14 +445,26 @@ void
 FirmwareUpdateAdapter_finish(void) {
 
     HAL_FLASH_Unlock();
+    HAL_StatusTypeDef status;
 
 #ifdef STM32L4xx
-    HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, MAGIC_KEY_VALUE);
+    status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, MAGIC_KEY_VALUE);
 #elif STM32H7xx
     uint8_t data[32] = {0};
     uint64_t magic_key_value = MAGIC_KEY_VALUE;
     memcpy((void*)data, (void*)&magic_key_value, sizeof(uint64_t));
-    HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, (uint32_t)data);
+    status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, (uint32_t)data);
+#elif STM32F7xx
+    uint32_t least_significant_data = (uint32_t) MAGIC_KEY_VALUE;
+    uint32_t most_significant_data = (uint32_t) (MAGIC_KEY_VALUE >> 32U);
+
+    status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS, (uint64_t) least_significant_data);
+
+    if (status == HAL_OK) {
+        status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS + 4U, (uint64_t) most_significant_data);
+    }
+#else
+    status = HAL_ERROR;
 #endif
 
     if (status == HAL_OK) {

@@ -54,8 +54,11 @@
 #define FLASH_FIRMWARE_ADDRESS  (0x08008000UL)                      //!< Address where firmware will be written
 #define MAGIC_KEY_ADDRESS       (0x08007800UL)                      //!< Place in internal flash for communication between bootloader and firmware
 #elif STM32H7xx
-#define FLASH_FIRMWARE_ADDRESS  (0x08020000UL)                      //!< Address where firmware will be written#endif
-#define MAGIC_KEY_ADDRESS       (0x080202A0UL)
+#define FLASH_FIRMWARE_ADDRESS  (0x08020000UL)                      //!< Address where firmware will be written
+#define MAGIC_KEY_ADDRESS       (0x080202A0UL)                      //!< Place in internal flash for communication between bootloader and firmware
+#elif STM32F7xx
+#define FLASH_FIRMWARE_ADDRESS  (0x08020000U)                       //!< Address where firmware will be written
+#define MAGIC_KEY_ADDRESS       (0x08020200U)                       //!< Place in internal flash for communication between bootloader and firmware
 #endif
 
 #define NOT_SECURED_MAGIC_STRING "NOT_SECURED_MAGIC_STRING_1234567" //!< 32 bytes magic string, means this board is not secure

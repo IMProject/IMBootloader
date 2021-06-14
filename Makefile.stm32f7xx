@@ -1,0 +1,65 @@
+
+######################################
+# source
+######################################
+# C sources
+C_SOURCES = $(COMMON_SRCS)\
+Bootloader/STM32/Src/stm32f7xx_it.c \
+Bootloader/STM32/Src/stm32f7xx_hal_msp.c \
+Bootloader/STM32/Src/system_stm32f7xx.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_exti.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pcd.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pcd_ex.c \
+Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_usb.c \
+
+# ASM sources
+ASM_SOURCES =  \
+Startup/startup_stm32f7xx.s
+
+# C includes
+C_INCLUDES = $(COMMON_INCS) \
+-IDrivers/STM32F7xx_HAL_Driver/Inc \
+-IDrivers/STM32F7xx_HAL_Driver/Inc/Legacy \
+-IDrivers/CMSIS/Device/ST/STM32F7xx/Include
+ 
+#######################################
+# CFLAGS
+#######################################
+# cpu
+CPU = -mcpu=cortex-m4
+
+# fpu
+FPU = -mfpu=fpv4-sp-d16
+
+# float-abi
+FLOAT-ABI = -mfloat-abi=hard
+
+# mcu
+MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+
+# macros for gcc
+# AS defines
+AS_DEFS = 
+
+# C defines
+C_DEFS =  \
+-DUSE_HAL_DRIVER \
+-DSTM32F7xx \
+-DSTM32F765xx \
+-DFLASH_SIZE=0x200000U
+
+# AS includes
+AS_INCLUDES = 
+
+include Makefile.common
+
+# *** EOF ***
