@@ -50,6 +50,7 @@ static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
 #define BANK_2_START_1MB    (0x08080000U)       //!< Bank 2 start address -> 1 MB flash size
 #define MAX_NUM_SECT_2MB    (12U)               //!< Maximum number of sectors per bank (2 MB flash size)
 #define MAX_NUM_SECT_1MB    (8U)                //!< Maximum number of sectors per bank (1 MB flash size)
+#define FLASH_WORD_SIZE     (4U)                //!< Flash word size in bytes
 #endif
 
 void
@@ -415,11 +416,37 @@ FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length
 bool
 FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
+    uint32_t memory_index = 0U;
+    uint32_t data;
 
-    if (length != 0U) {
+    if ((length / FLASH_WORD_SIZE) != 0U) {
+
+        for (uint32_t i = 0U; i < (length / FLASH_WORD_SIZE); ++i) {
+
+            memory_index = i * FLASH_WORD_SIZE;
+
+            memcpy(&data, buffer + memory_index, sizeof(data));
+
+            HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address + memory_index, (uint64_t) data);
+
+            if (status != HAL_OK) {
+                success = false;
+                break;
+            }
+        }
+
+        length = length % FLASH_WORD_SIZE;
+
+        if (length > 0) {
+            memory_index += FLASH_WORD_SIZE;
+        }
+    }
+
+    if ((length != 0) && (success)) {
 
         for (uint32_t i = 0U; i < length; ++i) {
-            HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, address + i, (uint64_t) buffer[i]);
+
+            HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, address + memory_index + i, (uint64_t) buffer[memory_index + i]);
 
             if (status != HAL_OK) {
                 success = false;
