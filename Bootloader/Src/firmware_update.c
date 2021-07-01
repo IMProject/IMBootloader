@@ -48,6 +48,7 @@
 #define ERASE_CMD                   "erase"             //!< String command for bootloader to erase the flash
 #define GET_BOARD_ID_CMD            "board_id"          //!< String command for bootloader to send board id to IMFlasher application
 #define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
+#define DISCONNECT_CMD              "disconnect"        //!< String command for bootloader to disconnect
 #define VERIFY_FLASHER_CMD          "IMFlasher_Verify"  //!< String for bootloader to verify IMFlasher application
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define IM_BOOTLOADER_STR           "IMBootloader"      //!< String for IMFlasher application to verify bootloader
@@ -116,10 +117,21 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
     bool success = true;
     uint32_t packageIndex;
 
-    if  ((0 == strcmp((char*)buf, SW_TYPE_STR)) && (!isFlashing)) {
-        CDC_Transmit_FS(im_bootloader, sizeof(im_bootloader));
-        s_updateState = fwUpdateState_CMD_ACTION_SELECT;
-        flashAddress = FLASH_FIRMWARE_ADDRESS;
+    if (!isFlashing) {
+
+        if (0 == strcmp((char*)buf, SW_TYPE_STR)) {
+            CDC_Transmit_FS(im_bootloader, sizeof(im_bootloader));
+            s_updateState = fwUpdateState_CMD_ACTION_SELECT;
+            flashAddress = FLASH_FIRMWARE_ADDRESS;
+
+        } else if (0 == strcmp((char*)buf, DISCONNECT_CMD)) {
+            s_updateState = fwUpdateState_INIT;
+            s_flashingState = fwFlashingState_SKIP;
+            FirmwareUpdate_ack();
+
+        } else {
+            // Do nothing
+        }
     }
 
     switch (s_updateState) {
@@ -145,7 +157,7 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
                 CDC_Transmit_FS((uint8_t*)buffer, strlen((char*)buffer));
 
             } else if (0 == strcmp((char*)buf, GET_BOARD_ID_CMD)) {
-                isFlashing = true;
+
 #ifdef SECURITY_ENABLED
                 Auth_getHashedBoardId(hashBuffer);
                 s_updateState = fwUpdateState_CMD_ACTION_SELECT;
@@ -167,6 +179,8 @@ FirmwareUpdate_handler(uint8_t* buf, uint32_t length) {
             break;
 
         case fwUpdateState_CHECK_SIGNATURE:
+
+            isFlashing = true;
             success = FirmwareUpdate_checkIfHasSignature(buf);
 
             if (success) {
