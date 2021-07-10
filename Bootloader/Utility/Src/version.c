@@ -35,15 +35,19 @@
 #include "version.h"
 #include <string.h>
 
+#define GIT_BRANCH_SIZE 40
+#define GIT_HASH_SIZE   42
+#define GIT_TAG_SIZE    20
+
 #define VERSION_INFO_STR    "Bootloader info"
 #define BRANCH_NAME_STR     "Branch name: "
 #define COMMIT_HASH_STR     "Commit hash: "
 #define LAST_TAG_STR        "Last tag: "
 #define NEW_ROW_STR         "\r\n"
 
-const char git_branch[20] = GIT_BRANCH;
-const char git_hash[42] = GIT_HASH;
-const char git_tag[20] = GIT_TAG;
+const char git_branch[GIT_BRANCH_SIZE] = GIT_BRANCH;
+const char git_hash[GIT_HASH_SIZE] = GIT_HASH;
+const char git_tag[GIT_TAG_SIZE] = GIT_TAG;
 
 void
 Version_copyToBuffer(uint8_t* buffer, uint16_t size) {

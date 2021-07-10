@@ -11,6 +11,13 @@ export DEBUG = 1
 # optimization
 export OPT = -Og
 
+######################################
+# Git branch and hash
+######################################
+export BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+export HASH := $(shell git rev-parse HEAD)
+export TAG := $(shell git tag --sort=committerdate | tail -1)
+
 #######################################
 # paths
 #######################################
