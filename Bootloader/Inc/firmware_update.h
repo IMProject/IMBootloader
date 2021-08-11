@@ -66,7 +66,8 @@
 #define SINGATURE_MAGIC_KEY     (0xDEC0DE5528101987)                //!< Hex value if the firmware is signed with bootloader will accept it
 
 void FirmwareUpdate_init(void);
-bool FirmwareUpdate_handler(uint8_t* buf, uint32_t length);
+bool FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length);
+bool FirmwareUpdate_flashingHandler(uint32_t flashLenght);
 bool FirmwareUpdate_flash(uint8_t* buf, uint32_t flashLength);
 bool FirmwareUpdate_isFlashing(uint32_t timeout);
 
