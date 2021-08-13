@@ -42,7 +42,7 @@ extern "C" {
 #define BOARD_MANUFACTURER_STRING "IMBOOT"
 #define WAIT_FOR_FLASH_TIMEOUT      2000
 
-#include "system_clock.h"
+#include "system_clock_adapter.h"
 #include "boards_config.h"
 
 #ifdef STM32L4xx

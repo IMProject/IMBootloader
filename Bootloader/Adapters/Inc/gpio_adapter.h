@@ -32,49 +32,11 @@
  *
  ****************************************************************************/
 
-#include <stdbool.h>
-#include "main.h"
-#include "system_clock_adapter.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
-#include "firmware_update.h"
 
-typedef  void (*pFunction)(void);
-pFunction JumpToApplication;
+#ifndef BOOTLOADER_INC_GPIO_ADAPTER_H_
+#define BOOTLOADER_INC_GPIO_ADAPTER_H_
 
-int
-main(void) {
-    HAL_Init();
-    SystemClock_Config();
-    GpioAdapter_init();
+void GpioAdapter_init(void);
+void GpioAdapter_ledToggle(void);
 
-    if (*(uint64_t*)MAGIC_KEY_ADDRESS != MAGIC_KEY_VALUE) {
-
-        MX_USB_DEVICE_Init();
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_ON);
-
-        while (FirmwareUpdate_isFlashing(0)) {
-            //wait here until flashing is finished
-        }
-
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
-        HAL_NVIC_SystemReset();
-    }
-
-    SysTick->CTRL = 0;
-    SysTick->LOAD = 0;
-    SysTick->VAL  = 0;
-
-    SCB->VTOR = FLASH_FIRMWARE_ADDRESS;
-
-    JumpToApplication = (pFunction) (*(__IO uint32_t*) (FLASH_FIRMWARE_ADDRESS + 4));
-    __set_MSP(*(__IO uint32_t*) FLASH_FIRMWARE_ADDRESS);
-    JumpToApplication();
-
-    return -1; //error
-}
-
-void
-Error_Handler(void) {
-    while (true) {}
-}
+#endif /* BOOTLOADER_INC_GPIO_ADAPTER_H_ */

@@ -32,9 +32,9 @@
  *
  ****************************************************************************/
 
-#include <firmware_update.h>
 #include "main.h"
 #include <string.h>
+#include "flash_adapter.h"
 
 #ifdef STM32L4xx
 static uint32_t type_program = FLASH_TYPEPROGRAM_DOUBLEWORD;
@@ -53,66 +53,34 @@ static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
 #define FLASH_WORD_SIZE     (4U)                //!< Flash word size in bytes
 #endif
 
-void
-FirmwareUpdateAdapter_InitGPIO(void) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    /* GPIO Ports Clock Enable */
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOD_CLK_ENABLE();
-    __HAL_RCC_GPIOE_CLK_ENABLE();
-    __HAL_RCC_GPIOF_CLK_ENABLE();
-
-    /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
-    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, LED_OFF);
-
-    /*Configure GPIO pins : LED1_Pin*/
-    GPIO_InitStruct.Pin = LED1_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
-
-    /*Configure GPIO pins : LED2_Pin*/
-    GPIO_InitStruct.Pin = LED2_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);
-}
-
-
 #ifdef EXTERNAL_FLASH
 bool
-FirmwareUpdateAdapter_flashErase(uint32_t firmwareSize, uint32_t flashAddress) {
+FlashAdapter_erase(uint32_t firmwareSize, uint32_t flashAddress) {
     return W25q_dynamicErase(firmwareSize, flashAddress);
 }
 
 bool
-FirmwareUpdateAdapter_blockErase(uint32_t address) {
+FlashAdapter_blockErase(uint32_t address) {
     return W25q_blockErase64k(address);
 }
 
 bool
-FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
+FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     return W25q_quadPageProgram(address, buffer, length);
 }
 
 bool
-FirmwareUpdateAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
+FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
     return W25q_readBytes(address, buffer, length);
 }
 
 void
-FirmwareUpdateAdapter_finish(void) {
+FlashAdapter_finish(void) {
 }
 
 #else
 bool
-FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address) {
+FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
     bool success = false;
 
     if (firmware_size > FLASH_SIZE) {
@@ -337,14 +305,14 @@ FirmwareUpdateAdapter_flashErase(uint32_t firmware_size, uint32_t flash_address)
 }
 
 bool
-FirmwareUpdateAdapter_blockErase(uint32_t address) {
+FlashAdapter_blockErase(uint32_t address) {
     bool success = true;
     return success;
 }
 
 #ifdef STM32L4xx
 bool
-FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
+FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
     uint64_t data = UINT64_MAX;
 
@@ -376,7 +344,7 @@ FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length
 
 #elif STM32H7xx
 bool
-FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
+FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
     uint16_t flash_word = 32; //32 bytes (256 bits)
     uint32_t memory_index = 0;
@@ -414,7 +382,7 @@ FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length
 
 #elif STM32F7xx
 bool
-FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
+FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
     uint32_t memory_index = 0U;
     uint32_t data;
@@ -460,7 +428,7 @@ FirmwareUpdateAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length
 #endif
 
 bool
-FirmwareUpdateAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
+FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
 
     memcpy(buffer, (void*)address, length);
@@ -469,7 +437,7 @@ FirmwareUpdateAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t leng
 }
 
 void
-FirmwareUpdateAdapter_finish(void) {
+FlashAdapter_finish(void) {
 
     HAL_FLASH_Unlock();
     HAL_StatusTypeDef status;
@@ -500,13 +468,4 @@ FirmwareUpdateAdapter_finish(void) {
     }
 }
 
-void
-FirmwareUpdateAdapter_ledToggle(void) {
-    static GPIO_PinState pinSet = LED_ON;
-
-    pinSet ^= 1;
-
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, pinSet);
-}
-
-#endif
+#endif // EXTERNAL_FLASH

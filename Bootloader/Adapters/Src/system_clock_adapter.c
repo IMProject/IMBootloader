@@ -32,7 +32,7 @@
  *
  ****************************************************************************/
 
-#include "system_clock.h"
+#include "system_clock_adapter.h"
 
 #ifdef STM32L4xx
 void

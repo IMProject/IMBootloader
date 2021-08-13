@@ -208,7 +208,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
         case fwUpdateState_ERASE:
 
-            success = FirmwareUpdateAdapter_flashErase(firmware_size, s_flash_address);
+            success = FlashAdapter_erase(firmware_size, s_flash_address);
             if (success) {
                 FirmwareUpdate_ack();
             }
@@ -330,10 +330,10 @@ FirmwareUpdate_flash(uint8_t* write_buffer, uint32_t flash_lenght) {
     uint8_t readoutBuffer[PACKET_SIZE];
 
     address = s_flash_address + (index * PACKET_SIZE);
-    success = FirmwareUpdateAdapter_program(address, write_buffer, flash_lenght);
+    success = FlashAdapter_program(address, write_buffer, flash_lenght);
 
     if (success) {
-        success = FirmwareUpdateAdapter_readBytes(address, readoutBuffer, flash_lenght);
+        success = FlashAdapter_readBytes(address, readoutBuffer, flash_lenght);
     }
 
     //calculate crc
@@ -367,12 +367,12 @@ FirmwareUpdate_isFlashing(uint32_t timeout) {
 
     if (s_is_flashed) {
         HAL_Delay(100); // wait for last ACK to be send
-        FirmwareUpdateAdapter_finish();
+        FlashAdapter_finish();
     }
 
     if (s_is_flashing) {
         HAL_Delay(100);
-        FirmwareUpdateAdapter_ledToggle();
+        GpioAdapter_ledToggle();
     }
 
     return retVal;

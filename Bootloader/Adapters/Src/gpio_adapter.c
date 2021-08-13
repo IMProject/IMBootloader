@@ -32,49 +32,46 @@
  *
  ****************************************************************************/
 
-#include <stdbool.h>
+#include "gpio_adapter.h"
 #include "main.h"
-#include "system_clock_adapter.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
-#include "firmware_update.h"
-
-typedef  void (*pFunction)(void);
-pFunction JumpToApplication;
-
-int
-main(void) {
-    HAL_Init();
-    SystemClock_Config();
-    GpioAdapter_init();
-
-    if (*(uint64_t*)MAGIC_KEY_ADDRESS != MAGIC_KEY_VALUE) {
-
-        MX_USB_DEVICE_Init();
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_ON);
-
-        while (FirmwareUpdate_isFlashing(0)) {
-            //wait here until flashing is finished
-        }
-
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
-        HAL_NVIC_SystemReset();
-    }
-
-    SysTick->CTRL = 0;
-    SysTick->LOAD = 0;
-    SysTick->VAL  = 0;
-
-    SCB->VTOR = FLASH_FIRMWARE_ADDRESS;
-
-    JumpToApplication = (pFunction) (*(__IO uint32_t*) (FLASH_FIRMWARE_ADDRESS + 4));
-    __set_MSP(*(__IO uint32_t*) FLASH_FIRMWARE_ADDRESS);
-    JumpToApplication();
-
-    return -1; //error
-}
 
 void
-Error_Handler(void) {
-    while (true) {}
+GpioAdapter_init(void) {
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    /* GPIO Ports Clock Enable */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    __HAL_RCC_GPIOE_CLK_ENABLE();
+    __HAL_RCC_GPIOF_CLK_ENABLE();
+
+    /*Configure GPIO pin Output Level */
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
+    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, LED_OFF);
+
+    /*Configure GPIO pins : LED1_Pin*/
+    GPIO_InitStruct.Pin = LED1_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
+
+    /*Configure GPIO pins : LED2_Pin*/
+    GPIO_InitStruct.Pin = LED2_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);
+}
+
+
+void
+GpioAdapter_ledToggle(void) {
+    static GPIO_PinState pinSet = LED_ON;
+
+    pinSet ^= 1;
+
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, pinSet);
 }
