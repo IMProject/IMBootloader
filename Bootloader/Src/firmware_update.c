@@ -50,6 +50,7 @@
 #define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
 #define DISCONNECT_CMD              "disconnect"        //!< String command for bootloader to disconnect
 #define VERIFY_FLASHER_CMD          "IMFlasher_Verify"  //!< String for bootloader to verify IMFlasher application
+#define EXIT_BL_CMD                 "exit_bl"           //!< String command for exit bootloader
 #define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define IM_BOOTLOADER_STR           "IMBootloader"      //!< String for IMFlasher application to verify bootloader
 
@@ -62,7 +63,7 @@ typedef enum fwUpdateState_ENUM {
     fwUpdateState_INIT,
     fwUpdateState_CMD_ACTION_SELECT,
     fwUpdateState_ERASE,
-    fwUpdateState_RX_FW_SIZE,
+    fwUpdateState_RECEIVE_FIRMWARE_SIZE,
     fwUpdateState_CHECK_SIGNATURE,
     fwUpdateState_DOWNLOADING,
     fwUpdateState_FLASHING,
@@ -87,6 +88,7 @@ uint8_t no_ack_pack[]   = "NOK";    //! ACK NOK packet for IMFlasher
 
 static uint32_t s_flash_address   = 0u;
 
+static bool s_exit_loop   = false;     //! Exit flash loop if needed
 static bool s_is_flashing = false;     //! Flash for main loop indicating flashing state
 static bool s_is_flashed  = false;     //! Flash for main loop indicating end of the flashing process
 
@@ -130,6 +132,13 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             s_flashing_state = fwFlashingState_SKIP;
             FirmwareUpdate_ack();
 
+        } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
+            s_update_state = fwUpdateState_INIT;
+            s_flashing_state = fwFlashingState_SKIP;
+            FirmwareUpdate_ack();
+            memset((void*)MAGIC_KEY_ADDRESS_RAM, 0x0, sizeof(uint64_t));
+            s_exit_loop = true;
+
         } else {
             // Do nothing
         }
@@ -143,7 +152,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             firmware_size = Utils_StringToInt(buf, length);
 
             if (0 == strcmp((char*)buf, VERIFY_FLASHER_CMD)) {
-                s_update_state = fwUpdateState_RX_FW_SIZE;
+                s_update_state = fwUpdateState_RECEIVE_FIRMWARE_SIZE;
                 FirmwareUpdate_ack();
 
             } else if (0 == strcmp((char*)buf, CHECK_SINGATURE_CMD)) {
@@ -193,7 +202,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             break;
 
-        case fwUpdateState_RX_FW_SIZE:
+        case fwUpdateState_RECEIVE_FIRMWARE_SIZE:
 
             firmware_size = Utils_StringToInt(buf, length);
 
@@ -357,7 +366,7 @@ FirmwareUpdate_flash(uint8_t* write_buffer, uint32_t flash_lenght) {
 }
 
 bool
-FirmwareUpdate_isFlashing(uint32_t timeout) {
+FirmwareUpdate_bootloaderLoop(uint32_t timeout) {
 
     // timeout = 0 -> no timeout
     bool retVal = true;
@@ -366,13 +375,18 @@ FirmwareUpdate_isFlashing(uint32_t timeout) {
     }
 
     if (s_is_flashed) {
-        HAL_Delay(100); // wait for last ACK to be send
+        HAL_Delay(100); // wait for last ACK to be send (main loop shall wait)
         FlashAdapter_finish();
     }
 
     if (s_is_flashing) {
         HAL_Delay(100);
         GpioAdapter_ledToggle();
+    }
+
+    if (s_exit_loop) {
+        HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
+        retVal = false;
     }
 
     return retVal;

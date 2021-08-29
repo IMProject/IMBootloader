@@ -48,12 +48,24 @@ main(void) {
     SystemClock_Config();
     GpioAdapter_init();
 
-    if (*(uint64_t*)MAGIC_KEY_ADDRESS != MAGIC_KEY_VALUE) {
+    bool enter_bootloader_loop = false;
+
+    // Check RAM KEY
+    if (*(uint64_t*)MAGIC_KEY_ADDRESS_RAM == MAGIC_KEY_VALUE) {
+        enter_bootloader_loop = true;
+    }
+
+    // Check FLASH KEY
+    if (*(uint64_t*)MAGIC_KEY_ADDRESS_FLASH != MAGIC_KEY_VALUE) {
+        enter_bootloader_loop = true;
+    }
+
+    if (enter_bootloader_loop) {
 
         MX_USB_DEVICE_Init();
         HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_ON);
 
-        while (FirmwareUpdate_isFlashing(0)) {
+        while (FirmwareUpdate_bootloaderLoop(0)) {
             //wait here until flashing is finished
         }
 

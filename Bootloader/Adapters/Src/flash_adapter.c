@@ -443,20 +443,20 @@ FlashAdapter_finish(void) {
     HAL_StatusTypeDef status;
 
 #ifdef STM32L4xx
-    status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, MAGIC_KEY_VALUE);
+    status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS_FLASH, MAGIC_KEY_VALUE);
 #elif STM32H7xx
     uint8_t data[32] = {0};
     uint64_t magic_key_value = MAGIC_KEY_VALUE;
     memcpy((void*)data, (void*)&magic_key_value, sizeof(uint64_t));
-    status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS, (uint32_t)data);
+    status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS_FLASH, (uint32_t)data);
 #elif STM32F7xx
     uint32_t least_significant_data = (uint32_t) MAGIC_KEY_VALUE;
     uint32_t most_significant_data = (uint32_t) (MAGIC_KEY_VALUE >> 32U);
 
-    status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS, (uint64_t) least_significant_data);
+    status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS_FLASH, (uint64_t) least_significant_data);
 
     if (status == HAL_OK) {
-        status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS + 4U, (uint64_t) most_significant_data);
+        status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, MAGIC_KEY_ADDRESS_FLASH + 4U, (uint64_t) most_significant_data);
     }
 #else
     status = HAL_ERROR;

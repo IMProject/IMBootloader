@@ -45,6 +45,6 @@ void FirmwareUpdate_init(void);
 bool FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length);
 bool FirmwareUpdate_flashingHandler(uint32_t flashLenght);
 bool FirmwareUpdate_flash(uint8_t* buf, uint32_t flashLength);
-bool FirmwareUpdate_isFlashing(uint32_t timeout);
+bool FirmwareUpdate_bootloaderLoop(uint32_t timeout);
 
 #endif /* INC_FIRMWAREUPDATE_H_ */
