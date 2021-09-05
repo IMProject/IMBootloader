@@ -74,5 +74,11 @@ bool FlashAdapter_blockErase(uint32_t address);
 bool FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length);
 bool FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length);
 void FlashAdapter_finish(void);
+bool FlashAdapter_isFlashRDPProtected(void);
+bool FlashAdapter_isFlashPCROPProtected(void);
+bool FlashAdapter_setReadProtection(bool enable);
+/* proprietary code readout protection */
+bool FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t protect_address_end);
+
 
 #endif /* BOOTLOADER_INC_FLASH_ADAPTER_H_ */

@@ -44,15 +44,18 @@
 #include "authentication.h"
 #endif
 
-#define CHECK_SINGATURE_CMD         "check_signature"   //!< String command for bootloader to check firmware signature
-#define ERASE_CMD                   "erase"             //!< String command for bootloader to erase the flash
-#define GET_BOARD_ID_CMD            "board_id"          //!< String command for bootloader to send board id to IMFlasher application
-#define GET_VERSION_CMD             "version"           //!< String command for bootloader to send version
-#define DISCONNECT_CMD              "disconnect"        //!< String command for bootloader to disconnect
-#define VERIFY_FLASHER_CMD          "IMFlasher_Verify"  //!< String for bootloader to verify IMFlasher application
-#define EXIT_BL_CMD                 "exit_bl"           //!< String command for exit bootloader
-#define SW_TYPE_STR                 "software_type"     //!< String for bootloader to send if IMFlasher is connected to bootloader
-#define IM_BOOTLOADER_STR           "IMBootloader"      //!< String for IMFlasher application to verify bootloader
+#define CHECK_SINGATURE_CMD         "check_signature"       //!< String command for bootloader to check firmware signature
+#define ERASE_CMD                   "erase"                 //!< String command for bootloader to erase the flash
+#define GET_BOARD_ID_CMD            "board_id"              //!< String command for bootloader to send board id to IMFlasher application
+#define GET_VERSION_CMD             "version"               //!< String command for bootloader to return version
+#define DISCONNECT_CMD              "disconnect"            //!< String command for bootloader to disconnect
+#define VERIFY_FLASHER_CMD          "IMFlasher_Verify"      //!< String for bootloader to verify IMFlasher application
+#define EXIT_BL_CMD                 "exit_bl"               //!< String command for exit bootloader
+#define IS_FW_PROTECTED_CMD         "is_fw_protected"       //!< String command for bootloader to return if firmware is protected
+#define ENABLE_FW_PROTECTION_CMD    "enable_fw_protection"  //!< String command to protect application flash
+#define DISABLE_FW_PROTECTION_CMD   "disable_fw_protection" //!< String command to unprotect application flash
+#define SW_TYPE_STR                 "software_type"         //!< String for bootloader to send if IMFlasher is connected to bootloader
+#define IM_BOOTLOADER_STR           "IMBootloader"          //!< String for IMFlasher application to verify bootloader
 
 #define BUFFER_SIZE     2048u   //!< Bootloader buffer size
 #define HASH_SIZE       32u     //!< Hashed board id value size in bytes
@@ -82,15 +85,19 @@ static void FirmwareUpdate_ack();
 static void FirmwareUpdate_noAck();
 static bool FirmwareUpdate_checkIfHasSignature(uint8_t* buffer);
 
-uint8_t im_bootloader[] = IM_BOOTLOADER_STR;
-uint8_t ack_pack[]      = "OK";     //! ACK OK packet for IMFlasher
-uint8_t no_ack_pack[]   = "NOK";    //! ACK NOK packet for IMFlasher
+static uint8_t im_bootloader[] = IM_BOOTLOADER_STR;
+static uint8_t ack_pack[]      = "OK";     //! ACK OK packet for IMFlasher
+static uint8_t no_ack_pack[]   = "NOK";    //! ACK NOK packet for IMFlasher
+static uint8_t true_str[]      = "TRUE";
+static uint8_t false_str[]     = "FALSE";
 
 static uint32_t s_flash_address   = 0u;
 
-static bool s_exit_loop   = false;     //! Exit flash loop if needed
-static bool s_is_flashing = false;     //! Flash for main loop indicating flashing state
-static bool s_is_flashed  = false;     //! Flash for main loop indicating end of the flashing process
+static bool s_exit_loop   = false;      //! Exit flash loop if needed
+static bool s_rdp_enable_flag = false;  //! Enable RDP flag
+static bool s_rdp_disable_flag = false; //! Disable RDP flag
+static bool s_is_flashing = false;      //! Flash for main loop indicating flashing state
+static bool s_is_flashed  = false;      //! Flash for main loop indicating end of the flashing process
 
 static fwUpdateState_E s_update_state = fwUpdateState_INIT;
 static fwFlashingState_E s_flashing_state = fwFlashingState_SKIP;
@@ -132,13 +139,6 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             s_flashing_state = fwFlashingState_SKIP;
             FirmwareUpdate_ack();
 
-        } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
-            s_update_state = fwUpdateState_INIT;
-            s_flashing_state = fwFlashingState_SKIP;
-            FirmwareUpdate_ack();
-            memset((void*)MAGIC_KEY_ADDRESS_RAM, 0x0, sizeof(uint64_t));
-            s_exit_loop = true;
-
         } else {
             // Do nothing
         }
@@ -173,14 +173,39 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
                 s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 #else
                 memcpy(s_hash_buffer, NOT_SECURED_MAGIC_STRING, HASH_SIZE);
-                s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 #endif
                 uint32_t crc = CalculateCRC32(s_hash_buffer, HASH_SIZE, s_crc_calculated, false, false);
                 crc ^= s_crc_xor_value;
                 Utils_Serialize32BE(&s_hash_buffer[HASH_SIZE], crc);
                 CDC_Transmit_FS(s_hash_buffer, sizeof(s_hash_buffer));
 
-                break;
+            } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
+                s_update_state = fwUpdateState_INIT;
+                s_flashing_state = fwFlashingState_SKIP;
+                FirmwareUpdate_ack();
+                memset((void*)MAGIC_KEY_ADDRESS_RAM, 0x0, sizeof(uint64_t));
+                s_exit_loop = true;
+
+            } else if (0 == strcmp((char*)buf, IS_FW_PROTECTED_CMD)) {
+
+                bool is_flash_protected = FlashAdapter_isFlashRDPProtected();
+
+                if (is_flash_protected) {
+                    CDC_Transmit_FS(true_str, sizeof(true_str));
+
+                } else {
+                    CDC_Transmit_FS(false_str, sizeof(false_str));
+                }
+
+            } else if (0 == strcmp((char*)buf, ENABLE_FW_PROTECTION_CMD)) {
+
+                FirmwareUpdate_ack();
+                s_rdp_enable_flag = true;
+
+            } else if (0 == strcmp((char*)buf, DISABLE_FW_PROTECTION_CMD)) {
+
+                FirmwareUpdate_ack();
+                s_rdp_disable_flag = true;
 
             } else {
                 //FirmwareUpdate_noAck();
@@ -387,6 +412,17 @@ FirmwareUpdate_bootloaderLoop(uint32_t timeout) {
     if (s_exit_loop) {
         HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
         retVal = false;
+    }
+
+    if (s_rdp_enable_flag) {
+        HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
+        FlashAdapter_setReadProtection(true);
+    }
+
+    if (s_rdp_disable_flag) {
+        HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
+        //BL is deleted after this, it needs to be flashed again
+        FlashAdapter_setReadProtection(false);
     }
 
     return retVal;

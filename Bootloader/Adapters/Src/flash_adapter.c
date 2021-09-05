@@ -39,7 +39,8 @@
 #ifdef STM32L4xx
 static uint32_t type_program = FLASH_TYPEPROGRAM_DOUBLEWORD;
 #elif STM32H7xx
-#define FLASH_SECTOR_SIZE  0x00020000UL        /* 128 KB */
+#define FLASH_SECTOR_SIZE           0x00020000UL        /* 128 KB */
+#define FLASH_PROTECTED_SECTOR_SIZE 0x200               /* 0x200 * 256 = 128KB */
 static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
 #elif STM32F7xx
 #define FLASH_SIZE_1_MB     (0x100000U)         //!< 1 MB flash size
@@ -52,6 +53,8 @@ static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
 #define MAX_NUM_SECT_1MB    (8U)                //!< Maximum number of sectors per bank (1 MB flash size)
 #define FLASH_WORD_SIZE     (4U)                //!< Flash word size in bytes
 #endif
+
+HAL_StatusTypeDef ActivateProtection(FLASH_OBProgramInitTypeDef* ob_sturct, uint32_t protect_address_start, uint32_t protect_address_end);
 
 #ifdef EXTERNAL_FLASH
 bool
@@ -462,10 +465,137 @@ FlashAdapter_finish(void) {
     status = HAL_ERROR;
 #endif
 
+    //FlashAdapter_readProtection(true, 0x08020000UL, 0x08040000UL-1UL);
+
     if (status == HAL_OK) {
 
         HAL_NVIC_SystemReset();
     }
+}
+
+bool
+FlashAdapter_isFlashRDPProtected(void) {
+    bool success = false;
+
+    FLASH_OBProgramInitTypeDef ob_sturct = {0};
+
+    HAL_FLASHEx_OBGetConfig(&ob_sturct);
+
+    if (ob_sturct.RDPLevel == OB_RDP_LEVEL_1) {
+        success = true;
+    }
+
+    return success;
+}
+
+bool
+FlashAdapter_isFlashPCROPProtected(void) {
+    bool success = false;
+
+    FLASH_OBProgramInitTypeDef ob_sturct = {0};
+    ob_sturct.Banks = FLASH_BANK_1;
+
+    HAL_FLASHEx_OBGetConfig(&ob_sturct);
+
+    if (ob_sturct.PCROPStartAddr <= ob_sturct.PCROPEndAddr) {
+        success = true;
+    }
+
+    return success;
+}
+
+bool
+FlashAdapter_setReadProtection(bool enable) {
+
+    bool success = false;
+
+#ifdef STM32H7xx
+
+    FLASH_OBProgramInitTypeDef ob_sturct = {0};
+    HAL_StatusTypeDef status = HAL_ERROR;
+
+    HAL_FLASHEx_OBGetConfig(&ob_sturct);
+
+    if (enable && ob_sturct.RDPLevel == OB_RDP_LEVEL_0) {
+        ob_sturct.RDPLevel = OB_RDP_LEVEL_1;
+        status = ActivateProtection(&ob_sturct, 0, 0);
+
+    } else {
+        ob_sturct.RDPLevel = OB_RDP_LEVEL_0;
+        status = ActivateProtection(&ob_sturct, 0, 0);
+    }
+
+    if (status == HAL_OK) {
+        success = true;
+    }
+
+#endif //STM32H7xx
+
+    return success;
+}
+
+bool
+FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t protect_address_end) {
+
+    bool success = false;
+
+#ifdef STM32H7xx
+
+    FLASH_OBProgramInitTypeDef ob_sturct = {0};
+    HAL_StatusTypeDef status = HAL_ERROR;
+
+    HAL_FLASHEx_OBGetConfig(&ob_sturct);
+
+    if (!enable && ob_sturct.RDPLevel == OB_RDP_LEVEL_0) {
+        ob_sturct.RDPLevel = OB_RDP_LEVEL_1;
+        ob_sturct.OptionType = OPTIONBYTE_RDP;
+        status = ActivateProtection(&ob_sturct, 0, 0);
+        ob_sturct.RDPLevel = OB_RDP_LEVEL_0;
+        ob_sturct.OptionType = OPTIONBYTE_RDP | OPTIONBYTE_PCROP;
+        status |= ActivateProtection(&ob_sturct, 0x0803FFFFUL, 0x08020000UL);
+
+    } else {
+        ob_sturct.RDPLevel = OB_RDP_LEVEL_0;
+        ob_sturct.OptionType = OPTIONBYTE_RDP | OPTIONBYTE_PCROP;
+        status = ActivateProtection(&ob_sturct, 0x0803FFFFUL, 0x08020000UL);
+    }
+
+#endif //STM32H7xx
+
+    return success;
+}
+
+HAL_StatusTypeDef
+ActivateProtection(FLASH_OBProgramInitTypeDef* ob_sturct, uint32_t protect_address_start, uint32_t protect_address_end) {
+
+    HAL_StatusTypeDef status = HAL_ERROR;
+
+#ifdef STM32H7xx
+
+    /* Bank 1 */
+    ob_sturct->Banks    = FLASH_BANK_1;
+    ob_sturct->PCROPConfig = OB_PCROP_RDP_ERASE;
+    ob_sturct->PCROPStartAddr = protect_address_start;
+    ob_sturct->PCROPEndAddr   = protect_address_end;
+
+    status = HAL_FLASH_Unlock();
+    status |= HAL_FLASH_OB_Unlock();
+
+    if (status == HAL_OK) {
+        status = HAL_FLASHEx_OBProgram(ob_sturct);
+    }
+
+    if (status == HAL_OK) {
+        status = HAL_FLASH_OB_Launch();
+    }
+
+    if (status == HAL_OK) {
+        HAL_FLASH_OB_Lock();
+    }
+
+#endif //STM32H7xx
+
+    return status;
 }
 
 #endif // EXTERNAL_FLASH
