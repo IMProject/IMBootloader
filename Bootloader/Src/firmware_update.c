@@ -93,11 +93,11 @@ static uint8_t false_str[]     = "FALSE";
 
 static uint32_t s_flash_address   = 0u;
 
-static bool s_exit_loop   = false;      //! Exit flash loop if needed
+static bool s_exit_loop = false;        //! Exit flash loop if needed
 static bool s_rdp_enable_flag = false;  //! Enable RDP flag
 static bool s_rdp_disable_flag = false; //! Disable RDP flag
 static bool s_is_flashing = false;      //! Flash for main loop indicating flashing state
-static bool s_is_flashed  = false;      //! Flash for main loop indicating end of the flashing process
+static bool s_is_flashed = false;       //! Flash for main loop indicating end of the flashing process
 
 static fwUpdateState_E s_update_state = fwUpdateState_INIT;
 static fwFlashingState_E s_flashing_state = fwFlashingState_SKIP;
@@ -215,11 +215,11 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
         case fwUpdateState_CHECK_SIGNATURE:
 
-            s_is_flashing = true;
             success = FirmwareUpdate_checkIfHasSignature(buf);
+            s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 
             if (success) {
-                s_update_state = fwUpdateState_CMD_ACTION_SELECT;
+                s_is_flashing = true;
                 FirmwareUpdate_ack();
             } else {
                 FirmwareUpdate_noAck();
@@ -436,7 +436,7 @@ FirmwareUpdate_ack() {
 static void
 FirmwareUpdate_noAck() {
     s_is_flashing = false;
-    s_update_state = fwUpdateState_INIT;
+    s_update_state = fwUpdateState_CMD_ACTION_SELECT;
     CDC_Transmit_FS(no_ack_pack, sizeof(no_ack_pack));
 }
 
