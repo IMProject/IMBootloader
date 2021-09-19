@@ -492,14 +492,16 @@ bool
 FlashAdapter_isFlashPCROPProtected(void) {
     bool success = false;
 
-    FLASH_OBProgramInitTypeDef ob_sturct = {0};
-    ob_sturct.Banks = FLASH_BANK_1;
+#ifdef STM32H7xx
+    FLASH_OBProgramInitTypeDef ob_struct = {0};
+    ob_struct.Banks = FLASH_BANK_1;
 
-    HAL_FLASHEx_OBGetConfig(&ob_sturct);
+    HAL_FLASHEx_OBGetConfig(&ob_struct);
 
-    if (ob_sturct.PCROPStartAddr <= ob_sturct.PCROPEndAddr) {
+    if (ob_struct.PCROPStartAddr <= ob_struct.PCROPEndAddr) {
         success = true;
     }
+#endif // STM32H7xx
 
     return success;
 }
