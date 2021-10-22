@@ -57,9 +57,10 @@
 #define SW_TYPE_STR                 "software_type"         //!< String for bootloader to send if IMFlasher is connected to bootloader
 #define IM_BOOTLOADER_STR           "IMBootloader"          //!< String for IMFlasher application to verify bootloader
 
-#define BUFFER_SIZE     2048u   //!< Bootloader buffer size
-#define HASH_SIZE       32u     //!< Hashed board id value size in bytes
-#define CRC_SIZE        4u      //!< CRC size in bytes (CRC32)
+#define BUFFER_SIZE     (2048U)         //!< Bootloader buffer size
+#define HASH_SIZE       (32U)           //!< Hashed board id value size in bytes
+#define CRC_SIZE        (4U)            //!< CRC size in bytes (CRC32)
+#define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
 
 /* Enumeration for bootloader state machine*/
 typedef enum fwUpdateState_ENUM {
@@ -68,22 +69,14 @@ typedef enum fwUpdateState_ENUM {
     fwUpdateState_ERASE,
     fwUpdateState_RECEIVE_FIRMWARE_SIZE,
     fwUpdateState_CHECK_SIGNATURE,
-    fwUpdateState_DOWNLOADING,
-    fwUpdateState_FLASHING,
+    fwUpdateState_DOWNLOADING_AND_FLASHING,
     fwUpdateState_CRC,
     fwUpdateState_END
 } fwUpdateState_E;
 
-/* Enumeration for tracking firmware download process */
-typedef enum fwFlashingState_ENUM {
-    fwFlashingState_SKIP,
-    fwFlashingState_FLASH,
-    fwFlashingState_LAST,
-} fwFlashingState_E;
-
-static void FirmwareUpdate_ack();
-static void FirmwareUpdate_noAck();
-static bool FirmwareUpdate_checkIfHasSignature(uint8_t* buffer);
+static void FirmwareUpdate_ack(void);
+static void FirmwareUpdate_noAck(void);
+static bool FirmwareUpdate_hasSignature(const uint8_t* buffer);
 
 static uint8_t im_bootloader[] = IM_BOOTLOADER_STR;
 static uint8_t ack_pack[]      = "OK";     //! ACK OK packet for IMFlasher
@@ -91,23 +84,18 @@ static uint8_t no_ack_pack[]   = "NOK";    //! ACK NOK packet for IMFlasher
 static uint8_t true_str[]      = "TRUE";
 static uint8_t false_str[]     = "FALSE";
 
-static uint32_t s_flash_address   = 0u;
-
-static bool s_exit_loop = false;        //! Exit flash loop if needed
-static bool s_rdp_enable_flag = false;  //! Enable RDP flag
-static bool s_rdp_disable_flag = false; //! Disable RDP flag
-static bool s_is_flashing = false;      //! Flash for main loop indicating flashing state
-static bool s_is_flashed = false;       //! Flash for main loop indicating end of the flashing process
+static bool s_exit_loop = false;        //!< Exit flash loop if needed
+static bool s_rdp_enable_flag = false;  //!< Enable RDP flag
+static bool s_rdp_disable_flag = false; //!< Disable RDP flag
+static bool s_is_flashing = false;      //!< Flash for main loop indicating flashing state
+static bool s_is_flashed = false;       //!< Flash for main loop indicating end of the flashing process
 
 static fwUpdateState_E s_update_state = fwUpdateState_INIT;
-static fwFlashingState_E s_flashing_state = fwFlashingState_SKIP;
 
 static uint8_t s_fw_buffer[BUFFER_SIZE] = {0};
 static uint8_t s_hash_buffer[HASH_SIZE + CRC_SIZE];
 
-
 static uint32_t s_crc_calculated = 0xFFFFFFFF;  //!< First (init) CRC value
-static uint32_t s_crc_xor_value = 0xFFFFFFFF;   //!< XOR CRC value
 
 void
 FirmwareUpdate_init(void) {
@@ -120,10 +108,10 @@ FirmwareUpdate_init(void) {
 bool
 FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
-    static uint32_t firmware_size = 0;
-    static uint32_t crc_received;
-    static uint32_t firmware_size_counter = 0; // we are collecting batches of 64 bytes
-    static uint32_t flash_lenght;
+    static uint32_t firmware_size = 0U;
+    uint32_t crc_received;
+    static uint32_t firmware_size_counter = 0U;
+    uint32_t flash_lenght;
     bool success = true;
     uint32_t package_index;
 
@@ -132,11 +120,9 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
         if (0 == strcmp((char*)buf, SW_TYPE_STR)) {
             CDC_Transmit_FS(im_bootloader, sizeof(im_bootloader));
             s_update_state = fwUpdateState_CMD_ACTION_SELECT;
-            s_flash_address = FLASH_FIRMWARE_ADDRESS;
 
         } else if (0 == strcmp((char*)buf, DISCONNECT_CMD)) {
             s_update_state = fwUpdateState_INIT;
-            s_flashing_state = fwFlashingState_SKIP;
             FirmwareUpdate_ack();
 
         } else {
@@ -175,13 +161,12 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
                 memcpy(s_hash_buffer, NOT_SECURED_MAGIC_STRING, HASH_SIZE);
 #endif
                 uint32_t crc = CalculateCRC32(s_hash_buffer, HASH_SIZE, s_crc_calculated, false, false);
-                crc ^= s_crc_xor_value;
+                crc ^= XOR_CRC_VALUE;
                 Utils_Serialize32BE(&s_hash_buffer[HASH_SIZE], crc);
                 CDC_Transmit_FS(s_hash_buffer, sizeof(s_hash_buffer));
 
             } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
                 s_update_state = fwUpdateState_INIT;
-                s_flashing_state = fwFlashingState_SKIP;
                 FirmwareUpdate_ack();
                 memset((void*)MAGIC_KEY_ADDRESS_RAM, 0x0, sizeof(uint64_t));
                 s_exit_loop = true;
@@ -215,7 +200,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
         case fwUpdateState_CHECK_SIGNATURE:
 
-            success = FirmwareUpdate_checkIfHasSignature(buf);
+            success = FirmwareUpdate_hasSignature(buf);
             s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 
             if (success) {
@@ -242,13 +227,10 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
         case fwUpdateState_ERASE:
 
-            success = FlashAdapter_erase(firmware_size, s_flash_address);
-            if (success) {
-                FirmwareUpdate_ack();
-            }
+            success = FlashAdapter_erase(firmware_size, FLASH_FIRMWARE_ADDRESS);
 
             if (success) {
-                s_update_state = fwUpdateState_DOWNLOADING;
+                s_update_state = fwUpdateState_DOWNLOADING_AND_FLASHING;
                 FirmwareUpdate_ack();
             } else {
                 FirmwareUpdate_noAck();
@@ -256,7 +238,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             break;
 
-        case fwUpdateState_DOWNLOADING:
+        case fwUpdateState_DOWNLOADING_AND_FLASHING:
 
             package_index = firmware_size_counter % PACKET_SIZE;
 
@@ -264,33 +246,29 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             firmware_size_counter += length;
 
             package_index = firmware_size_counter % PACKET_SIZE;
+
             if ((0u == package_index) && (firmware_size != firmware_size_counter)) {
-
-                flash_lenght = PACKET_SIZE;
-                s_flashing_state = fwFlashingState_FLASH;
-
+                success = FirmwareUpdate_flash(&(s_fw_buffer[0]), PACKET_SIZE);
+                (success) ? (FirmwareUpdate_ack()) : (FirmwareUpdate_noAck());
             } else if (firmware_size == firmware_size_counter) {
 
                 flash_lenght = (firmware_size_counter % PACKET_SIZE);
                 if (flash_lenght == 0u) {
                     flash_lenght = PACKET_SIZE;
                 }
-                s_flashing_state = fwFlashingState_LAST;
+                success = FirmwareUpdate_flash(&(s_fw_buffer[0]), flash_lenght);
+                (success) ? (FirmwareUpdate_ack()) : (FirmwareUpdate_noAck());
                 s_update_state = fwUpdateState_CRC;
             } else {
-                //keep collecting
-                s_flashing_state = fwFlashingState_SKIP;
+                // Keep collecting
             }
 
-            break;
-
-        case fwUpdateState_FLASHING:
             break;
 
         case fwUpdateState_CRC:
 
             crc_received = Utils_StringToInt(buf, length);
-            s_crc_calculated ^= s_crc_xor_value;
+            s_crc_calculated ^= XOR_CRC_VALUE;
             if (crc_received == s_crc_calculated) {
                 FirmwareUpdate_ack();
                 s_is_flashing = false;
@@ -309,89 +287,41 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             break;
     }
 
-    success = success & FirmwareUpdate_flashingHandler(flash_lenght);
-
-    return success;
-}
-
-
-bool
-FirmwareUpdate_flashingHandler(uint32_t flash_lenght) {
-
-    bool success = false;
-
-    switch (s_flashing_state) {
-
-        case fwFlashingState_FLASH:
-
-            success = FirmwareUpdate_flash(&(s_fw_buffer[0]), flash_lenght);
-
-            if (success) {
-                FirmwareUpdate_ack();
-            } else {
-                FirmwareUpdate_noAck();
-            }
-            break;
-
-        case fwFlashingState_LAST:
-
-            success = FirmwareUpdate_flash(&(s_fw_buffer[0]), flash_lenght);
-
-            if (success) {
-                FirmwareUpdate_ack();
-            } else {
-                FirmwareUpdate_noAck();
-            }
-            break;
-
-        case fwFlashingState_SKIP:
-            //do nothing
-            break;
-
-        default:
-            //do nothing
-            break;
-    }
-
     return success;
 }
 
 bool
-FirmwareUpdate_flash(uint8_t* write_buffer, uint32_t flash_lenght) {
+FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length) {
     bool success = false;
-    static uint32_t index = 0;
+    static uint32_t index = 0U;
     uint32_t address;
-    uint8_t readoutBuffer[PACKET_SIZE];
+    uint8_t readout_buffer[PACKET_SIZE];
 
-    address = s_flash_address + (index * PACKET_SIZE);
-    success = FlashAdapter_program(address, write_buffer, flash_lenght);
-
-    if (success) {
-        success = FlashAdapter_readBytes(address, readoutBuffer, flash_lenght);
-    }
-
-    //calculate crc
-    if (success) {
-        s_crc_calculated = CalculateCRC32(readoutBuffer, flash_lenght, s_crc_calculated, false, false);
-    }
+    address = FLASH_FIRMWARE_ADDRESS + (index * PACKET_SIZE);
+    success = FlashAdapter_program(address, write_buffer, flash_length);
 
     if (success) {
-        for (uint32_t i = 0; success & (i < flash_lenght); i++) {
-            if (write_buffer[i] == readoutBuffer[i]) {
-                success = true;
-            } else {
-                success = false;
+        success = FlashAdapter_readBytes(address, readout_buffer, flash_length);
+
+        if (success) {
+            s_crc_calculated = CalculateCRC32(readout_buffer, flash_length, s_crc_calculated, false, false);
+            for (uint32_t i = 0U; (success) && (i < flash_length); ++i) {
+                if (write_buffer[i] == readout_buffer[i]) {
+                    success = true;
+                } else {
+                    success = false;
+                }
             }
         }
     }
 
-    index++;
+    ++index;
 
     return success;
 }
 
 bool
-FirmwareUpdate_bootloaderLoop(uint32_t timeout) {
+FirmwareUpdate_bootloaderLoop(const uint32_t timeout) {
 
     // timeout = 0 -> no timeout
     bool retVal = true;
@@ -429,19 +359,19 @@ FirmwareUpdate_bootloaderLoop(uint32_t timeout) {
 }
 
 static void
-FirmwareUpdate_ack() {
+FirmwareUpdate_ack(void) {
     CDC_Transmit_FS(ack_pack, sizeof(ack_pack));
 }
 
 static void
-FirmwareUpdate_noAck() {
+FirmwareUpdate_noAck(void) {
     s_is_flashing = false;
     s_update_state = fwUpdateState_CMD_ACTION_SELECT;
     CDC_Transmit_FS(no_ack_pack, sizeof(no_ack_pack));
 }
 
 static bool
-FirmwareUpdate_checkIfHasSignature(uint8_t* buffer) {
+FirmwareUpdate_hasSignature(const uint8_t* buffer) {
 
     bool success = false;
     uint64_t signatureMagicKey = SINGATURE_MAGIC_KEY;
@@ -452,5 +382,3 @@ FirmwareUpdate_checkIfHasSignature(uint8_t* buffer) {
 
     return success;
 }
-
-
