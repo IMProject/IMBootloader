@@ -34,7 +34,7 @@
 
 #include "crc32.h"
 
-static uint32_t s_crcTable[256] = {
+static uint32_t s_crc_table[256] = {
     0x00000000, 0x04C11DB7, 0x09823B6E, 0x0D4326D9, 0x130476DC, 0x17C56B6B, 0x1A864DB2, 0x1E475005,
     0x2608EDB8, 0x22C9F00F, 0x2F8AD6D6, 0x2B4BCB61, 0x350C9B64, 0x31CD86D3, 0x3C8EA00A, 0x384FBDBD,
     0x4C11DB70, 0x48D0C6C7, 0x4593E01E, 0x4152FDA9, 0x5F15ADAC, 0x5BD4B01B, 0x569796C2, 0x52568B75,
@@ -69,55 +69,56 @@ static uint32_t s_crcTable[256] = {
     0xAFB010B1, 0xAB710D06, 0xA6322BDF, 0xA2F33668, 0xBCB4666D, 0xB8757BDA, 0xB5365D03, 0xB1F740B4
 };
 
-static uint32_t reflect(uint32_t data, uint8_t nBits);
+static uint32_t Reflect(uint32_t data, uint8_t n_bits);
 
 uint32_t
 CalculateCRC32(
-    const uint8_t* crc_DataPtr,
-    uint32_t crc_Length,
-    uint32_t crc_InitialValue,
-    bool reflectedOutput,
-    bool reflectedInput
+    const uint8_t* crc_data_ptr,
+    uint32_t crc_length,
+    uint32_t crc_initial_value,
+    bool reflected_output,
+    bool reflected_input
 ) {
-    uint32_t ui32Counter;
-    uint8_t temp;
-    uint32_t crc = crc_InitialValue;
 
-    for (ui32Counter = 0U; ui32Counter < crc_Length; ui32Counter++) {
-        if (reflectedInput) {
-            temp = reflect(*crc_DataPtr, 8);
+    uint32_t counter;
+    uint8_t temp;
+    uint32_t crc = crc_initial_value;
+
+    for (counter = 0u; counter < crc_length; ++counter) {
+        if (reflected_input) {
+            temp = Reflect(*crc_data_ptr, 8u);
         } else {
-            temp = *crc_DataPtr;
+            temp = *crc_data_ptr;
         }
 
-        crc = (crc << 8) ^ s_crcTable[(uint8_t)((crc >> 24) ^ temp)];
-        crc_DataPtr++;
+        crc = (crc << 8u) ^ s_crc_table[(uint8_t)((crc >> 24u) ^ temp)];
+        ++crc_data_ptr;
 
     }
 
-    if (reflectedOutput) {
-        crc = reflect(crc, sizeof(uint32_t) * 8);
+    if (reflected_output) {
+        crc = Reflect(crc, sizeof(uint32_t) * 8u);
     }
     return crc;
 }
 
 static uint32_t
-reflect(uint32_t data, uint8_t nBits) {
-    uint32_t  reflection = 0;
+Reflect(uint32_t data, uint8_t n_bits) {
 
+    uint32_t  reflection = 0u;
 
     /*
     * Reflect the data about the center bit.
     */
-    for (uint8_t bit = 0; bit < nBits; ++bit) {
+    for (uint8_t bit = 0u; bit < n_bits; ++bit) {
         /*
         * If the LSB bit is set, set the reflection of it.
         */
         if (data & 0x01) {
-            reflection |= (1 << ((nBits - 1) - bit));
+            reflection |= (1u << ((n_bits - 1u) - bit));
         }
 
-        data = (data >> 1);
+        data = (data >> 1u);
     }
 
     return (reflection);

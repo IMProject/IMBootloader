@@ -39,11 +39,11 @@
 #include "stdbool.h"
 
 uint32_t CalculateCRC32(
-    const uint8_t* crc_DataPtr,
-    uint32_t crc_Length,
-    uint32_t crc_InitialValue,
-    bool reflectedOutput,
-    bool reflectedInput
+    const uint8_t* crc_data_ptr,
+    uint32_t crc_length,
+    uint32_t crc_initial_value,
+    bool reflected_output,
+    bool reflected_input
 );
 
 #endif // CRC32_H
