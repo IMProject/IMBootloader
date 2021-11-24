@@ -322,7 +322,7 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
 
     if (length % sizeof(uint64_t) == 0 ) {
 
-        for (uint32_t i = 0; i < length / sizeof(uint64_t); i++) {
+        for (uint32_t i = 0; i < length / sizeof(uint64_t); ++i) {
             uint32_t memory_index = i * sizeof(uint64_t);
             memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(uint64_t));
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, data);
@@ -354,7 +354,7 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
 
     if ((length / flash_word) != 0 ) {
 
-        for (uint32_t i = 0; i < length / flash_word; i++) {
+        for (uint32_t i = 0; i < length / flash_word; ++i) {
             memory_index = i * flash_word;
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)&buffer[memory_index]);
 

@@ -42,7 +42,7 @@ Utils_StringToInt(uint8_t* buf, uint32_t lenght) {
 
     while ((buf[i] != '\0') && (lenght > i)) {
         integer += (buf[i] - '0') * pow(10, (lenght - (i + 1)));
-        i++;
+        ++i;
     }
     return integer;
 }
