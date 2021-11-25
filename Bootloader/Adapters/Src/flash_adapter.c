@@ -40,7 +40,6 @@
 static uint32_t type_program = FLASH_TYPEPROGRAM_DOUBLEWORD;
 #elif STM32H7xx
 #define FLASH_SECTOR_SIZE           0x00020000UL        /* 128 KB */
-#define FLASH_PROTECTED_SECTOR_SIZE 0x200               /* 0x200 * 256 = 128KB */
 static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
 #elif STM32F7xx
 #define FLASH_SIZE_1_MB     (0x100000U)         //!< 1 MB flash size
@@ -100,13 +99,13 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
 #ifdef STM32L4xx
         /* Get the number of PAGES to erase */
         uint32_t number_of_pages = firmware_size / FLASH_PAGE_SIZE;
-        if ((firmware_size % FLASH_PAGE_SIZE) != 0) {
-            number_of_pages += 1;
+        if ((firmware_size % FLASH_PAGE_SIZE) != 0U) {
+            number_of_pages += 1U;
         }
         uint32_t start_page = (flash_address - FLASH_BASE) / FLASH_PAGE_SIZE;
 
         pEraseInit.Banks     = FLASH_BANK_1;
-        pEraseInit.NbPages   = number_of_pages + 1;
+        pEraseInit.NbPages   = number_of_pages + 1U;
         pEraseInit.Page      = start_page;
         pEraseInit.TypeErase = FLASH_TYPEERASE_PAGES;
 
@@ -116,10 +115,10 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
 
         /* Get the number of SECTORS to erase */
         uint32_t number_of_sectors = firmware_size / FLASH_SECTOR_SIZE;
-        if ((number_of_sectors % FLASH_SECTOR_SIZE) != 0) {
-            number_of_sectors += 1;
+        if ((number_of_sectors % FLASH_SECTOR_SIZE) != 0U) {
+            number_of_sectors += 1U;
         } else {
-            number_of_sectors = 1;
+            number_of_sectors = 1U;
         }
 
         uint32_t start_sector = (flash_address - FLASH_BASE) / FLASH_SECTOR_SIZE;
@@ -320,9 +319,9 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     uint64_t data = UINT64_MAX;
 
 
-    if (length % sizeof(uint64_t) == 0 ) {
+    if (length % sizeof(uint64_t) == 0U ) {
 
-        for (uint32_t i = 0; i < length / sizeof(uint64_t); ++i) {
+        for (uint32_t i = 0U; i < length / sizeof(uint64_t); ++i) {
             uint32_t memory_index = i * sizeof(uint64_t);
             memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(uint64_t));
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, data);
@@ -349,12 +348,12 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
 bool
 FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
-    uint16_t flash_word = 32; //32 bytes (256 bits)
-    uint32_t memory_index = 0;
+    uint16_t flash_word = 32U; //32 bytes (256 bits)
+    uint32_t memory_index = 0U;
 
-    if ((length / flash_word) != 0 ) {
+    if ((length / flash_word) != 0U ) {
 
-        for (uint32_t i = 0; i < length / flash_word; ++i) {
+        for (uint32_t i = 0U; i < length / flash_word; ++i) {
             memory_index = i * flash_word;
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)&buffer[memory_index]);
 
@@ -365,14 +364,14 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
         }
 
         length = length % flash_word;
-        if (length > 0) {
+        if (length > 0U) {
             memory_index += flash_word;
         }
     }
 
-    if ((length != 0) && (length < flash_word)) {
+    if ((length != 0U) && (length < flash_word)) {
 
-        uint8_t data[32] = {0};
+        uint8_t data[32] = {0U};
         memcpy((void*)data, (void*)&buffer[memory_index], length);
         HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)data);
         if (status != HAL_OK) {
@@ -448,7 +447,7 @@ FlashAdapter_finish(void) {
 #ifdef STM32L4xx
     status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS_FLASH, MAGIC_KEY_VALUE);
 #elif STM32H7xx
-    uint8_t data[32] = {0};
+    uint8_t data[32] = {0U};
     uint64_t magic_key_value = MAGIC_KEY_VALUE;
     memcpy((void*)data, (void*)&magic_key_value, sizeof(uint64_t));
     status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS_FLASH, (uint32_t)data);
@@ -477,7 +476,7 @@ bool
 FlashAdapter_isFlashRDPProtected(void) {
     bool success = false;
 
-    FLASH_OBProgramInitTypeDef ob_sturct = {0};
+    FLASH_OBProgramInitTypeDef ob_sturct = {0U};
 
     HAL_FLASHEx_OBGetConfig(&ob_sturct);
 
@@ -493,7 +492,7 @@ FlashAdapter_isFlashPCROPProtected(void) {
     bool success = false;
 
 #ifdef STM32H7xx
-    FLASH_OBProgramInitTypeDef ob_struct = {0};
+    FLASH_OBProgramInitTypeDef ob_struct = {0U};
     ob_struct.Banks = FLASH_BANK_1;
 
     HAL_FLASHEx_OBGetConfig(&ob_struct);
@@ -513,18 +512,18 @@ FlashAdapter_setReadProtection(bool enable) {
 
 #ifdef STM32H7xx
 
-    FLASH_OBProgramInitTypeDef ob_sturct = {0};
+    FLASH_OBProgramInitTypeDef ob_sturct = {0U};
     HAL_StatusTypeDef status = HAL_ERROR;
 
     HAL_FLASHEx_OBGetConfig(&ob_sturct);
 
     if (enable && ob_sturct.RDPLevel == OB_RDP_LEVEL_0) {
         ob_sturct.RDPLevel = OB_RDP_LEVEL_1;
-        status = ActivateProtection(&ob_sturct, 0, 0);
+        status = ActivateProtection(&ob_sturct, 0U, 0U);
 
     } else {
         ob_sturct.RDPLevel = OB_RDP_LEVEL_0;
-        status = ActivateProtection(&ob_sturct, 0, 0);
+        status = ActivateProtection(&ob_sturct, 0U, 0U);
     }
 
     if (status == HAL_OK) {
@@ -551,7 +550,7 @@ FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t prot
     if (!enable && ob_sturct.RDPLevel == OB_RDP_LEVEL_0) {
         ob_sturct.RDPLevel = OB_RDP_LEVEL_1;
         ob_sturct.OptionType = OPTIONBYTE_RDP;
-        status = ActivateProtection(&ob_sturct, 0, 0);
+        status = ActivateProtection(&ob_sturct, 0U, 0U);
         ob_sturct.RDPLevel = OB_RDP_LEVEL_0;
         ob_sturct.OptionType = OPTIONBYTE_RDP | OPTIONBYTE_PCROP;
         status |= ActivateProtection(&ob_sturct, 0x0803FFFFUL, 0x08020000UL);
