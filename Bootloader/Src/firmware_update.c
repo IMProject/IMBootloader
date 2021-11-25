@@ -62,6 +62,7 @@
 #define HASH_SIZE       (32U)           //!< Hashed board id value size in bytes
 #define CRC_SIZE        (4U)            //!< CRC size in bytes (CRC32)
 #define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
+#define TX_BUFFER_SIZE  (1000U)         //!< TX buffer maximum size
 
 /* Enumeration for bootloader state machine*/
 typedef enum fwUpdateState_ENUM {
@@ -95,7 +96,6 @@ static bool s_is_flashed = false;       //!< Flash for main loop indicating end 
 static fwUpdateState_E s_update_state = fwUpdateState_INIT;
 
 static uint8_t s_fw_buffer[BUFFER_SIZE] = {0};
-static uint8_t s_hash_buffer[HASH_SIZE + CRC_SIZE];
 
 static uint32_t s_crc_calculated = 0xFFFFFFFF;  //!< First (init) CRC value
 
@@ -116,6 +116,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
     uint32_t flash_lenght;
     bool success = true;
     uint32_t package_index;
+    uint8_t tx_buffer[TX_BUFFER_SIZE];
 
     if (!s_is_flashing) {
 
@@ -150,27 +151,25 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
-                uint8_t buffer[300] = {0};
-                Version_getData(buffer, sizeof(buffer));
-                CDC_Transmit_FS((uint8_t*)buffer, strlen((char*)buffer));
+                Version_getData(tx_buffer, sizeof(tx_buffer));
+                CDC_Transmit_FS(tx_buffer, strlen((char*)tx_buffer));
 
             } else if (0 == strcmp((char*)buf, GET_BOARD_ID_CMD)) {
 
 #ifdef SECURITY_ENABLED
-                Auth_getHashedBoardId(s_hash_buffer);
+                Auth_getHashedBoardId(tx_buffer);
                 s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 #else
-                memcpy(s_hash_buffer, NOT_SECURED_MAGIC_STRING, HASH_SIZE);
+                memcpy(tx_buffer, NOT_SECURED_MAGIC_STRING, HASH_SIZE);
 #endif
-                uint32_t crc = CalculateCRC32(s_hash_buffer, HASH_SIZE, s_crc_calculated, false, false);
+                uint32_t crc = CalculateCRC32(tx_buffer, HASH_SIZE, s_crc_calculated, false, false);
                 crc ^= XOR_CRC_VALUE;
-                Utils_Serialize32BE(&s_hash_buffer[HASH_SIZE], crc);
-                CDC_Transmit_FS(s_hash_buffer, sizeof(s_hash_buffer));
+                Utils_Serialize32BE(&tx_buffer[HASH_SIZE], crc);
+                CDC_Transmit_FS(tx_buffer, HASH_SIZE + CRC_SIZE);
             } else if (0 == strcmp((char*)buf, GET_VERSION_JSON_CMD)) {
 
-                uint8_t buffer[1000];
-                Version_getDataJson(buffer, sizeof(buffer));
-                FirmwareUpdate_sendStringWithCrc(buffer, sizeof(buffer));
+                Version_getDataJson(tx_buffer, sizeof(tx_buffer));
+                FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
 
             } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
                 s_update_state = fwUpdateState_INIT;
