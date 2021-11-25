@@ -32,8 +32,9 @@
  *
  ****************************************************************************/
 
-#include "version.h"
 #include <string.h>
+#include "version.h"
+#include "json.h"
 
 #define GIT_BRANCH_SIZE 40
 #define GIT_HASH_SIZE   42
@@ -49,9 +50,31 @@ const char git_branch[GIT_BRANCH_SIZE] = GIT_BRANCH;
 const char git_hash[GIT_HASH_SIZE] = GIT_HASH;
 const char git_tag[GIT_TAG_SIZE] = GIT_TAG;
 
-void
-Version_copyToBuffer(uint8_t* buffer, uint16_t size) {
+/* JSON String
+ * {
+*   "git_branch":"master",
+*   "git_hash":"be387ad0b2ba6dc0877e8e255e872ee310a9127c",
+*   "git_tag":"v1.1.0"
+*  }
+*/
 
+bool
+Version_getDataJson(uint8_t* buffer, uint16_t size) {
+
+    bool success = true;
+    success &= Json_startString((char*)buffer, size);
+    success &= Json_addData((char*)buffer, size, "git_branch", git_branch);
+    success &= Json_addData((char*)buffer, size, "git_hash", git_hash);
+    success &= Json_addData((char*)buffer, size, "git_tag", git_tag);
+    success &= Json_endString((char*)buffer, size);
+
+    return success;
+}
+
+bool
+Version_getData(uint8_t* buffer, uint16_t size) {
+
+    bool success = false;
     uint16_t str_size = strlen(BRANCH_NAME_STR) + strlen(COMMIT_HASH_STR) + strlen(LAST_TAG_STR);
     str_size += (3 * strlen(NEW_ROW_STR)) + strlen(git_branch) + strlen(git_hash) + strlen(git_tag);
 
@@ -91,9 +114,8 @@ Version_copyToBuffer(uint8_t* buffer, uint16_t size) {
         }
 
         buffer[buffer_index] = '\0';
+        success = true;
     }
+
+    return success;
 }
-
-
-
-

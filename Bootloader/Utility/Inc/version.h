@@ -38,6 +38,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void Version_copyToBuffer(uint8_t* buffer, uint16_t size);
+bool Version_getDataJson(uint8_t* buffer, uint16_t size);
+bool Version_getData(uint8_t* buffer, uint16_t size);
 
 #endif /* INC_VERSION_H_ */

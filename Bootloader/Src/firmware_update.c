@@ -47,7 +47,8 @@
 #define CHECK_SINGATURE_CMD         "check_signature"       //!< String command for bootloader to check firmware signature
 #define ERASE_CMD                   "erase"                 //!< String command for bootloader to erase the flash
 #define GET_BOARD_ID_CMD            "board_id"              //!< String command for bootloader to send board id to IMFlasher application
-#define GET_VERSION_CMD             "version"               //!< String command for bootloader to return version
+#define GET_VERSION_CMD             "version"               //!< String command for bootloader to send version
+#define GET_VERSION_JSON_CMD        "version_json"          //!< String command for bootloader to send version in JSON format
 #define DISCONNECT_CMD              "disconnect"            //!< String command for bootloader to disconnect
 #define VERIFY_FLASHER_CMD          "IMFlasher_Verify"      //!< String for bootloader to verify IMFlasher application
 #define EXIT_BL_CMD                 "exit_bl"               //!< String command for exit bootloader
@@ -74,6 +75,7 @@ typedef enum fwUpdateState_ENUM {
     fwUpdateState_END
 } fwUpdateState_E;
 
+static bool FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size);
 static void FirmwareUpdate_ack(void);
 static void FirmwareUpdate_noAck(void);
 static bool FirmwareUpdate_hasSignature(const uint8_t* buffer);
@@ -149,7 +151,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
 
                 uint8_t buffer[300] = {0};
-                Version_copyToBuffer(buffer, sizeof(buffer));
+                Version_getData(buffer, sizeof(buffer));
                 CDC_Transmit_FS((uint8_t*)buffer, strlen((char*)buffer));
 
             } else if (0 == strcmp((char*)buf, GET_BOARD_ID_CMD)) {
@@ -164,6 +166,11 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
                 crc ^= XOR_CRC_VALUE;
                 Utils_Serialize32BE(&s_hash_buffer[HASH_SIZE], crc);
                 CDC_Transmit_FS(s_hash_buffer, sizeof(s_hash_buffer));
+            } else if (0 == strcmp((char*)buf, GET_VERSION_JSON_CMD)) {
+
+                uint8_t buffer[1000];
+                Version_getDataJson(buffer, sizeof(buffer));
+                FirmwareUpdate_sendStringWithCrc(buffer, sizeof(buffer));
 
             } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
                 s_update_state = fwUpdateState_INIT;
@@ -356,6 +363,35 @@ FirmwareUpdate_bootloaderLoop(const uint32_t timeout) {
     }
 
     return retVal;
+}
+
+static bool
+FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size) {
+
+    bool success = false;
+    bool null_terminator_exist = false;
+
+    for (size_t i = 0U; i < size; ++i) {
+        if (string[i] == '\0') {
+            null_terminator_exist = true;
+            break;
+        }
+    }
+
+    if (null_terminator_exist) {
+
+        size_t last_char = strlen((char*)string);
+
+        if (size >= last_char) {
+            uint32_t crc = CalculateCRC32(&string[0], last_char, 0xFFFFFFFFU, false, false);
+            crc ^= XOR_CRC_VALUE;
+            Utils_Serialize32BE(&string[last_char], crc);
+            CDC_Transmit_FS(string, last_char + sizeof(crc));
+            success = true;
+        }
+    }
+
+    return success;
 }
 
 static void
