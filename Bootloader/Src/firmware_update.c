@@ -66,14 +66,13 @@
 
 /* Enumeration for bootloader state machine*/
 typedef enum fwUpdateState_ENUM {
-    fwUpdateState_INIT,
+    fwUpdateState_IDLE,
     fwUpdateState_CMD_ACTION_SELECT,
     fwUpdateState_ERASE,
     fwUpdateState_RECEIVE_FIRMWARE_SIZE,
     fwUpdateState_CHECK_SIGNATURE,
     fwUpdateState_DOWNLOADING_AND_FLASHING,
-    fwUpdateState_CRC,
-    fwUpdateState_END
+    fwUpdateState_CRC
 } fwUpdateState_E;
 
 static bool FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size);
@@ -93,7 +92,7 @@ static bool s_rdp_disable_flag = false; //!< Disable RDP flag
 static bool s_is_flashing = false;      //!< Flash for main loop indicating flashing state
 static bool s_is_flashed = false;       //!< Flash for main loop indicating end of the flashing process
 
-static fwUpdateState_E s_update_state = fwUpdateState_INIT;
+static fwUpdateState_E s_update_state = fwUpdateState_IDLE;
 
 static uint8_t s_fw_buffer[BUFFER_SIZE] = {0};
 
@@ -125,7 +124,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 
         } else if (0 == strcmp((char*)buf, DISCONNECT_CMD)) {
-            s_update_state = fwUpdateState_INIT;
+            s_update_state = fwUpdateState_IDLE;
             FirmwareUpdate_ack();
 
         } else {
@@ -172,7 +171,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
                 FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
 
             } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
-                s_update_state = fwUpdateState_INIT;
+                s_update_state = fwUpdateState_IDLE;
                 FirmwareUpdate_ack();
                 memset((void*)MAGIC_KEY_ADDRESS_RAM, 0x0, sizeof(uint64_t));
                 s_exit_loop = true;
@@ -282,14 +281,16 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             } else {
                 FirmwareUpdate_noAck();
             }
-            s_update_state = fwUpdateState_END;
+            s_update_state = fwUpdateState_IDLE;
 
             break;
 
-        case fwUpdateState_END:
+        case fwUpdateState_IDLE:
+            // Do nothing
             break;
 
         default:
+            // Do nothing
             break;
     }
 
