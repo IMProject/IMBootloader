@@ -32,20 +32,51 @@
  *
  ****************************************************************************/
 
-#ifndef INC_FIRMWAREUPDATE_H_
-#define INC_FIRMWAREUPDATE_H_
+#ifndef BOOTLOADER_INC_BOARD_INFO_H_
+#define BOOTLOADER_INC_BOARD_INFO_H_
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <assert.h>
+#include <string.h>
+#include <main.h>
 
-#include "board_info.h"
-#include "gpio_adapter.h"
-#include "flash_adapter.h"
-#include "hash_adapter.h"
+/* 32 bytes fake board id. If enabled, board and manufacturer id communication will be skipped. */
+//#define FAKE_BOARD_ID  "NOT_SECURED_MAGIC_STRING_1234567"
 
-void FirmwareUpdate_init(void);
-bool FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length);
-bool FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length);
-bool FirmwareUpdate_bootloaderLoop(const uint32_t timeout);
+enum secureHash_ENUM {
+    BLAKE2B = 0,
+    SHA256,
+    MD5
+} secureHash_E;
 
-#endif /* INC_FIRMWAREUPDATE_H_ */
+#ifndef stm32l4xx //Monocypher can't fit into the current bootloader size
+#define HASH_BOARD_ID_ALGORITHM         BLAKE2B
+#else
+#define HASH_BOARD_ID_ALGORITHM         SHA256
+#endif
+
+#define HASHED_BOARD_ID_SIZE            32U
+#define BASE64_HASHED_BOARD_ID_SIZE     44U
+
+#define MANUFACTURER_ID_SIZE            32U
+#define BASE64_MANUFACTURER_ID_SIZE     44U
+
+#define PRODUCT_TYPE_MAX_SIZE           100U
+
+#define BASE64_MANUFACTURER_ID (const char*)("Qj9FKEgrTWJRZVRoV21acTR0N3cheiVDKkYpSkBOY1I=") // Size must be equal to 44 bytes (Base64 format)
+
+#ifdef MATEK_H743_SLIM
+#define PRODUCT_TYPE    (const char*)("IMProject_demo-matek_H7_slim") // Maximum allowed size is 100 bytes
+#else
+#define PRODUCT_TYPE    (const char*)("Product_type_name-board_name") // Maximum allowed size is 100 bytes
+#endif
+
+static_assert(strlen((const char*)BASE64_MANUFACTURER_ID) == BASE64_MANUFACTURER_ID_SIZE, "MANUFACTURER_ID is wrong size");
+static_assert(strlen((const char*)PRODUCT_TYPE) <= PRODUCT_TYPE_MAX_SIZE, "PRODUCT_TYPE is wrong size");
+
+bool BoardInfo_getDataJson(uint8_t* buffer, size_t size);
+bool BoardInfo_getBase64ManufacturerId(uint8_t* b64_manufacturer_id);
+
+
+#endif /* BOOTLOADER_INC_BOARD_INFO_H_ */

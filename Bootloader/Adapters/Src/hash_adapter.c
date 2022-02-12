@@ -32,20 +32,65 @@
  *
  ****************************************************************************/
 
-#ifndef INC_FIRMWAREUPDATE_H_
-#define INC_FIRMWAREUPDATE_H_
-
-#include <stdint.h>
-#include <stdbool.h>
-
-#include "board_info.h"
-#include "gpio_adapter.h"
-#include "flash_adapter.h"
 #include "hash_adapter.h"
+#include "monocypher.h"
+#include "base64.h"
+#include "main.h"
 
-void FirmwareUpdate_init(void);
-bool FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length);
-bool FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length);
-bool FirmwareUpdate_bootloaderLoop(const uint32_t timeout);
 
-#endif /* INC_FIRMWAREUPDATE_H_ */
+void
+HashAdapter_getHashedBoardId(uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE]) {
+
+    uint32_t uid[3];
+    uid[0] = HAL_GetUIDw0();
+    uid[1] = HAL_GetUIDw1();
+    uid[2] = HAL_GetUIDw2();
+
+    uint8_t manufacturer_id[MANUFACTURER_ID_SIZE];
+
+    if (BoardInfo_decodeBase64ManufacturerId(manufacturer_id)) {
+
+        switch (HASH_BOARD_ID_ALGORITHM) {
+
+            case (BLAKE2B):
+                crypto_blake2b_general(hashed_board_id, HASHED_BOARD_ID_SIZE, manufacturer_id, MANUFACTURER_ID_SIZE, (uint8_t*)uid, 3 * sizeof(uint32_t));
+                break;
+
+            case (SHA256):
+                //Only SMT32H75x supports HW accelerator
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+bool
+HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id) {
+
+    bool success = false;
+
+    uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE] = {0U};
+    HashAdapter_getHashedBoardId(hashed_board_id);
+    int32_t ret = Base64_encode(hashed_board_id, HASHED_BOARD_ID_SIZE, (char*)b64_hashed_board_id, BASE64_HASHED_BOARD_ID_SIZE);
+
+    if (0 == ret) {
+        success = true;
+    }
+
+    return success;
+}
+
+bool
+BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id) {
+    bool success = false;
+
+    size_t manufacturer_id_size = MANUFACTURER_ID_SIZE;
+    int32_t ret = Base64_decode((char*)BASE64_MANUFACTURER_ID, BASE64_MANUFACTURER_ID_SIZE, manufacturer_id, &manufacturer_id_size);
+
+    if (0 == ret) {
+        success = true;
+    }
+
+    return success;
+}

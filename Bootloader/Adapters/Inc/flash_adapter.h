@@ -64,7 +64,6 @@
 #define MAGIC_KEY_ADDRESS_RAM   (0x20000000UL)                      //!< Address in ram for communication between bootloader and firmware
 #endif
 
-#define NOT_SECURED_MAGIC_STRING "NOT_SECURED_MAGIC_STRING_1234567" //!< 32 bytes magic string, means this board is not secure
 #define MAGIC_KEY_VALUE         (0x28101987A5B5C5D5)                //!< Hex value if written in flash bootloader will jump to firmware
 #define SIGNATURE_MAGIC_KEY     (0xDEC0DE5528101987)                //!< Hex value if the firmware is signed with bootloader will accept it
 

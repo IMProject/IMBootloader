@@ -32,20 +32,16 @@
  *
  ****************************************************************************/
 
-#ifndef INC_FIRMWAREUPDATE_H_
-#define INC_FIRMWAREUPDATE_H_
+#ifndef BOOTLOADER_ADAPTERS_INC_HASH_ADAPTER_H_
+#define BOOTLOADER_ADAPTERS_INC_HASH_ADAPTER_H_
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #include "board_info.h"
-#include "gpio_adapter.h"
-#include "flash_adapter.h"
-#include "hash_adapter.h"
 
-void FirmwareUpdate_init(void);
-bool FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length);
-bool FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length);
-bool FirmwareUpdate_bootloaderLoop(const uint32_t timeout);
+void HashAdapter_getHashedBoardId(uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE]);
+bool HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id);
+bool BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id);
 
-#endif /* INC_FIRMWAREUPDATE_H_ */
+
+#endif /* BOOTLOADER_ADAPTERS_INC_HASH_ADAPTER_H_ */
