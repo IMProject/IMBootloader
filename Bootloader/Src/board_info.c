@@ -32,20 +32,33 @@
  *
  ****************************************************************************/
 
-#ifndef INC_FIRMWAREUPDATE_H_
-#define INC_FIRMWAREUPDATE_H_
-
-#include <stdint.h>
-#include <stdbool.h>
-
 #include "board_info.h"
-#include "gpio_adapter.h"
-#include "flash_adapter.h"
+#include "version.h"
 #include "hash_adapter.h"
+#include "json.h"
+#include "base64.h"
 
-void FirmwareUpdate_init(void);
-bool FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length);
-bool FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length);
-bool FirmwareUpdate_bootloaderLoop(const uint32_t timeout);
+/* JSON String
+ *
+ * {
+ *   "bord_id":"Tk9UX1NFQ1VSRURfTUFHSUNfU1RSSU5HXzEyMzQ1Njc=",
+ *   "manufacturer_id":"Qj9FKEgrTWJRZVRoV21acTR0N3cheiVDKkYpSkBOY1I=",
+ *   "product_type":"Produt_type_name-board_version"
+ * }
+ */
 
-#endif /* INC_FIRMWAREUPDATE_H_ */
+bool
+BoardInfo_getDataJson(uint8_t* buffer, size_t size) {
+    bool success = true;
+
+    uint8_t b64_hashed_board_id[BASE64_HASHED_BOARD_ID_SIZE + 1U] = {0U};
+    HashAdapter_getBase64HashedBoardId(b64_hashed_board_id);
+
+    success &= Json_startString((char*)buffer, size);
+    success &= Json_addData((char*)buffer, size, "board_id", (const char*)b64_hashed_board_id);
+    success &= Json_addData((char*)buffer, size, "manufacturer_id", BASE64_MANUFACTURER_ID);
+    success &= Json_addData((char*)buffer, size, "product_type", PRODUCT_TYPE);
+    success &= Json_endString((char*)buffer, size);
+
+    return success;
+}

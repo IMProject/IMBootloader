@@ -26,8 +26,10 @@ export COMMON_SRCS =  \
 Bootloader/Src/main.c \
 Bootloader/Src/crc32.c \
 Bootloader/Src/firmware_update.c \
+Bootloader/Src/board_info.c \
 Bootloader/Adapters/Src/gpio_adapter.c \
 Bootloader/Adapters/Src/flash_adapter.c \
+Bootloader/Adapters/Src/hash_adapter.c \
 Bootloader/Adapters/Src/system_clock_adapter.c \
 Bootloader/STM32/Src/usb_device.c \
 Bootloader/STM32/Src/usbd_conf.c \
@@ -35,8 +37,9 @@ Bootloader/STM32/Src/usbd_desc.c \
 Bootloader/STM32/Src/usbd_cdc_if.c \
 Bootloader/Utility/Src/version.c \
 Bootloader/Utility/Src/utils.c \
-Monocypher/src/monocypher.c \
+Bootloader/Utility/Src/base64.c \
 Bootloader/Utility/Src/json.c \
+Monocypher/src/monocypher.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \

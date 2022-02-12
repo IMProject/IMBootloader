@@ -47,6 +47,7 @@ main(void) {
     HAL_Init();
     SystemClock_Config();
     GpioAdapter_init();
+    FirmwareUpdate_init();
     bool enter_bootloader_loop = false;
 
     // Check RAM KEY

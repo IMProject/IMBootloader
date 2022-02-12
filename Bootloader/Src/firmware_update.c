@@ -40,13 +40,11 @@
 #include "crc32.h"
 #include "version.h"
 
-#ifdef SECURITY_ENABLED
-#include "authentication.h"
-#endif
 
 #define CHECK_SINGATURE_CMD         "check_signature"       //!< String command for bootloader to check firmware signature
 #define ERASE_CMD                   "erase"                 //!< String command for bootloader to erase the flash
-#define GET_BOARD_ID_CMD            "board_id"              //!< String command for bootloader to send board id to IMFlasher application
+#define GET_BOARD_ID_CMD            "board_id"              //!< String command for bootloader to send board id
+#define GET_BOARD_INFO_JSON_CMD     "board_info_json"       //!< String command for bootloader to send board info in JSON format
 #define GET_VERSION_CMD             "version"               //!< String command for bootloader to send version
 #define GET_VERSION_JSON_CMD        "version_json"          //!< String command for bootloader to send version in JSON format
 #define DISCONNECT_CMD              "disconnect"            //!< String command for bootloader to disconnect
@@ -58,7 +56,6 @@
 #define SW_TYPE_STR                 "software_type"         //!< String for bootloader to send if IMFlasher is connected to bootloader
 
 #define BUFFER_SIZE     (2048U)         //!< Bootloader buffer size
-#define HASH_SIZE       (32U)           //!< Hashed board id value size in bytes
 #define CRC_SIZE        (4U)            //!< CRC size in bytes (CRC32)
 #define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
 #define TX_BUFFER_SIZE  (1000U)         //!< TX buffer maximum size
@@ -92,15 +89,15 @@ static bool s_is_flashed = false;       //!< Flash for main loop indicating end 
 
 static fwUpdateState_E s_update_state = fwUpdateState_IDLE;
 
+static uint8_t s_hashed_board_key[HASHED_BOARD_ID_SIZE];
 static uint8_t s_fw_buffer[BUFFER_SIZE];
 
 static uint32_t s_crc_calculated = 0xFFFFFFFF;  //!< First (init) CRC value
 
 void
 FirmwareUpdate_init(void) {
-#ifdef SECURITY_ENABLED
-    Auth_calcHashBoardId();
-    uint8_t boardKey[BOARD_KEY_SIZE];
+#ifndef FAKE_BOARD_ID
+    HashAdapter_getHashedBoardId(s_hashed_board_key);
 #endif
 }
 
@@ -152,16 +149,21 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             } else if (0 == strcmp((char*)buf, GET_BOARD_ID_CMD)) {
 
-#ifdef SECURITY_ENABLED
-                Auth_getHashedBoardId(tx_buffer);
-                s_update_state = fwUpdateState_CMD_ACTION_SELECT;
+#ifdef FAKE_BOARD_ID
+                memcpy(tx_buffer, FAKE_BOARD_ID, HASHED_BOARD_ID_SIZE);
+
 #else
-                memcpy(tx_buffer, NOT_SECURED_MAGIC_STRING, HASH_SIZE);
+                memcpy(tx_buffer, s_hashed_board_key, HASHED_BOARD_ID_SIZE);
 #endif
-                uint32_t crc = CalculateCRC32(tx_buffer, HASH_SIZE, s_crc_calculated, false, false);
+                uint32_t crc = CalculateCRC32(tx_buffer, HASHED_BOARD_ID_SIZE, s_crc_calculated, false, false);
                 crc ^= XOR_CRC_VALUE;
-                Utils_Serialize32BE(&tx_buffer[HASH_SIZE], crc);
-                FirmwareUpdate_sendMessage(tx_buffer, HASH_SIZE + CRC_SIZE);
+                Utils_Serialize32BE(&tx_buffer[HASHED_BOARD_ID_SIZE], crc);
+                FirmwareUpdate_sendMessage(tx_buffer, HASHED_BOARD_ID_SIZE + CRC_SIZE);
+            } else if (0 == strcmp((char*)buf, GET_BOARD_INFO_JSON_CMD)) {
+
+                BoardInfo_getDataJson(tx_buffer, sizeof(tx_buffer));
+                FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
+
             } else if (0 == strcmp((char*)buf, GET_VERSION_JSON_CMD)) {
 
                 Version_getDataJson(tx_buffer, sizeof(tx_buffer));
