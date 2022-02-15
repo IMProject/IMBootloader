@@ -84,7 +84,7 @@ export BIN = $(CP) -O binary -S
 check_format:
 	$(call colorecho,'Checking formatting with astyle')
 	@Tools/astyle/check_code_style_all.sh
-	@cd  && git diff --check
+	@git diff --check
 
 format:
 	$(call colorecho,'Formatting with astyle')
