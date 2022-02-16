@@ -1,0 +1,36 @@
+name: Compile targets
+
+on:
+  push:
+    branches: 
+    - 'master'
+  pull_request:
+    branches:
+    - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [
+          stm32l4xx,
+          stm32f7xx,
+          stm32h7xx,
+          matek_H7_slim,
+          pixhawk4
+          ]
+          
+    container:       
+      image: px4io/px4-dev-nuttx-focal:2021-09-08
+      options: --privileged --ulimit core=-1 --security-opt seccomp=unconfined
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        submodules: 'true'
+      
+    - name: make ${{matrix.config}}
+      run: make ${{matrix.config}}
