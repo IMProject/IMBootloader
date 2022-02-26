@@ -37,11 +37,11 @@
 
 uint32_t
 Utils_StringToInt(uint8_t* buf, uint32_t lenght) {
-    uint32_t integer = 0;
-    uint32_t i = 0;
+    uint32_t integer = 0u;
+    uint32_t i = 0u;
 
-    while ((buf[i] != '\0') && (lenght > i)) {
-        integer += (buf[i] - '0') * pow(10, (lenght - (i + 1)));
+    while ((buf[i] != (uint8_t)'\0') && (lenght > i)) {
+        integer += (uint32_t)(buf[i] - (uint8_t)'0') * pow(10, (lenght - (i + 1u)));
         ++i;
     }
     return integer;
@@ -49,28 +49,28 @@ Utils_StringToInt(uint8_t* buf, uint32_t lenght) {
 
 void
 Utils_Serialize32BE(uint8_t* buf, uint32_t value) {
-    buf[0] = (uint8_t)(value >> 24u) & 0xFF;
-    buf[1] = (uint8_t)(value >> 16u) & 0xFF;
-    buf[2] = (uint8_t)(value >> 8u) & 0xFF;
-    buf[3] = (uint8_t)(value >> 0u) & 0xFF;
+    buf[0] = (uint8_t)(value >> 24u) & 0xFFu;
+    buf[1] = (uint8_t)(value >> 16u) & 0xFFu;
+    buf[2] = (uint8_t)(value >> 8u) & 0xFFu;
+    buf[3] = (uint8_t)(value >> 0u) & 0xFFu;
 }
 
 void
 Utils_Serialize24BE(uint8_t* buf, uint32_t value) {
-    buf[0] = (uint8_t)(value >> 16u) & 0xFF;
-    buf[1] = (uint8_t)(value >> 8u) & 0xFF;
-    buf[2] = (uint8_t)(value >> 0u) & 0xFF;
+    buf[0] = (uint8_t)(value >> 16u) & 0xFFu;
+    buf[1] = (uint8_t)(value >> 8u) & 0xFFu;
+    buf[2] = (uint8_t)(value >> 0u) & 0xFFu;
 }
 
 void
 Utils_Serialize16BE(uint8_t* buf, uint16_t value) {
-    buf[0] = (uint8_t)(value >> 8u) & 0xFF;
-    buf[1] = (uint8_t)(value >> 0u) & 0xFF;
+    buf[0] = (uint8_t)(value >> 8u) & 0xFFu;
+    buf[1] = (uint8_t)(value >> 0u) & 0xFFu;
 }
 
 void
 Utils_Serialize8BE(uint8_t* buf, uint8_t value) {
-    buf[0] = (uint8_t)(value >> 0u) & 0xFF;
+    buf[0] = (uint8_t)(value >> 0u) & 0xFFu;
 }
 
 void
