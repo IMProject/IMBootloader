@@ -89,7 +89,18 @@ check_format:
 format:
 	$(call colorecho,'Formatting with astyle')
 	@Tools/astyle/check_code_style_all.sh --fix
-
+	
+#######################################
+# Cppcheck
+#######################################
+.PHONY: cppcheck misra
+cppcheck:
+	$(call colorecho,'Checking code with cppcheck')
+	@cppcheck --error-exitcode=1 Bootloader
+	
+misra:
+	$(call colorecho,'Checking MISRA C:2012 with cppcheck')
+	@cppcheck cppcheck --addon=misra.py --error-exitcode=1 Bootloader
 #
 # Bootloaders to build
 #
