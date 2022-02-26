@@ -1,0 +1,4 @@
+{"summary": "MisraExternalIdentifiers", "data": [{"name": "hUsbDeviceFS", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/STM32/Src/usb_device.c", "line": 45, "column": 20, "decl": false}, {"name": "FS_Desc", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/STM32/Src/usb_device.c", "line": 46, "column": 32, "decl": true}, {"name": "MX_USB_DEVICE_Init", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/STM32/Src/usb_device.c", "line": 67, "column": 1, "decl": true}]}
+{"summary": "MisraInternalIdentifiers", "data": []}
+{"summary": "MisraLocalIdentifiers", "data": []}
+{"summary": "MisraUsage", "data": ["hUsbDeviceFS", "FS_Desc"]}

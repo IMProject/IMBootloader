@@ -1,0 +1,4 @@
+{"summary": "MisraExternalIdentifiers", "data": [{"name": "JumpToApplication", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Src/main.c", "line": 43, "column": 11, "decl": false}, {"name": "main", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Src/main.c", "line": 46, "column": 1, "decl": true}, {"name": "Error_Handler", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Src/main.c", "line": 90, "column": 1, "decl": true}]}
+{"summary": "MisraInternalIdentifiers", "data": []}
+{"summary": "MisraLocalIdentifiers", "data": [{"name": "enter_bootloader_loop", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Src/main.c", "line": 51, "column": 10}]}
+{"summary": "MisraUsage", "data": ["JumpToApplication"]}

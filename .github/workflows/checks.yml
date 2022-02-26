@@ -22,5 +22,8 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
       
-    - name: Check check format
+    - name: Check format
       run: make check_format
+
+    - name: Check MISRA C:2012
+      run: make misra
