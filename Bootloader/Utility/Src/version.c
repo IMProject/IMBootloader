@@ -76,11 +76,11 @@ Version_getData(uint8_t* buffer, uint16_t size) {
 
     bool success = false;
     uint16_t str_size = strlen(BRANCH_NAME_STR) + strlen(COMMIT_HASH_STR) + strlen(LAST_TAG_STR);
-    str_size += (3 * strlen(NEW_ROW_STR)) + strlen(git_branch) + strlen(git_hash) + strlen(git_tag);
+    str_size += (3u * strlen(NEW_ROW_STR)) + strlen(git_branch) + strlen(git_hash) + strlen(git_tag);
 
     if (size >= str_size) {
 
-        uint16_t buffer_index = 0;
+        uint16_t buffer_index = 0u;
 
         memcpy(&buffer[buffer_index], VERSION_INFO_STR, strlen(VERSION_INFO_STR));
         buffer_index += strlen(VERSION_INFO_STR);
@@ -104,7 +104,7 @@ Version_getData(uint8_t* buffer, uint16_t size) {
         buffer_index += strlen(NEW_ROW_STR);
 
         //TAG
-        if (strlen(git_tag) != 0) { // in case tag doesn't exist
+        if (strlen(git_tag) != 0u) { // in case tag doesn't exist
             memcpy(&buffer[buffer_index], LAST_TAG_STR, strlen(LAST_TAG_STR));
             buffer_index += strlen(LAST_TAG_STR);
             memcpy(&buffer[buffer_index], git_tag, strlen(git_tag));
