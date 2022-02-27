@@ -9,7 +9,7 @@ Idea is to save developers time for writing bootloader and flasher applications.
 This bootloader works together with the flasher app [IMFlasher](https://github.com/IMProject/IMFlasher).
 
 #### Application example
-Each MCU has it's own [IMLedBlink](https://github.com/IMProject/IMLedBlink) example. It is a good starting point for developing an application or to get an idea of how to jump from the application to IMBootloader.
+Each MCU has its own [IMLedBlink](https://github.com/IMProject/IMLedBlink) example. It is a good starting point for developing an application or to get an idea of how to jump from the application to IMBootloader.
 
 #### Currently supported MCUs:
 
