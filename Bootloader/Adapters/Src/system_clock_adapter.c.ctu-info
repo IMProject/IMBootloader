@@ -1,3 +1,0 @@
-{"summary": "MisraExternalIdentifiers", "data": [{"name": "SystemClock_Config", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/system_clock_adapter.c", "line": 145, "column": 1, "decl": true}]}
-{"summary": "MisraInternalIdentifiers", "data": []}
-{"summary": "MisraLocalIdentifiers", "data": [{"name": "RCC_OscInitStruct", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/system_clock_adapter.c", "line": 146, "column": 24}, {"name": "RCC_ClkInitStruct", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/system_clock_adapter.c", "line": 147, "column": 24}, {"name": "PeriphClkInitStruct", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/system_clock_adapter.c", "line": 148, "column": 30}]}

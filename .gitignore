@@ -5,3 +5,5 @@
 build/
 
 .settings/
+
+*.ctu-info

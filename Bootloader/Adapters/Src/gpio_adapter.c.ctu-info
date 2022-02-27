@@ -1,3 +1,0 @@
-{"summary": "MisraExternalIdentifiers", "data": [{"name": "GpioAdapter_init", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/gpio_adapter.c", "line": 39, "column": 1, "decl": true}, {"name": "GpioAdapter_ledToggle", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/gpio_adapter.c", "line": 71, "column": 1, "decl": true}]}
-{"summary": "MisraInternalIdentifiers", "data": []}
-{"summary": "MisraLocalIdentifiers", "data": [{"name": "GPIO_InitStruct", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/gpio_adapter.c", "line": 40, "column": 22}, {"name": "pinSet", "file": "/home/im/GIT/IMProject/IMBootloader/Bootloader/Adapters/Src/gpio_adapter.c", "line": 72, "column": 26}]}
