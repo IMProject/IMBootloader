@@ -38,10 +38,10 @@
 
 #ifdef STM32L4xx
 static uint32_t type_program = FLASH_TYPEPROGRAM_DOUBLEWORD;
-#elif STM32H7xx
-#define FLASH_SECTOR_SIZE           0x00020000UL        /* 128 KB */
+#elif defined(STM32H7xx)
+#define FLASH_WORD_SIZE     (32U)               //!< 32 bytes (256 bits)
 static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
-#elif STM32F7xx
+#elif defined(STM32F7xx)
 #define FLASH_SIZE_1_MB     (0x100000U)         //!< 1 MB flash size
 #define FLASH_SIZE_2_MB     (0x200000U)         //!< 2 MB flash size
 #define KB_TO_B             (1024U)             //!< 1 kB = 1024 B
@@ -53,12 +53,12 @@ static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
 #define FLASH_WORD_SIZE     (4U)                //!< Flash word size in bytes
 #endif
 
-HAL_StatusTypeDef ActivateProtection(FLASH_OBProgramInitTypeDef* ob_sturct, uint32_t protect_address_start, uint32_t protect_address_end);
+HAL_StatusTypeDef ActivateProtection(FLASH_OBProgramInitTypeDef* ob_struct, uint32_t protect_address_start, uint32_t protect_address_end);
 
 #ifdef EXTERNAL_FLASH
 bool
-FlashAdapter_erase(uint32_t firmwareSize, uint32_t flashAddress) {
-    return W25q_dynamicErase(firmwareSize, flashAddress);
+FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
+    return W25q_dynamicErase(firmware_size, flash_address);
 }
 
 bool
@@ -85,11 +85,7 @@ bool
 FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
     bool success = false;
 
-    if (firmware_size > FLASH_SIZE) {
-        success = false;
-
-    } else {
-
+    if (firmware_size <= FLASH_SIZE) {
         HAL_FLASH_Unlock();
 
         HAL_StatusTypeDef      status = HAL_OK;
@@ -111,7 +107,7 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
 
         success = true;
 
-#elif STM32H7xx
+#elif defined(STM32H7xx)
 
         /* Get the number of SECTORS to erase */
         uint32_t number_of_sectors = firmware_size / FLASH_SECTOR_SIZE;
@@ -130,7 +126,7 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
 
         success = true;
 
-#elif STM32F7xx
+#elif defined(STM32F7xx)
 
         bool is_start_sector_in_first_bank = false;
         bool is_start_sector_in_second_bank = false;
@@ -140,8 +136,8 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
         uint32_t temp_size = 0U;
         uint32_t start_sector = 0U;
         uint32_t number_of_sectors = 0U;
-        uint32_t max_num_of_sectors;
-        uint32_t bank_2_start_address;
+        uint32_t max_num_of_sectors = 0U;
+        uint32_t bank_2_start_address = 0U;
 
         // Sector sizes when 2 banks are used, in case of 1 bank, sizes have to be doubled
         const uint32_t sector_sizes_kb[MAX_NUM_SECT_2MB] = { 16U, 16U, 16U, 16U,
@@ -171,18 +167,19 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
 
                 // Find start sector
                 for (uint32_t i = 0U; i < max_num_of_sectors; ++i) {
-
                     if (flash_address == (BANK_1_START + temp_size)) {
                         start_sector = i;
                         pEraseInit.Banks = FLASH_BANK_1;
                         is_start_sector_in_first_bank = true;
-                        break;
                     }
 
                     if (flash_address == (bank_2_start_address + temp_size)) {
                         start_sector = i;
                         pEraseInit.Banks = FLASH_BANK_2;
                         is_start_sector_in_second_bank = true;
+                    }
+
+                    if ((is_start_sector_in_first_bank) || (is_start_sector_in_second_bank)) {
                         break;
                     }
 
@@ -290,6 +287,10 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
             pEraseInit.TypeErase    = FLASH_TYPEERASE_SECTORS;
             pEraseInit.VoltageRange = FLASH_VOLTAGE_RANGE_3;
         }
+#else
+        if (flash_address == 0U) {
+            // MISRA
+        }
 #endif
 
         if (success) {
@@ -309,6 +310,9 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
 bool
 FlashAdapter_blockErase(uint32_t address) {
     bool success = true;
+    if (address == 0U) {
+        // MISRA
+    }
     return success;
 }
 
@@ -316,13 +320,13 @@ FlashAdapter_blockErase(uint32_t address) {
 bool
 FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
-    uint64_t data = UINT64_MAX;
-
+    // cppcheck-suppress misra-c2012-12.4
+    uint64_t data = (uint64_t)UINT64_MAX;
 
     if (length % sizeof(uint64_t) == 0U ) {
-
-        for (uint32_t i = 0U; i < length / sizeof(uint64_t); ++i) {
+        for (uint32_t i = 0U; i < (length / sizeof(uint64_t)); ++i) {
             uint32_t memory_index = i * sizeof(uint64_t);
+            // cppcheck-suppress misra-c2012-17.7
             memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(uint64_t));
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, data);
 
@@ -331,30 +335,32 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
                 break;
             }
         }
-
     } else if (length < sizeof(uint64_t)) {
-
+        // cppcheck-suppress misra-c2012-17.7
         memcpy((void*)&data, (void*)buffer, length);
         HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address, data);
         if (status != HAL_OK) {
             success = false;
         }
+    } else {
+        // MISRA
     }
 
     return success;
 }
 
-#elif STM32H7xx
+#elif defined(STM32H7xx)
 bool
 FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
-    uint16_t flash_word = 32U; //32 bytes (256 bits)
     uint32_t memory_index = 0U;
+    uint32_t length_program = length;
 
-    if ((length / flash_word) != 0U ) {
+    if ((length_program / FLASH_WORD_SIZE) != 0U ) {
 
-        for (uint32_t i = 0U; i < length / flash_word; ++i) {
-            memory_index = i * flash_word;
+        for (uint32_t i = 0U; i < (length_program / FLASH_WORD_SIZE); ++i) {
+            memory_index = i * FLASH_WORD_SIZE;
+            // cppcheck-suppress misra-c2012-11.4
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)&buffer[memory_index]);
 
             if (status != HAL_OK) {
@@ -363,16 +369,18 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
             }
         }
 
-        length = length % flash_word;
-        if (length > 0U) {
-            memory_index += flash_word;
+        length_program = length_program % FLASH_WORD_SIZE;
+        if (length_program > 0U) {
+            memory_index += FLASH_WORD_SIZE;
         }
     }
 
-    if ((length != 0U) && (length < flash_word)) {
+    if ((length_program != 0U) && (length_program < FLASH_WORD_SIZE)) {
 
-        uint8_t data[32] = {0U};
-        memcpy((void*)data, (void*)&buffer[memory_index], length);
+        uint8_t data[32];
+        // cppcheck-suppress misra-c2012-17.7
+        memcpy((void*)data, (void*)&buffer[memory_index], length_program);
+        // cppcheck-suppress misra-c2012-11.4
         HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)data);
         if (status != HAL_OK) {
             success = false;
@@ -382,20 +390,21 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     return success;
 }
 
-#elif STM32F7xx
+#elif defined(STM32F7xx)
 bool
 FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
     uint32_t memory_index = 0U;
     uint32_t data;
+    uint32_t length_program = length;
 
-    if ((length / FLASH_WORD_SIZE) != 0U) {
+    if ((length_program / FLASH_WORD_SIZE) != 0U) {
 
-        for (uint32_t i = 0U; i < (length / FLASH_WORD_SIZE); ++i) {
+        for (uint32_t i = 0U; i < (length_program / FLASH_WORD_SIZE); ++i) {
 
             memory_index = i * FLASH_WORD_SIZE;
-
-            memcpy(&data, buffer + memory_index, sizeof(data));
+            // cppcheck-suppress misra-c2012-17.7
+            memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(data));
 
             HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address + memory_index, (uint64_t) data);
 
@@ -405,16 +414,16 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
             }
         }
 
-        length = length % FLASH_WORD_SIZE;
+        length_program = length_program % FLASH_WORD_SIZE;
 
-        if (length > 0) {
+        if (length_program > 0U) {
             memory_index += FLASH_WORD_SIZE;
         }
     }
 
-    if ((length != 0) && (success)) {
+    if ((length_program != 0U) && (success)) {
 
-        for (uint32_t i = 0U; i < length; ++i) {
+        for (uint32_t i = 0U; i < length_program; ++i) {
 
             HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, address + memory_index + i, (uint64_t) buffer[memory_index + i]);
 
@@ -432,8 +441,9 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
 bool
 FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
-
-    memcpy(buffer, (void*)address, length);
+    // cppcheck-suppress misra-c2012-11.6
+    // cppcheck-suppress misra-c2012-17.7
+    memcpy((void*)buffer, (void*)address, length);
 
     return success;
 }
@@ -446,12 +456,14 @@ FlashAdapter_finish(void) {
 
 #ifdef STM32L4xx
     status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS_FLASH, MAGIC_KEY_VALUE);
-#elif STM32H7xx
-    uint8_t data[32] = {0U};
+#elif defined(STM32H7xx)
+    uint8_t data[32];
     uint64_t magic_key_value = MAGIC_KEY_VALUE;
+    // cppcheck-suppress misra-c2012-17.7
     memcpy((void*)data, (void*)&magic_key_value, sizeof(uint64_t));
+    // cppcheck-suppress misra-c2012-11.4
     status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS_FLASH, (uint32_t)data);
-#elif STM32F7xx
+#elif defined(STM32F7xx)
     uint32_t least_significant_data = (uint32_t) MAGIC_KEY_VALUE;
     uint32_t most_significant_data = (uint32_t) (MAGIC_KEY_VALUE >> 32U);
 
@@ -517,7 +529,7 @@ FlashAdapter_setReadProtection(bool enable) {
 
     HAL_FLASHEx_OBGetConfig(&ob_sturct);
 
-    if (enable && ob_sturct.RDPLevel == OB_RDP_LEVEL_0) {
+    if ((enable) && (ob_sturct.RDPLevel == OB_RDP_LEVEL_0)) {
         ob_sturct.RDPLevel = OB_RDP_LEVEL_1;
         status = ActivateProtection(&ob_sturct, 0U, 0U);
 
@@ -529,8 +541,11 @@ FlashAdapter_setReadProtection(bool enable) {
     if (status == HAL_OK) {
         success = true;
     }
-
-#endif //STM32H7xx
+#else
+    if (enable) {
+        // MISRA
+    }
+#endif
 
     return success;
 }
@@ -547,7 +562,7 @@ FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t prot
 
     HAL_FLASHEx_OBGetConfig(&ob_sturct);
 
-    if (!enable && ob_sturct.RDPLevel == OB_RDP_LEVEL_0) {
+    if ((!enable) && (ob_sturct.RDPLevel == OB_RDP_LEVEL_0)) {
         ob_sturct.RDPLevel = OB_RDP_LEVEL_1;
         ob_sturct.OptionType = OPTIONBYTE_RDP;
         status = ActivateProtection(&ob_sturct, 0U, 0U);
@@ -560,30 +575,33 @@ FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t prot
         ob_sturct.OptionType = OPTIONBYTE_RDP | OPTIONBYTE_PCROP;
         status = ActivateProtection(&ob_sturct, 0x0803FFFFUL, 0x08020000UL);
     }
+#endif
 
-#endif //STM32H7xx
+    if ((enable) && (protect_address_start == 0U) && (protect_address_end == 0U)) {
+        // MISRA
+    }
 
     return success;
 }
 
 HAL_StatusTypeDef
-ActivateProtection(FLASH_OBProgramInitTypeDef* ob_sturct, uint32_t protect_address_start, uint32_t protect_address_end) {
+ActivateProtection(FLASH_OBProgramInitTypeDef* ob_struct, uint32_t protect_address_start, uint32_t protect_address_end) {
 
     HAL_StatusTypeDef status = HAL_ERROR;
 
 #ifdef STM32H7xx
 
     /* Bank 1 */
-    ob_sturct->Banks    = FLASH_BANK_1;
-    ob_sturct->PCROPConfig = OB_PCROP_RDP_ERASE;
-    ob_sturct->PCROPStartAddr = protect_address_start;
-    ob_sturct->PCROPEndAddr   = protect_address_end;
+    ob_struct->Banks    = FLASH_BANK_1;
+    ob_struct->PCROPConfig = OB_PCROP_RDP_ERASE;
+    ob_struct->PCROPStartAddr = protect_address_start;
+    ob_struct->PCROPEndAddr   = protect_address_end;
 
     status = HAL_FLASH_Unlock();
     status |= HAL_FLASH_OB_Unlock();
 
     if (status == HAL_OK) {
-        status = HAL_FLASHEx_OBProgram(ob_sturct);
+        status = HAL_FLASHEx_OBProgram(ob_struct);
     }
 
     if (status == HAL_OK) {
@@ -593,8 +611,11 @@ ActivateProtection(FLASH_OBProgramInitTypeDef* ob_sturct, uint32_t protect_addre
     if (status == HAL_OK) {
         HAL_FLASH_OB_Lock();
     }
-
-#endif //STM32H7xx
+#else
+    if ((ob_struct == NULL) && (protect_address_start == 0U) && (protect_address_end == 0U)) {
+        // MISRA
+    }
+#endif
 
     return status;
 }
