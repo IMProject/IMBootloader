@@ -19,8 +19,9 @@ Each MCU has its own [IMLedBlink](https://github.com/IMProject/IMLedBlink) examp
 
 #### Currently supported boards:
 
-| Board                                                                | MCU      |
-| -------------------------------------------------------------------- |:--------:|
-| [Mateksys h743-slim](http://www.mateksys.com/?portfolio=h743-slim)   |STM32H7xx |
+| Board                                                                      |MCU       |
+| -------------------------------------------------------------------------- |:--------:|
+| [Mateksys h743-slim](http://www.mateksys.com/?portfolio=h743-slim)         |STM32H7xx |
+| [Pixhawk 4](https://docs.px4.io/master/en/flight_controller/pixhawk4.html) |STM32F7xx |
 
 In the future, we will add as many as possible MCUs. 
