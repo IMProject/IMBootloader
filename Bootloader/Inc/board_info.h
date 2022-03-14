@@ -67,9 +67,11 @@ enum secureHash_ENUM {
 #define BASE64_MANUFACTURER_ID (const char*)("Qj9FKEgrTWJRZVRoV21acTR0N3cheiVDKkYpSkBOY1I=") // Size must be equal to 44 bytes (Base64 format)
 
 #ifdef MATEK_H743_SLIM
-#define PRODUCT_TYPE    (const char*)("IMProject_demo-matek_H7_slim") // Maximum allowed size is 100 bytes
+#define PRODUCT_TYPE    (const char*)("IMProject_demo-matek_H7_slim")   // Maximum allowed size is 100 bytes
+#elif defined(PIXHAWK4)
+#define PRODUCT_TYPE    (const char*)("IMProject_demo-pixhawk4")        // Maximum allowed size is 100 bytes
 #else
-#define PRODUCT_TYPE    (const char*)("Product_type_name-board_name") // Maximum allowed size is 100 bytes
+#define PRODUCT_TYPE    (const char*)("Product_type_name-board_name")   // Maximum allowed size is 100 bytes
 #endif
 
 static_assert(strlen((const char*)BASE64_MANUFACTURER_ID) == BASE64_MANUFACTURER_ID_SIZE, "MANUFACTURER_ID is wrong size");
