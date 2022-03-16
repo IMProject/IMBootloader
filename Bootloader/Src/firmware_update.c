@@ -57,6 +57,7 @@
 
 #define BUFFER_SIZE     (2048U)         //!< Bootloader buffer size
 #define CRC_SIZE        (4U)            //!< CRC size in bytes (CRC32)
+#define CRC_INIT_VALUE  (0xFFFFFFFFU)   //!< CRC init value
 #define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
 #define TX_BUFFER_SIZE  (1000U)         //!< TX buffer maximum size
 
@@ -92,7 +93,7 @@ static fwUpdateState_E s_update_state = fwUpdateState_IDLE;
 static uint8_t s_hashed_board_key[HASHED_BOARD_ID_SIZE];
 static uint8_t s_fw_buffer[BUFFER_SIZE];
 
-static uint32_t s_crc_calculated = 0xFFFFFFFF;  //!< First (init) CRC value
+static uint32_t s_crc_calculated = CRC_INIT_VALUE;
 
 void
 FirmwareUpdate_init(void) {
@@ -155,8 +156,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 #else
                 memcpy(tx_buffer, s_hashed_board_key, HASHED_BOARD_ID_SIZE);
 #endif
-                uint32_t crc = CalculateCRC32(tx_buffer, HASHED_BOARD_ID_SIZE, s_crc_calculated, false, false);
-                crc ^= XOR_CRC_VALUE;
+                uint32_t crc = CalculateCRC32(tx_buffer, HASHED_BOARD_ID_SIZE, s_crc_calculated, XOR_CRC_VALUE, false, false, true);
                 Utils_Serialize32BE(&tx_buffer[HASHED_BOARD_ID_SIZE], crc);
                 FirmwareUpdate_sendMessage(tx_buffer, HASHED_BOARD_ID_SIZE + CRC_SIZE);
             } else if (0 == strcmp((char*)buf, GET_BOARD_INFO_JSON_CMD)) {
@@ -325,7 +325,7 @@ FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length) {
         success = FlashAdapter_readBytes(address, readout_buffer, flash_length);
 
         if (success) {
-            s_crc_calculated = CalculateCRC32(readout_buffer, flash_length, s_crc_calculated, false, false);
+            s_crc_calculated = CalculateCRC32(readout_buffer, flash_length, s_crc_calculated, 0U, false, false, false);
             for (uint32_t i = 0U; (success) && (i < flash_length); ++i) {
                 if (write_buffer[i] == readout_buffer[i]) {
                     success = true;
@@ -397,8 +397,7 @@ FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size) {
         size_t last_char = strlen((char*)string);
 
         if (size >= last_char) {
-            uint32_t crc = CalculateCRC32(&string[0], last_char, 0xFFFFFFFFU, false, false);
-            crc ^= XOR_CRC_VALUE;
+            uint32_t crc = CalculateCRC32(&string[0], last_char, CRC_INIT_VALUE, XOR_CRC_VALUE, false, false, true);
             Utils_Serialize32BE(&string[last_char], crc);
             FirmwareUpdate_sendMessage(string, last_char + sizeof(crc));
             success = true;
