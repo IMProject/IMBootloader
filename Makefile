@@ -24,7 +24,6 @@ export TAG := $(shell git tag --sort=committerdate | tail -1)
 
 export COMMON_SRCS =  \
 Bootloader/Src/main.c \
-Bootloader/Src/crc32.c \
 Bootloader/Src/firmware_update.c \
 Bootloader/Src/board_info.c \
 Bootloader/Adapters/Src/gpio_adapter.c \
@@ -37,6 +36,7 @@ Bootloader/STM32/Src/usbd_desc.c \
 Bootloader/STM32/Src/usbd_cdc_if.c \
 Bootloader/Utility/Src/version.c \
 Bootloader/Utility/Src/utils.c \
+Bootloader/Utility/Src/crc32.c \
 Bootloader/Utility/Src/base64.c \
 Bootloader/Utility/Src/json.c \
 Monocypher/src/monocypher.c \
