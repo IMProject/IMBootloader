@@ -1,3 +1,6 @@
 [submodule "Monocypher"]
 	path = Monocypher
 	url = git@github.com:LoupVaillant/Monocypher.git
+[submodule "Bootloader/Utility"]
+	path = Bootloader/Utility
+	url = git@github.com:IMProject/IMUtility.git
