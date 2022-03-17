@@ -44,7 +44,7 @@
 /* 32 bytes fake board id. If enabled, board and manufacturer id communication will be skipped. */
 //#define FAKE_BOARD_ID  "NOT_SECURED_MAGIC_STRING_1234567"
 
-enum secureHash_ENUM {
+typedef enum secureHash_ENUM {
     BLAKE2B = 0,
     SHA256,
     MD5

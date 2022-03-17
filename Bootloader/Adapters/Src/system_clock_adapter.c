@@ -81,7 +81,7 @@ SystemClock_Config(void) {
     }
 }
 
-#elif STM32H7xx
+#elif defined(STM32H7xx)
 void
 SystemClock_Config(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -140,7 +140,7 @@ SystemClock_Config(void) {
     */
     HAL_PWREx_EnableUSBVoltageDetector();
 }
-#elif STM32F7xx
+#elif defined(STM32F7xx)
 void
 SystemClock_Config(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
