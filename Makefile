@@ -100,7 +100,8 @@ cppcheck:
 	
 misra:
 	$(call colorecho,'Checking MISRA C:2012 with cppcheck')
-	@cppcheck cppcheck $(COMMON_INCS) --force --addon=misra.py --inline-suppr --error-exitcode=1 Bootloader
+	@cppcheck cppcheck $(COMMON_INCS) Bootloader --force --addon=misra.py --inline-suppr --error-exitcode=1 \
+	-i Bootloader/Utility
 #
 # Bootloaders to build
 #
