@@ -53,7 +53,7 @@ HashAdapter_getHashedBoardId(uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE]) {
         switch (HASH_BOARD_ID_ALGORITHM) {
 
             case (BLAKE2B):
-                crypto_blake2b_general(hashed_board_id, HASHED_BOARD_ID_SIZE, manufacturer_id, MANUFACTURER_ID_SIZE, (uint8_t*)uid, 3 * sizeof(uint32_t));
+                crypto_blake2b_general(hashed_board_id, HASHED_BOARD_ID_SIZE, manufacturer_id, MANUFACTURER_ID_SIZE, (uint8_t*)uid, 3U * sizeof(uint32_t));
                 break;
 
             case (SHA256):
@@ -70,7 +70,7 @@ HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id) {
 
     bool success = false;
 
-    uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE] = {0U};
+    uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE];
     HashAdapter_getHashedBoardId(hashed_board_id);
     int32_t ret = Base64_encode(hashed_board_id, HASHED_BOARD_ID_SIZE, (char*)b64_hashed_board_id, BASE64_HASHED_BOARD_ID_SIZE);
 
@@ -86,6 +86,7 @@ BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id) {
     bool success = false;
 
     size_t manufacturer_id_size = MANUFACTURER_ID_SIZE;
+    // cppcheck-suppress misra-c2012-11.8
     int32_t ret = Base64_decode((char*)BASE64_MANUFACTURER_ID, BASE64_MANUFACTURER_ID_SIZE, manufacturer_id, &manufacturer_id_size);
 
     if (0 == ret) {

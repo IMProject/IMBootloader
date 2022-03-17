@@ -32,8 +32,8 @@
  *
  ****************************************************************************/
 
-#ifndef __MAIN_H
-#define __MAIN_H
+#ifndef MAIN_H_
+#define MAIN_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,10 +48,10 @@ extern "C" {
 #ifdef STM32L4xx
 #include "stm32l4xx.h"
 #include "stm32l4xx_hal.h"
-#elif STM32H7xx
+#elif defined(STM32H7xx)
 #include "stm32h7xx.h"
 #include "stm32h7xx_hal.h"
-#elif STM32F7xx
+#elif defined(STM32F7xx)
 #include "stm32f7xx.h"
 #include "stm32f7xx_hal.h"
 #endif
@@ -62,6 +62,6 @@ void Error_Handler(void);
 }
 #endif
 
-#endif /* __MAIN_H */
+#endif /* MAIN_H_ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

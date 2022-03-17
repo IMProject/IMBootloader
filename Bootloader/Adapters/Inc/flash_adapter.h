@@ -54,17 +54,17 @@
 #define FLASH_FIRMWARE_ADDRESS  (0x08008000UL)                      //!< Address where firmware will be written
 #define MAGIC_KEY_ADDRESS_FLASH (0x08007800UL)                      //!< Address in internal flash for communication between bootloader and firmware
 #define MAGIC_KEY_ADDRESS_RAM   (0x20000000UL)                      //!< Address in ram for communication between bootloader and firmware
-#elif STM32H7xx
+#elif defined(STM32H7xx)
 #define FLASH_FIRMWARE_ADDRESS  (0x08020000UL)                      //!< Address where firmware will be written
 #define MAGIC_KEY_ADDRESS_FLASH (0x080202A0UL)                      //!< Address in internal flash for communication between bootloader and firmware
 #define MAGIC_KEY_ADDRESS_RAM   (0x38000000UL)                      //!< Address in ram for communication between bootloader and firmware
-#elif STM32F7xx
+#elif defined(STM32F7xx)
 #define FLASH_FIRMWARE_ADDRESS  (0x08020000UL)                      //!< Address where firmware will be written
 #define MAGIC_KEY_ADDRESS_FLASH (0x08020200UL)                      //!< Address in internal flash for communication between bootloader and firmware
 #define MAGIC_KEY_ADDRESS_RAM   (0x20000000UL)                      //!< Address in ram for communication between bootloader and firmware
 #endif
 
-#define MAGIC_KEY_VALUE         (0x28101987A5B5C5D5)                //!< Hex value if written in flash bootloader will jump to firmware
+#define MAGIC_KEY_VALUE         (0x28101987A5B5C5D5UL)              //!< Hex value if written in flash bootloader will jump to firmware
 #define SIGNATURE_MAGIC_KEY     (0xDEC0DE5528101987)                //!< Hex value if the firmware is signed with bootloader will accept it
 
 
