@@ -37,6 +37,8 @@
 #define BOOTLOADER_INC_GPIO_ADAPTER_H_
 
 void GpioAdapter_init(void);
-void GpioAdapter_ledToggle(void);
+void GpioAdapter_led1Toggle(void);
+void GpioAdapter_led1On(void);
+void GpioAdapter_led1Off(void);
 
 #endif /* BOOTLOADER_INC_GPIO_ADAPTER_H_ */
