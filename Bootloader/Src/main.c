@@ -63,13 +63,13 @@ main(void) {
     if (enter_bootloader_loop) {
 
         MX_USB_DEVICE_Init();
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_ON);
+        GpioAdapter_led1On();
 
         while (FirmwareUpdate_bootloaderLoop(0U)) {
             //wait here until flashing is finished
         }
 
-        HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
+        GpioAdapter_led1Off();
         HAL_NVIC_SystemReset();
     }
 

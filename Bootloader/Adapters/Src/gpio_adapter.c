@@ -73,10 +73,24 @@ GpioAdapter_init(void) {
 
 
 void
-GpioAdapter_ledToggle(void) {
+GpioAdapter_led1Toggle(void) {
+#if defined(LED1_Pin) && defined(LED1_Port) && defined(LED_ON)
     static GPIO_PinState pinSet = LED_ON;
-
     pinSet ^= 1;
+    HAL_GPIO_WritePin(LED1_Port, LED1_Pin, pinSet);
+#endif
+}
 
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, pinSet);
+void
+GpioAdapter_led1On(void) {
+#if defined(LED1_Pin) && defined(LED1_Port) && defined(LED_ON)
+    HAL_GPIO_WritePin(LED1_Port, LED1_Pin, LED_ON);
+#endif
+}
+
+void
+GpioAdapter_led1Off(void) {
+#if defined(LED1_Pin) && defined(LED1_Port) && defined(LED_OFF)
+    HAL_GPIO_WritePin(LED1_Port, LED1_Pin, LED_OFF);
+#endif
 }

@@ -357,7 +357,7 @@ FirmwareUpdate_bootloaderLoop(const uint32_t timeout) {
 
     if (s_is_flashing) {
         HAL_Delay(100);
-        GpioAdapter_ledToggle();
+        GpioAdapter_led1Toggle();
     }
 
     if (s_exit_loop) {
