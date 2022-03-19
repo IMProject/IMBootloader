@@ -50,11 +50,7 @@ typedef enum secureHash_ENUM {
     MD5
 } secureHash_E;
 
-#ifndef stm32l4xx //Monocypher can't fit into the current bootloader size
 #define HASH_BOARD_ID_ALGORITHM         BLAKE2B
-#else
-#define HASH_BOARD_ID_ALGORITHM         SHA256
-#endif
 
 #define HASHED_BOARD_ID_SIZE            32U
 #define BASE64_HASHED_BOARD_ID_SIZE     44U

@@ -52,7 +52,7 @@
 
 #ifdef STM32L4xx
 #define FLASH_FIRMWARE_ADDRESS  (0x08008000UL)                      //!< Address where firmware will be written
-#define MAGIC_KEY_ADDRESS_FLASH (0x08007800UL)                      //!< Address in internal flash for communication between bootloader and firmware
+#define MAGIC_KEY_ADDRESS_FLASH (0x0800F800UL)                      //!< Address in internal flash for communication between bootloader and firmware
 #define MAGIC_KEY_ADDRESS_RAM   (0x20000000UL)                      //!< Address in ram for communication between bootloader and firmware
 #elif defined(STM32H7xx)
 #define FLASH_FIRMWARE_ADDRESS  (0x08020000UL)                      //!< Address where firmware will be written
