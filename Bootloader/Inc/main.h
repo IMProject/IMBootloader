@@ -64,4 +64,3 @@ void Error_Handler(void);
 
 #endif /* MAIN_H_ */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

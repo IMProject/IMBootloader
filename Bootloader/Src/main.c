@@ -39,8 +39,7 @@
 #include "usbd_cdc_if.h"
 #include "firmware_update.h"
 
-typedef  void (*pFunction)(void);
-pFunction JumpToApplication;
+typedef void (*pFunction)(void);
 
 int
 main(void) {
@@ -49,13 +48,16 @@ main(void) {
     GpioAdapter_init();
     FirmwareUpdate_init();
     bool enter_bootloader_loop = false;
+    pFunction JumpToApplication;
 
     // Check RAM KEY
+    // cppcheck-suppress misra-c2012-11.4
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_RAM == MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
 
     // Check FLASH KEY
+    // cppcheck-suppress misra-c2012-11.4
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_FLASH != MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
@@ -90,8 +92,9 @@ main(void) {
     SysTick->VAL  = 0;
 
     SCB->VTOR = FLASH_FIRMWARE_ADDRESS;
-
-    JumpToApplication = (pFunction) (*(__IO uint32_t*) (FLASH_FIRMWARE_ADDRESS + 4));
+    // cppcheck-suppress misra-c2012-11.4
+    JumpToApplication = (pFunction) (*(__IO uint32_t*) (FLASH_FIRMWARE_ADDRESS + 4U));
+    // cppcheck-suppress misra-c2012-11.4
     __set_MSP(*(__IO uint32_t*) FLASH_FIRMWARE_ADDRESS);
     JumpToApplication();
 

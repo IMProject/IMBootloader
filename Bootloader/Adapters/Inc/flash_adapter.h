@@ -47,7 +47,7 @@
 
 #else
 #define FIRMWARE_FLASH_SIZE_LIMIT (FLASH_SIZE - 0x8000u)    //!< Max available flash size for firmware. Flash bank size - FW start address
-#define PACKET_SIZE               256                       //!< amount of memory for collecting data from flashing application. Value is synchronized with Flasher APP.
+#define PACKET_SIZE               (256U)                    //!< amount of memory for collecting data from flashing application. Value is synchronized with Flasher APP.
 #endif
 
 #ifdef STM32L4xx
