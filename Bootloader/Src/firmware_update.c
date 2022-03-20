@@ -32,7 +32,8 @@
  *
  ****************************************************************************/
 
-#include <firmware_update.h>
+#include "firmware_update.h"
+
 #include <string.h>
 
 #include "utils.h"
@@ -61,7 +62,7 @@
 #define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
 #define TX_BUFFER_SIZE  (1000U)         //!< TX buffer maximum size
 
-/* Enumeration for bootloader state machine*/
+//! Enumeration for bootloader state machine
 typedef enum fwUpdateState_ENUM {
     fwUpdateState_IDLE,
     fwUpdateState_CMD_ACTION_SELECT,
@@ -73,14 +74,8 @@ typedef enum fwUpdateState_ENUM {
 } fwUpdateState_E;
 
 static bool FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size);
-inline static uint8_t FirmwareUpdate_sendMessage(uint8_t* data, uint16_t length);
-inline static bool FirmwareUpdate_hasSignature(const uint8_t* buffer);
-
-static uint8_t im_bootloader[] = "IMBootloader";    //!< Used for IMFlasher application to verify bootloader
-static uint8_t ack_pack[]      = "OK";              //! ACK OK packet for IMFlasher
-static uint8_t no_ack_pack[]   = "NOK";             //! ACK NOK packet for IMFlasher
-static uint8_t true_str[]      = "TRUE";
-static uint8_t false_str[]     = "FALSE";
+inline static bool FirmwareUpdate_sendMessage(uint8_t* data, uint16_t length);
+inline static bool FirmwareUpdate_hasSignature(const uint64_t* buffer);
 
 static bool s_exit_loop = false;        //!< Exit flash loop if needed
 static bool s_rdp_enable_flag = false;  //!< Enable RDP flag
@@ -88,11 +83,7 @@ static bool s_rdp_disable_flag = false; //!< Disable RDP flag
 static bool s_is_flashing = false;      //!< Flash for main loop indicating flashing state
 static bool s_is_flashed = false;       //!< Flash for main loop indicating end of the flashing process
 
-static fwUpdateState_E s_update_state = fwUpdateState_IDLE;
-
 static uint8_t s_hashed_board_key[HASHED_BOARD_ID_SIZE];
-static uint8_t s_fw_buffer[BUFFER_SIZE];
-
 static uint32_t s_crc_calculated = CRC_INIT_VALUE;
 
 void
@@ -104,11 +95,23 @@ FirmwareUpdate_init(void) {
 
 bool
 FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
+    // cppcheck-suppress misra-c2012-7.4
+    static uint8_t im_bootloader[] = "IMBootloader";
+    // cppcheck-suppress misra-c2012-7.4
+    static uint8_t ack_pack[]      = "OK";
+    // cppcheck-suppress misra-c2012-7.4
+    static uint8_t no_ack_pack[]   = "NOK";
+    // cppcheck-suppress misra-c2012-7.4
+    static uint8_t true_str[]      = "TRUE";
+    // cppcheck-suppress misra-c2012-7.4
+    static uint8_t false_str[]     = "FALSE";
 
+    static fwUpdateState_E s_update_state = fwUpdateState_IDLE;
+    uint8_t fw_buffer[BUFFER_SIZE];
     static uint32_t firmware_size = 0U;
     uint32_t crc_received;
     static uint32_t firmware_size_counter = 0U;
-    uint32_t flash_lenght;
+    uint32_t flash_length;
     bool success = true;
     uint32_t package_index;
     uint8_t tx_buffer[TX_BUFFER_SIZE];
@@ -116,12 +119,16 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
     if (!s_is_flashing) {
 
         if (0 == strcmp((char*)buf, SW_TYPE_STR)) {
-            FirmwareUpdate_sendMessage(im_bootloader, sizeof(im_bootloader));
-            s_update_state = fwUpdateState_CMD_ACTION_SELECT;
+            success = FirmwareUpdate_sendMessage(im_bootloader, sizeof(im_bootloader));
+            if (success) {
+                s_update_state = fwUpdateState_CMD_ACTION_SELECT;
+            } else {
+                s_update_state = fwUpdateState_IDLE;
+            }
 
         } else if (0 == strcmp((char*)buf, DISCONNECT_CMD)) {
-            FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
             s_update_state = fwUpdateState_IDLE;
+            success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
 
         } else {
             // Do nothing
@@ -137,16 +144,17 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             if (0 == strcmp((char*)buf, VERIFY_FLASHER_CMD)) {
                 s_update_state = fwUpdateState_RECEIVE_FIRMWARE_SIZE;
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
 
             } else if (0 == strcmp((char*)buf, CHECK_SINGATURE_CMD)) {
                 s_update_state = fwUpdateState_CHECK_SIGNATURE;
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
 
             } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
-
-                Version_getData(tx_buffer, sizeof(tx_buffer));
-                FirmwareUpdate_sendMessage(tx_buffer, strlen((char*)tx_buffer));
+                success = Version_getData(tx_buffer, sizeof(tx_buffer));
+                if (success) {
+                    success = FirmwareUpdate_sendMessage(tx_buffer, strlen((char*)tx_buffer));
+                }
 
             } else if (0 == strcmp((char*)buf, GET_BOARD_ID_CMD)) {
 
@@ -154,45 +162,49 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
                 memcpy(tx_buffer, FAKE_BOARD_ID, HASHED_BOARD_ID_SIZE);
 
 #else
+                // cppcheck-suppress misra-c2012-17.7
                 memcpy(tx_buffer, s_hashed_board_key, HASHED_BOARD_ID_SIZE);
 #endif
                 uint32_t crc = CalculateCRC32(tx_buffer, HASHED_BOARD_ID_SIZE, s_crc_calculated, XOR_CRC_VALUE, false, false, true);
                 Utils_Serialize32BE(&tx_buffer[HASHED_BOARD_ID_SIZE], crc);
-                FirmwareUpdate_sendMessage(tx_buffer, HASHED_BOARD_ID_SIZE + CRC_SIZE);
-            } else if (0 == strcmp((char*)buf, GET_BOARD_INFO_JSON_CMD)) {
+                success = FirmwareUpdate_sendMessage(tx_buffer, HASHED_BOARD_ID_SIZE + CRC_SIZE);
 
-                BoardInfo_getDataJson(tx_buffer, sizeof(tx_buffer));
-                FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
+            } else if (0 == strcmp((char*)buf, GET_BOARD_INFO_JSON_CMD)) {
+                if (BoardInfo_getDataJson(tx_buffer, sizeof(tx_buffer))) {
+                    // MISRA
+                }
+                success = FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
 
             } else if (0 == strcmp((char*)buf, GET_VERSION_JSON_CMD)) {
-
-                Version_getDataJson(tx_buffer, sizeof(tx_buffer));
-                FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
+                success = Version_getDataJson(tx_buffer, sizeof(tx_buffer));
+                if (success) {
+                    success = FirmwareUpdate_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
+                }
 
             } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
                 s_update_state = fwUpdateState_IDLE;
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
-                memset((void*)MAGIC_KEY_ADDRESS_RAM, 0x0, sizeof(uint64_t));
+                // cppcheck-suppress misra-c2012-11.6
+                // cppcheck-suppress misra-c2012-17.7
+                memset((void*)MAGIC_KEY_ADDRESS_RAM, 0, sizeof(uint64_t));
                 s_exit_loop = true;
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
 
             } else if (0 == strcmp((char*)buf, IS_FW_PROTECTED_CMD)) {
-
                 bool is_flash_protected = FlashAdapter_isFlashRDPProtected();
 
                 if (is_flash_protected) {
-                    FirmwareUpdate_sendMessage(true_str, sizeof(true_str));
-
+                    success = FirmwareUpdate_sendMessage(true_str, sizeof(true_str));
                 } else {
-                    FirmwareUpdate_sendMessage(false_str, sizeof(false_str));
+                    success = FirmwareUpdate_sendMessage(false_str, sizeof(false_str));
                 }
 
             } else if (0 == strcmp((char*)buf, ENABLE_FW_PROTECTION_CMD)) {
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
                 s_rdp_enable_flag = true;
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
 
             } else if (0 == strcmp((char*)buf, DISABLE_FW_PROTECTION_CMD)) {
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
                 s_rdp_disable_flag = true;
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
 
             } else {
                 // NO ACK
@@ -200,32 +212,34 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             break;
 
-        case fwUpdateState_CHECK_SIGNATURE:
-
-            success = FirmwareUpdate_hasSignature(buf);
+        case fwUpdateState_CHECK_SIGNATURE: {
+            uint64_t signature;
+            // cppcheck-suppress misra-c2012-17.7
+            memcpy((void*)&signature, (void*)buf, sizeof(uint64_t));
+            success = FirmwareUpdate_hasSignature(&signature);
             s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 
             if (success) {
                 s_is_flashing = true;
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
                 s_is_flashing = false;
-                FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
+                success = FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
             }
 
             break;
-
+        }
         case fwUpdateState_RECEIVE_FIRMWARE_SIZE:
 
             firmware_size = Utils_StringToInt(buf, length);
 
             if (firmware_size <= FIRMWARE_FLASH_SIZE_LIMIT) {
                 s_update_state = fwUpdateState_ERASE;
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
                 s_is_flashing = false;
                 s_update_state = fwUpdateState_CMD_ACTION_SELECT;
-                FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
+                success = FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
             }
 
             break;
@@ -236,11 +250,11 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             if (success) {
                 s_update_state = fwUpdateState_DOWNLOADING_AND_FLASHING;
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
                 s_is_flashing = false;
                 s_update_state = fwUpdateState_CMD_ACTION_SELECT;
-                FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
+                success = FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
             }
 
             break;
@@ -248,35 +262,35 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
         case fwUpdateState_DOWNLOADING_AND_FLASHING:
 
             package_index = firmware_size_counter % PACKET_SIZE;
-
-            memcpy(&(s_fw_buffer[package_index]), buf, length);
+            // cppcheck-suppress misra-c2012-17.7
+            memcpy(&(fw_buffer[package_index]), buf, length);
             firmware_size_counter += length;
 
             package_index = firmware_size_counter % PACKET_SIZE;
 
             if ((0u == package_index) && (firmware_size != firmware_size_counter)) {
-                success = FirmwareUpdate_flash(&(s_fw_buffer[0]), PACKET_SIZE);
+                success = FirmwareUpdate_flash(&(fw_buffer[0]), PACKET_SIZE);
                 if (success) {
-                    FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
+                    success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
                 } else {
-                    FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
                     s_is_flashing = false;
                     s_update_state = fwUpdateState_CMD_ACTION_SELECT;
+                    success = FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
                 }
-            } else if (firmware_size == firmware_size_counter) {
 
-                flash_lenght = (firmware_size_counter % PACKET_SIZE);
-                if (flash_lenght == 0u) {
-                    flash_lenght = PACKET_SIZE;
+            } else if (firmware_size == firmware_size_counter) {
+                flash_length = (firmware_size_counter % PACKET_SIZE);
+                if (flash_length == 0u) {
+                    flash_length = PACKET_SIZE;
                 }
-                success = FirmwareUpdate_flash(&(s_fw_buffer[0]), flash_lenght);
+                success = FirmwareUpdate_flash(&(fw_buffer[0]), flash_length);
                 if (success) {
-                    FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
                     s_update_state = fwUpdateState_CRC;
+                    success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
                 } else {
-                    FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
                     s_is_flashing = false;
                     s_update_state = fwUpdateState_CMD_ACTION_SELECT;
+                    success = FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
                 }
             } else {
                 // Keep collecting
@@ -289,10 +303,10 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             crc_received = Utils_StringToInt(buf, length);
             s_crc_calculated ^= XOR_CRC_VALUE;
             if (crc_received == s_crc_calculated) {
-                FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
                 s_is_flashed  = true;
+                success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
-                FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
+                success = FirmwareUpdate_sendMessage(no_ack_pack, sizeof(no_ack_pack));
             }
             s_is_flashing = false;
             s_update_state = fwUpdateState_IDLE;
@@ -314,22 +328,21 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 bool
 FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length) {
     bool success = false;
-    static uint32_t index = 0U;
-    uint32_t address;
+    // cppcheck-suppress misra-c2012-18.8
     uint8_t readout_buffer[PACKET_SIZE];
+    static uint32_t index = 0U;
+    const uint32_t address_addition = index * PACKET_SIZE;
+    uint64_t address = FLASH_FIRMWARE_ADDRESS + address_addition;
 
-    address = FLASH_FIRMWARE_ADDRESS + (index * PACKET_SIZE);
-    success = FlashAdapter_program(address, write_buffer, flash_length);
+    success = FlashAdapter_program((uint32_t)address, write_buffer, flash_length);
 
     if (success) {
-        success = FlashAdapter_readBytes(address, readout_buffer, flash_length);
+        success = FlashAdapter_readBytes((uint32_t)address, readout_buffer, flash_length);
 
         if (success) {
             s_crc_calculated = CalculateCRC32(readout_buffer, flash_length, s_crc_calculated, 0U, false, false, false);
             for (uint32_t i = 0U; (success) && (i < flash_length); ++i) {
-                if (write_buffer[i] == readout_buffer[i]) {
-                    success = true;
-                } else {
+                if (write_buffer[i] != readout_buffer[i]) {
                     success = false;
                 }
             }
@@ -343,11 +356,10 @@ FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length) {
 
 bool
 FirmwareUpdate_bootloaderLoop(const uint32_t timeout) {
-
     // timeout = 0 -> no timeout
-    bool retVal = true;
-    if ((timeout != 0) && (HAL_GetTick() > timeout) && (!s_is_flashing)) {
-        retVal = false;
+    bool ret_val = true;
+    if ((timeout != 0U) && (HAL_GetTick() > timeout) && (!s_is_flashing)) {
+        ret_val = false;
     }
 
     if (s_is_flashed) {
@@ -362,21 +374,21 @@ FirmwareUpdate_bootloaderLoop(const uint32_t timeout) {
 
     if (s_exit_loop) {
         HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
-        retVal = false;
+        ret_val = false;
     }
 
     if (s_rdp_enable_flag) {
         HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
-        FlashAdapter_setReadProtection(true);
+        ret_val = FlashAdapter_setReadProtection(true);
     }
 
     if (s_rdp_disable_flag) {
         HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
-        //BL is deleted after this, it needs to be flashed again
-        FlashAdapter_setReadProtection(false);
+        // BL is deleted after this, it needs to be flashed again
+        ret_val = FlashAdapter_setReadProtection(false);
     }
 
-    return retVal;
+    return ret_val;
 }
 
 static bool
@@ -386,7 +398,7 @@ FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size) {
     bool null_terminator_exist = false;
 
     for (size_t i = 0U; i < size; ++i) {
-        if (string[i] == '\0') {
+        if (string[i] == (uint8_t)('\0')) {
             null_terminator_exist = true;
             break;
         }
@@ -399,21 +411,20 @@ FirmwareUpdate_sendStringWithCrc(uint8_t* string, size_t size) {
         if (size >= last_char) {
             uint32_t crc = CalculateCRC32(&string[0], last_char, CRC_INIT_VALUE, XOR_CRC_VALUE, false, false, true);
             Utils_Serialize32BE(&string[last_char], crc);
-            FirmwareUpdate_sendMessage(string, last_char + sizeof(crc));
-            success = true;
+            success = FirmwareUpdate_sendMessage(string, last_char + sizeof(crc));
         }
     }
 
     return success;
 }
 
-inline static uint8_t
+inline static bool
 FirmwareUpdate_sendMessage(uint8_t* data, uint16_t length) {
-    return CDC_Transmit_FS(data, length);
+    return (CDC_Transmit_FS(data, length) == (uint8_t)USBD_OK);
 }
 
 inline static bool
-FirmwareUpdate_hasSignature(const uint8_t* buffer) {
-    uint64_t signature_magic_key = SIGNATURE_MAGIC_KEY;
+FirmwareUpdate_hasSignature(const uint64_t* buffer) {
+    const uint64_t signature_magic_key = SIGNATURE_MAGIC_KEY;
     return (0 == memcmp(buffer, &signature_magic_key, sizeof(SIGNATURE_MAGIC_KEY)));
 }

@@ -51,9 +51,10 @@ bool
 BoardInfo_getDataJson(uint8_t* buffer, size_t size) {
     bool success = true;
 
-    uint8_t b64_hashed_board_id[BASE64_HASHED_BOARD_ID_SIZE + 1U] = {0U};
-    HashAdapter_getBase64HashedBoardId(b64_hashed_board_id);
-
+    uint8_t b64_hashed_board_id[BASE64_HASHED_BOARD_ID_SIZE + 1U];
+    if (HashAdapter_getBase64HashedBoardId(b64_hashed_board_id)) {
+        // MISRA
+    }
     success &= Json_startString((char*)buffer, size);
     success &= Json_addData((char*)buffer, size, "board_id", (const char*)b64_hashed_board_id);
     success &= Json_addData((char*)buffer, size, "manufacturer_id", BASE64_MANUFACTURER_ID);
