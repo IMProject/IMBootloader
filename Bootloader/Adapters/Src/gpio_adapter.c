@@ -69,8 +69,15 @@ GpioAdapter_init(void) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(LED2_Port, &GPIO_InitStruct);
 #endif
-}
 
+#if defined(BL_BUTTON_Pin) && defined(BL_BUTTON_Port)
+    GPIO_InitStruct.Pin = BL_BUTTON_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(BL_BUTTON_Port, &GPIO_InitStruct);
+#endif
+
+}
 
 void
 GpioAdapter_led1Toggle(void) {
