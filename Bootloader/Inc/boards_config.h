@@ -58,7 +58,11 @@
 #define LED2_Port               GPIOC
 #define LED_ON                  GPIO_PIN_SET
 #define LED_OFF                 GPIO_PIN_RESET
-
+#define BL_BUTTON_Pin           GPIO_PIN_4      //!< Button for entering in BL if pressed at boot time
+#define BL_BUTTON_Port          GPIOE
+#define BL_BUTTON_ON            GPIO_PIN_SET
+#define BL_BUTTON_OFF           GPIO_PIN_RESET
+#define BL_BUTTON_PRESS_TIME    500u            //!< Time in [ms] needed for button to be pressed to enter in BL
 #endif
 
 

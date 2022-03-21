@@ -60,6 +60,18 @@ main(void) {
         enter_bootloader_loop = true;
     }
 
+#if defined(BL_BUTTON_Pin) && defined(BL_BUTTON_Port) && defined(BL_BUTTON_ON) && defined(BL_BUTTON_PRESS_TIME)
+    // Check bootloader button
+    uint32_t time_start = HAL_GetTick();
+    while (BL_BUTTON_ON == HAL_GPIO_ReadPin(BL_BUTTON_Port, BL_BUTTON_Pin)) {
+        uint32_t time_elapsed = HAL_GetTick() - time_start;
+        if (time_elapsed > BL_BUTTON_PRESS_TIME) {
+            enter_bootloader_loop = true;
+            break;
+        }
+    }
+#endif
+
     if (enter_bootloader_loop) {
 
         MX_USB_DEVICE_Init();
