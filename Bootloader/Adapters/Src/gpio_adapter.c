@@ -39,7 +39,6 @@ void
 GpioAdapter_init(void) {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    /* GPIO Ports Clock Enable */
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -47,23 +46,29 @@ GpioAdapter_init(void) {
     __HAL_RCC_GPIOE_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
 
-    /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, LED_OFF);
-    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, LED_OFF);
+#if defined(LED1_Pin) && defined(LED1_Port) && defined(LED_OFF)
+    HAL_GPIO_WritePin(LED1_Port, LED1_Pin, LED_OFF);
+#endif
 
-    /*Configure GPIO pins : LED1_Pin*/
+#if defined(LED2_Pin) && defined(LED2_Port) && defined(LED_OFF)
+    HAL_GPIO_WritePin(LED2_Port, LED2_Pin, LED_OFF);
+#endif
+
+#if defined(LED1_Pin) && defined(LED1_Port)
     GPIO_InitStruct.Pin = LED1_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(LED1_Port, &GPIO_InitStruct);
+#endif
 
-    /*Configure GPIO pins : LED2_Pin*/
+#if defined(LED2_Pin) && defined(LED2_Port)
     GPIO_InitStruct.Pin = LED2_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(LED2_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(LED2_Port, &GPIO_InitStruct);
+#endif
 }
 
 

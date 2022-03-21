@@ -38,26 +38,26 @@
 /* LED configuration for board available on the market */
 
 #ifdef MATEK_H743_SLIM
-#define LED1_Pin GPIO_PIN_4  // Green
-#define LED1_GPIO_Port GPIOE
-#define LED2_Pin GPIO_PIN_3  // Blue
-#define LED2_GPIO_Port GPIOE
-#define LED_ON    GPIO_PIN_RESET
-#define LED_OFF   GPIO_PIN_SET
+#define LED1_Pin                GPIO_PIN_4      //!< Pin defined for green LED
+#define LED1_Port               GPIOE
+#define LED2_Pin                GPIO_PIN_3      //!< Pin defined for blue LED
+#define LED2_Port               GPIOE
+#define LED_ON                  GPIO_PIN_RESET
+#define LED_OFF                 GPIO_PIN_SET
 #elif defined(PIXHAWK4)
-#define LED1_Pin GPIO_PIN_6     // Green
-#define LED1_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_7     // Blue
-#define LED2_GPIO_Port GPIOC
-#define LED_ON    GPIO_PIN_RESET
-#define LED_OFF   GPIO_PIN_SET
+#define LED1_Pin                GPIO_PIN_6      //!< Pin defined for green LED
+#define LED1_Port               GPIOC
+#define LED2_Pin                GPIO_PIN_7      //!< Pin defined for blue LED
+#define LED2_Port               GPIOC
+#define LED_ON                  GPIO_PIN_RESET
+#define LED_OFF                 GPIO_PIN_SET
 #else
-#define LED1_Pin GPIO_PIN_13
-#define LED1_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_14
-#define LED2_GPIO_Port GPIOC
-#define LED_ON    GPIO_PIN_SET
-#define LED_OFF   GPIO_PIN_RESET
+#define LED1_Pin                GPIO_PIN_13
+#define LED1_Port               GPIOC
+#define LED2_Pin                GPIO_PIN_14
+#define LED2_Port               GPIOC
+#define LED_ON                  GPIO_PIN_SET
+#define LED_OFF                 GPIO_PIN_RESET
 
 #endif
 
