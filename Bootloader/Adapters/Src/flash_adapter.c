@@ -119,6 +119,7 @@ FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
 
         uint32_t start_sector = (flash_address - FLASH_BASE) / FLASH_SECTOR_SIZE;
 
+        pEraseInit.Banks        = FLASH_BANK_1;
         pEraseInit.Sector       = start_sector;
         pEraseInit.NbSectors    = number_of_sectors;
         pEraseInit.TypeErase    = FLASH_TYPEERASE_SECTORS;
