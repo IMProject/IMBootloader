@@ -51,15 +51,19 @@ bool
 BoardInfo_getDataJson(uint8_t* buffer, size_t size) {
     bool success = true;
 
-    uint8_t b64_hashed_board_id[BASE64_HASHED_BOARD_ID_SIZE + 1U];
-    if (HashAdapter_getBase64HashedBoardId(b64_hashed_board_id)) {
-        // MISRA
+    uint8_t b64_hashed_board_id_str[HASHED_BOARD_ID_SIZE_BASE64_STR];
+    if (HashAdapter_getBase64HashedBoardId(b64_hashed_board_id_str, sizeof(b64_hashed_board_id_str))) {
+
+        success &= Json_startString((char*)buffer, size);
+        success &= Json_addData((char*)buffer, size, "board_id", (const char*)b64_hashed_board_id_str);
+        success &= Json_addData((char*)buffer, size, "manufacturer_id", MANUFACTURER_ID_BASE64_STR);
+        success &= Json_addData((char*)buffer, size, "product_type", PRODUCT_TYPE);
+        success &= Json_endString((char*)buffer, size);
+
+    } else {
+        success = false;
     }
-    success &= Json_startString((char*)buffer, size);
-    success &= Json_addData((char*)buffer, size, "board_id", (const char*)b64_hashed_board_id);
-    success &= Json_addData((char*)buffer, size, "manufacturer_id", BASE64_MANUFACTURER_ID);
-    success &= Json_addData((char*)buffer, size, "product_type", PRODUCT_TYPE);
-    success &= Json_endString((char*)buffer, size);
+
 
     return success;
 }

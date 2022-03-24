@@ -50,28 +50,28 @@ typedef enum secureHash_ENUM {
     MD5
 } secureHash_E;
 
-#define HASH_BOARD_ID_ALGORITHM         BLAKE2B
+#define HASH_BOARD_ID_ALGORITHM             BLAKE2B //!< Selected algorithm for calculating hashed board id from UUID
 
-#define HASHED_BOARD_ID_SIZE            32U
-#define BASE64_HASHED_BOARD_ID_SIZE     44U
+#define HASHED_BOARD_ID_SIZE                32U //!< Size for hashed board id binary
+#define HASHED_BOARD_ID_SIZE_BASE64_STR     45U //!< Size for hashed board id string in base64 format including null-terminator
 
-#define MANUFACTURER_ID_SIZE            32U
-#define BASE64_MANUFACTURER_ID_SIZE     44U
+#define MANUFACTURER_ID_SIZE                32U //!< Size for manufacturer id binary
+#define MANUFACTURER_ID_SIZE_BASE64_STR     45U //!< Size for manufacturer id string in base64 format including null-terminator
 
-#define PRODUCT_TYPE_MAX_SIZE           100U
+#define PRODUCT_TYPE_MAX_SIZE               101U //!< Size for product type including null-terminator
 
-#define BASE64_MANUFACTURER_ID (const char*)("Qj9FKEgrTWJRZVRoV21acTR0N3cheiVDKkYpSkBOY1I=") // Size must be equal to 44 bytes (Base64 format)
+#define MANUFACTURER_ID_BASE64_STR (const char*)("Qj9FKEgrTWJRZVRoV21acTR0N3cheiVDKkYpSkBOY1I=") // Size must be equal to 44 characters Base64 format (45 bytes)
 
 #ifdef MATEK_H743_SLIM
-#define PRODUCT_TYPE    (const char*)("IMProject_demo-matek_H7_slim")   // Maximum allowed size is 100 bytes
+#define PRODUCT_TYPE    (const char*)("IMProject_demo-matek_H7_slim")   // Maximum allowed size is 100 characters (101 bytes)
 #elif defined(PIXHAWK4)
-#define PRODUCT_TYPE    (const char*)("IMProject_demo-pixhawk4")        // Maximum allowed size is 100 bytes
+#define PRODUCT_TYPE    (const char*)("IMProject_demo-pixhawk4")        // Maximum allowed size is 100 characters (101 bytes)
 #else
-#define PRODUCT_TYPE    (const char*)("Product_type_name-board_name")   // Maximum allowed size is 100 bytes
+#define PRODUCT_TYPE    (const char*)("Product_type_name-board_name")   // Maximum allowed size is 100 characters (101 bytes)
 #endif
 
-static_assert(strlen((const char*)BASE64_MANUFACTURER_ID) == BASE64_MANUFACTURER_ID_SIZE, "MANUFACTURER_ID is wrong size");
-static_assert(strlen((const char*)PRODUCT_TYPE) <= PRODUCT_TYPE_MAX_SIZE, "PRODUCT_TYPE is wrong size");
+static_assert(strlen((const char*)MANUFACTURER_ID_BASE64_STR) == (MANUFACTURER_ID_SIZE_BASE64_STR - 1U), "BASE64_MANUFACTURER_ID is wrong size");
+static_assert(strlen((const char*)PRODUCT_TYPE) <= (PRODUCT_TYPE_MAX_SIZE - 1U), "PRODUCT_TYPE is wrong size");
 
 bool BoardInfo_getDataJson(uint8_t* buffer, size_t size);
 bool BoardInfo_getBase64ManufacturerId(uint8_t* b64_manufacturer_id);
