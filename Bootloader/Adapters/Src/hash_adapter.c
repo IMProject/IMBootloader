@@ -66,13 +66,13 @@ HashAdapter_getHashedBoardId(uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE]) {
 }
 
 bool
-HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id) {
+HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id_str, size_t b64_hashed_board_id_str_size) {
 
     bool success = false;
 
     uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE];
     HashAdapter_getHashedBoardId(hashed_board_id);
-    int32_t ret = Base64_encode(hashed_board_id, HASHED_BOARD_ID_SIZE, (char*)b64_hashed_board_id, BASE64_HASHED_BOARD_ID_SIZE);
+    int32_t ret = Base64_encode(hashed_board_id, HASHED_BOARD_ID_SIZE, (char*)b64_hashed_board_id_str, b64_hashed_board_id_str_size);
 
     if (0 == ret) {
         success = true;
@@ -87,7 +87,7 @@ BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id) {
 
     size_t manufacturer_id_size = MANUFACTURER_ID_SIZE;
     // cppcheck-suppress misra-c2012-11.8
-    int32_t ret = Base64_decode((char*)BASE64_MANUFACTURER_ID, BASE64_MANUFACTURER_ID_SIZE, manufacturer_id, &manufacturer_id_size);
+    int32_t ret = Base64_decode((char*)MANUFACTURER_ID_BASE64_STR, MANUFACTURER_ID_SIZE_BASE64_STR, manufacturer_id, &manufacturer_id_size);
 
     if (0 == ret) {
         success = true;
