@@ -40,7 +40,7 @@
 #include "board_info.h"
 
 void HashAdapter_getHashedBoardId(uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE]);
-bool HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id);
+bool HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id_str, size_t b64_hashed_board_id_str_size);
 bool BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id);
 
 
