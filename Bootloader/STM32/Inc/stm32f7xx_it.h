@@ -19,8 +19,8 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F7xx_IT_H
-#define __STM32F7xx_IT_H
+#ifndef STM32F7xx_IT_H_
+#define STM32F7xx_IT_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,6 +65,6 @@ void OTG_FS_IRQHandler(void);
 }
 #endif
 
-#endif /* __STM32F7xx_IT_H */
+#endif /* STM32F7xx_IT_H_ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
