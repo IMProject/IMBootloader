@@ -256,7 +256,12 @@ SystemInit(void) {
   */
 void
 SystemCoreClockUpdate(void) {
-    uint32_t tmp = 0U, msirange = 0U, pllvco = 0U, pllr = 2U, pllsource = 0U, pllm = 2U;
+    uint32_t tmp = 0U;
+    uint32_t msirange = 0U;
+    uint32_t pllvco = 0U;
+    uint32_t pllr = 2U;
+    uint32_t pllsource = 0U;
+    uint32_t pllm = 2U;
 
     /* Get MSI Range frequency--------------------------------------------------*/
     if ((RCC->CR & RCC_CR_MSIRGSEL) == RESET) {

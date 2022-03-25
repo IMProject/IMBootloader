@@ -200,7 +200,11 @@ SystemInit(void) {
   */
 void
 SystemCoreClockUpdate(void) {
-    uint32_t tmp = 0, pllvco = 0, pllp = 2, pllsource = 0, pllm = 2;
+    uint32_t tmp = 0U;
+    uint32_t pllvco = 0U;
+    uint32_t pllp = 2U;
+    uint32_t pllsource = 0U;
+    uint32_t pllm = 2U;
 
     /* Get SYSCLK source -------------------------------------------------------*/
     tmp = RCC->CFGR & RCC_CFGR_SWS;
@@ -220,7 +224,7 @@ SystemCoreClockUpdate(void) {
             pllsource = (RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) >> 22;
             pllm = RCC->PLLCFGR & RCC_PLLCFGR_PLLM;
 
-            if (pllsource != 0) {
+            if (pllsource != 0U) {
                 /* HSE used as PLL clock source */
                 pllvco = (HSE_VALUE / pllm) * ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> 6);
             } else {
