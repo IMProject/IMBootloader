@@ -47,7 +47,6 @@ void Error_Handler(void);
 /* USER CODE END 0 */
 
 /* Exported function prototypes ----------------------------------------------*/
-extern USBD_StatusTypeDef USBD_LL_BatteryCharging(USBD_HandleTypeDef* pdev);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -86,9 +85,9 @@ HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 #ifdef STM32L4xx
         GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
-#elif STM32F7xx
+#elif defined(STM32F7xx)
         GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
-#elif STM32H7xx
+#elif defined(STM32H7xx)
         GPIO_InitStruct.Alternate = GPIO_AF10_OTG1_FS;
 #endif
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -99,7 +98,7 @@ HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
 
 #ifdef STM32L4xx
         // Enable VDDUSB
-        if (__HAL_RCC_PWR_IS_CLK_DISABLED()) {
+        if ((bool)__HAL_RCC_PWR_IS_CLK_DISABLED()) {
             __HAL_RCC_PWR_CLK_ENABLE();
             HAL_PWREx_EnableVddUSB();
             __HAL_RCC_PWR_CLK_DISABLE();
@@ -135,7 +134,7 @@ HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle) {
 
 #ifdef STM32L4xx
         /* Disable VDDUSB */
-        if (__HAL_RCC_PWR_IS_CLK_DISABLED()) {
+        if ((bool)__HAL_RCC_PWR_IS_CLK_DISABLED()) {
             __HAL_RCC_PWR_CLK_ENABLE();
             HAL_PWREx_DisableVddUSB();
             __HAL_RCC_PWR_CLK_DISABLE();
@@ -158,14 +157,17 @@ HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle) {
   * @param  hpcd: PCD handle
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_SetupStageCallback(PCD_HandleTypeDef* hpcd)
 #else
 void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_SetupStage((USBD_HandleTypeDef*)hpcd->pData, (uint8_t*)hpcd->Setup);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_SetupStage((USBD_HandleTypeDef*)hpcd->pData, (uint8_t*)hpcd->Setup) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -174,14 +176,17 @@ void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef* hpcd)
   * @param  epnum: Endpoint number
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_DataOutStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #else
 void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_DataOutStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_DataOutStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -190,14 +195,17 @@ void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
   * @param  epnum: Endpoint number
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_DataInStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #else
 void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_DataInStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->IN_ep[epnum].xfer_buff);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_DataInStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->IN_ep[epnum].xfer_buff) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -205,14 +213,17 @@ void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
   * @param  hpcd: PCD handle
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_SOFCallback(PCD_HandleTypeDef* hpcd)
 #else
 void HAL_PCD_SOFCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_SOF((USBD_HandleTypeDef*)hpcd->pData);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_SOF((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -220,7 +231,7 @@ void HAL_PCD_SOFCallback(PCD_HandleTypeDef* hpcd)
   * @param  hpcd: PCD handle
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_ResetCallback(PCD_HandleTypeDef* hpcd)
 #else
@@ -233,10 +244,16 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef* hpcd)
         Error_Handler();
     }
     /* Set Speed. */
-    USBD_LL_SetSpeed((USBD_HandleTypeDef*)hpcd->pData, speed);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_SetSpeed((USBD_HandleTypeDef*)hpcd->pData, speed) == USBD_OK) {
+        // MISRA
+    }
 
     /* Reset Device. */
-    USBD_LL_Reset((USBD_HandleTypeDef*)hpcd->pData);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_Reset((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -245,7 +262,7 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef* hpcd)
   * @param  hpcd: PCD handle
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_SuspendCallback(PCD_HandleTypeDef* hpcd)
 #else
@@ -254,10 +271,13 @@ void HAL_PCD_SuspendCallback(PCD_HandleTypeDef* hpcd)
 {
     __HAL_PCD_GATE_PHYCLOCK(hpcd);
     /* Inform USB library that core enters in suspend Mode. */
-    USBD_LL_Suspend((USBD_HandleTypeDef*)hpcd->pData);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_Suspend((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
+        // MISRA
+    }
     /* Enter in STOP mode. */
     /* USER CODE BEGIN 2 */
-    if (hpcd->Init.low_power_enable) {
+    if (hpcd->Init.low_power_enable != 0) {
         /* Set SLEEPDEEP bit and SleepOnExit of Cortex System Control Register. */
         SCB->SCR |= (uint32_t)((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
     }
@@ -270,7 +290,7 @@ void HAL_PCD_SuspendCallback(PCD_HandleTypeDef* hpcd)
   * @param  hpcd: PCD handle
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_ResumeCallback(PCD_HandleTypeDef* hpcd)
 #else
@@ -280,13 +300,16 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef* hpcd)
     __HAL_PCD_UNGATE_PHYCLOCK(hpcd);
 
     /* USER CODE BEGIN 3 */
-    if (hpcd->Init.low_power_enable) {
+    if (hpcd->Init.low_power_enable != 0) {
         /* Reset SLEEPDEEP bit of Cortex System Control Register. */
         SCB->SCR &= (uint32_t)~((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
         SystemClockConfig_Resume();
     }
     /* USER CODE END 3 */
-    USBD_LL_Resume((USBD_HandleTypeDef*)hpcd->pData);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_Resume((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -295,14 +318,17 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef* hpcd)
   * @param  epnum: Endpoint number
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #else
 void HAL_PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_IsoOUTIncomplete((USBD_HandleTypeDef*)hpcd->pData, epnum);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_IsoOUTIncomplete((USBD_HandleTypeDef*)hpcd->pData, epnum) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -311,14 +337,17 @@ void HAL_PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
   * @param  epnum: Endpoint number
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_ISOINIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #else
 void HAL_PCD_ISOINIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_IsoINIncomplete((USBD_HandleTypeDef*)hpcd->pData, epnum);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_IsoINIncomplete((USBD_HandleTypeDef*)hpcd->pData, epnum) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -326,14 +355,17 @@ void HAL_PCD_ISOINIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
   * @param  hpcd: PCD handle
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_ConnectCallback(PCD_HandleTypeDef* hpcd)
 #else
 void HAL_PCD_ConnectCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_DevConnected((USBD_HandleTypeDef*)hpcd->pData);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_DevConnected((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /**
@@ -341,14 +373,17 @@ void HAL_PCD_ConnectCallback(PCD_HandleTypeDef* hpcd)
   * @param  hpcd: PCD handle
   * @retval None
   */
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
 static void
 PCD_DisconnectCallback(PCD_HandleTypeDef* hpcd)
 #else
 void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
+    // cppcheck-suppress misra-c2012-21.1
+    if (USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
+        // MISRA
+    }
 }
 
 /*******************************************************************************
@@ -361,9 +396,10 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef* hpcd)
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Init(USBD_HandleTypeDef* pdev) {
     /* Init USB Ip. */
-    if (pdev->id == DEVICE_FS) {
+    if (pdev->id == (uint8_t)DEVICE_FS) {
         /* Enable USB power on Pwrctrl CR2 register. */
         /* Link the driver to the stack. */
         hpcd_USB_OTG_FS.pData = pdev;
@@ -383,7 +419,7 @@ USBD_LL_Init(USBD_HandleTypeDef* pdev) {
             Error_Handler( );
         }
 
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+#if defined(USE_HAL_PCD_REGISTER_CALLBACKS) && (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
         /* Register USB PCD CallBacks */
         HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SOF_CB_ID, PCD_SOFCallback);
         HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SETUPSTAGE_CB_ID, PCD_SetupStageCallback);
@@ -411,6 +447,7 @@ USBD_LL_Init(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_DeInit(USBD_HandleTypeDef* pdev) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -443,6 +480,7 @@ USBD_LL_DeInit(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Start(USBD_HandleTypeDef* pdev) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -475,6 +513,7 @@ USBD_LL_Start(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Stop(USBD_HandleTypeDef* pdev) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -510,6 +549,7 @@ USBD_LL_Stop(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_OpenEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t ep_type, uint16_t ep_mps) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -543,6 +583,7 @@ USBD_LL_OpenEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t ep_type, uint1
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_CloseEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -576,6 +617,7 @@ USBD_LL_CloseEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_FlushEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -609,6 +651,7 @@ USBD_LL_FlushEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_StallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -642,6 +685,7 @@ USBD_LL_StallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_ClearStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -675,14 +719,18 @@ USBD_LL_ClearStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval Stall (1: Yes, 0: No)
   */
 uint8_t
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_IsStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
+    uint8_t result;
     PCD_HandleTypeDef* hpcd = (PCD_HandleTypeDef*) pdev->pData;
 
-    if ((ep_addr & 0x80) == 0x80) {
-        return hpcd->IN_ep[ep_addr & 0x7F].is_stall;
+    if ((ep_addr & 0x80U) == 0x80U) {
+        result = hpcd->IN_ep[ep_addr & 0x7FU].is_stall;
     } else {
-        return hpcd->OUT_ep[ep_addr & 0x7F].is_stall;
+        result = hpcd->OUT_ep[ep_addr & 0x7FU].is_stall;
     }
+
+    return result;
 }
 
 /**
@@ -692,6 +740,7 @@ USBD_LL_IsStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_SetUSBAddress(USBD_HandleTypeDef* pdev, uint8_t dev_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -727,6 +776,7 @@ USBD_LL_SetUSBAddress(USBD_HandleTypeDef* pdev, uint8_t dev_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Transmit(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf, uint16_t size) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -762,6 +812,7 @@ USBD_LL_Transmit(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf, uint1
   * @retval USBD status
   */
 USBD_StatusTypeDef
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_PrepareReceive(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf, uint16_t size) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -795,6 +846,7 @@ USBD_LL_PrepareReceive(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf,
   * @retval Recived Data Size
   */
 uint32_t
+// cppcheck-suppress misra-c2012-21.1
 USBD_LL_GetRxDataSize(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     return HAL_PCD_EP_GetRxCount((PCD_HandleTypeDef*) pdev->pData, ep_addr);
 }
@@ -809,25 +861,32 @@ void
 HAL_PCDEx_LPM_Callback(PCD_HandleTypeDef* hpcd, PCD_LPM_MsgTypeDef msg) {
     switch (msg) {
         case PCD_LPM_L0_ACTIVE:
-            if (hpcd->Init.low_power_enable) {
+            if (hpcd->Init.low_power_enable != 0) {
                 SystemClockConfig_Resume();
 
                 /* Reset SLEEPDEEP bit of Cortex System Control Register. */
                 SCB->SCR &= (uint32_t)~((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
             }
             __HAL_PCD_UNGATE_PHYCLOCK(hpcd);
-            USBD_LL_Resume(hpcd->pData);
+            if (USBD_LL_Resume(hpcd->pData) == USBD_OK) {
+                // MISRA
+            }
             break;
 
         case PCD_LPM_L1_ACTIVE:
             __HAL_PCD_GATE_PHYCLOCK(hpcd);
-            USBD_LL_Suspend(hpcd->pData);
+            if (USBD_LL_Suspend(hpcd->pData) == USBD_OK) {
+                // MISRA
+            }
 
             /* Enter in STOP mode. */
-            if (hpcd->Init.low_power_enable) {
+            if (hpcd->Init.low_power_enable != 0) {
                 /* Set SLEEPDEEP bit and SleepOnExit of Cortex System Control Register. */
                 SCB->SCR |= (uint32_t)((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
             }
+            break;
+        default:
+            // MISRA
             break;
     }
 }
@@ -849,7 +908,10 @@ USBD_LL_Delay(uint32_t Delay) {
   */
 void*
 USBD_static_malloc(uint32_t size) {
-    static uint32_t mem[(sizeof(USBD_CDC_HandleTypeDef) / 4) + 1]; /* On 32-bit boundary */
+    if (size == 0U) {
+        // MISRA
+    }
+    static uint32_t mem[(sizeof(USBD_CDC_HandleTypeDef) / 4U) + 1U]; /* On 32-bit boundary */
     return mem;
 }
 
@@ -860,7 +922,9 @@ USBD_static_malloc(uint32_t size) {
   */
 void
 USBD_static_free(void* p) {
-
+    if (p == (void*)0) {
+        // MISRA
+    }
 }
 
 /* USER CODE BEGIN 5 */
