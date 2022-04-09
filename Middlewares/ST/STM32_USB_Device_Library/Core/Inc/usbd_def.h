@@ -18,8 +18,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_DEF_H
-#define __USBD_DEF_H
+#ifndef USBD_DEF_H_
+#define USBD_DEF_H_
 
 #ifdef __cplusplus
  extern "C" {
@@ -40,10 +40,6 @@
 /** @defgroup USB_DEF_Exported_Defines
   * @{
   */
-
-#ifndef NULL
-#define NULL                                            0U
-#endif /* NULL */
 
 #ifndef USBD_MAX_NUM_INTERFACES
 #define USBD_MAX_NUM_INTERFACES                         1U
@@ -166,29 +162,29 @@ typedef  struct  usb_setup_req
     uint16_t  wLength;
 }USBD_SetupReqTypedef;
 
-struct _USBD_HandleTypeDef;
+struct USBD_HandleTypeDef;
 
-typedef struct _Device_cb
+typedef struct
 {
-  uint8_t  (*Init)             (struct _USBD_HandleTypeDef *pdev , uint8_t cfgidx);
-  uint8_t  (*DeInit)           (struct _USBD_HandleTypeDef *pdev , uint8_t cfgidx);
+  uint8_t  (*Init)             (struct USBD_HandleTypeDef *pdev , uint8_t cfgidx);
+  uint8_t  (*DeInit)           (struct USBD_HandleTypeDef *pdev , uint8_t cfgidx);
  /* Control Endpoints*/
-  uint8_t  (*Setup)            (struct _USBD_HandleTypeDef *pdev , USBD_SetupReqTypedef  *req);
-  uint8_t  (*EP0_TxSent)       (struct _USBD_HandleTypeDef *pdev );
-  uint8_t  (*EP0_RxReady)      (struct _USBD_HandleTypeDef *pdev );
+  uint8_t  (*Setup)            (struct USBD_HandleTypeDef *pdev , USBD_SetupReqTypedef  *req);
+  uint8_t  (*EP0_TxSent)       (struct USBD_HandleTypeDef *pdev );
+  uint8_t  (*EP0_RxReady)      (struct USBD_HandleTypeDef *pdev );
   /* Class Specific Endpoints*/
-  uint8_t  (*DataIn)           (struct _USBD_HandleTypeDef *pdev , uint8_t epnum);
-  uint8_t  (*DataOut)          (struct _USBD_HandleTypeDef *pdev , uint8_t epnum);
-  uint8_t  (*SOF)              (struct _USBD_HandleTypeDef *pdev);
-  uint8_t  (*IsoINIncomplete)  (struct _USBD_HandleTypeDef *pdev , uint8_t epnum);
-  uint8_t  (*IsoOUTIncomplete) (struct _USBD_HandleTypeDef *pdev , uint8_t epnum);
+  uint8_t  (*DataIn)           (struct USBD_HandleTypeDef *pdev , uint8_t epnum);
+  uint8_t  (*DataOut)          (struct USBD_HandleTypeDef *pdev , uint8_t epnum);
+  uint8_t  (*SOF)              (struct USBD_HandleTypeDef *pdev);
+  uint8_t  (*IsoINIncomplete)  (struct USBD_HandleTypeDef *pdev , uint8_t epnum);
+  uint8_t  (*IsoOUTIncomplete) (struct USBD_HandleTypeDef *pdev , uint8_t epnum);
 
   uint8_t  *(*GetHSConfigDescriptor)(uint16_t *length);
   uint8_t  *(*GetFSConfigDescriptor)(uint16_t *length);
   uint8_t  *(*GetOtherSpeedConfigDescriptor)(uint16_t *length);
   uint8_t  *(*GetDeviceQualifierDescriptor)(uint16_t *length);
 #if (USBD_SUPPORT_USER_STRING == 1U)
-  uint8_t  *(*GetUsrStrDescriptor)(struct _USBD_HandleTypeDef *pdev ,uint8_t index,  uint16_t *length);
+  uint8_t  *(*GetUsrStrDescriptor)(struct USBD_HandleTypeDef *pdev ,uint8_t index,  uint16_t *length);
 #endif
 
 } USBD_ClassTypeDef;
@@ -234,7 +230,7 @@ typedef struct
 } USBD_EndpointTypeDef;
 
 /* USB Device handle structure */
-typedef struct _USBD_HandleTypeDef
+typedef struct USBD_HandleTypeDef
 {
   uint8_t                 id;
   uint32_t                dev_config;
@@ -272,39 +268,10 @@ typedef struct _USBD_HandleTypeDef
 #define  SWAPBYTE(addr)        (((uint16_t)(*((uint8_t *)(addr)))) + \
                                (((uint16_t)(*(((uint8_t *)(addr)) + 1U))) << 8U))
 
-#define LOBYTE(x)  ((uint8_t)(x & 0x00FFU))
-#define HIBYTE(x)  ((uint8_t)((x & 0xFF00U) >> 8U))
+#define LOBYTE(x)  ((uint8_t)((x) & 0x00FFU))
+#define HIBYTE(x)  ((uint8_t)(((x) & 0xFF00U) >> 8U))
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 #define MAX(a, b)  (((a) > (b)) ? (a) : (b))
-
-
-#if  defined ( __GNUC__ )
-  #ifndef __weak
-    #define __weak   __attribute__((weak))
-  #endif /* __weak */
-  #ifndef __packed
-    #define __packed __attribute__((__packed__))
-  #endif /* __packed */
-#endif /* __GNUC__ */
-
-
-/* In HS mode and when the DMA is used, all variables and data structures dealing
-   with the DMA during the transaction process should be 4-bytes aligned */
-
-#if defined   (__GNUC__)        /* GNU Compiler */
-  #define __ALIGN_END    __attribute__ ((aligned (4)))
-  #define __ALIGN_BEGIN
-#else
-  #define __ALIGN_END
-  #if defined   (__CC_ARM)      /* ARM Compiler */
-    #define __ALIGN_BEGIN    __align(4)
-  #elif defined (__ICCARM__)    /* IAR Compiler */
-    #define __ALIGN_BEGIN
-  #elif defined  (__TASKING__)  /* TASKING Compiler */
-    #define __ALIGN_BEGIN    __align(4)
-  #endif /* __CC_ARM */
-#endif /* __GNUC__ */
-
 
 /**
   * @}
@@ -330,7 +297,7 @@ typedef struct _USBD_HandleTypeDef
 }
 #endif
 
-#endif /* __USBD_DEF_H */
+#endif /* USBD_DEF_H_ */
 
 /**
   * @}

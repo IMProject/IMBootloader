@@ -20,8 +20,8 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USB_DEVICE__H__
-#define __USB_DEVICE__H__
+#ifndef USB_DEVICE_H_
+#define USB_DEVICE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -99,6 +99,6 @@ void MX_USB_DEVICE_Init(void);
 }
 #endif
 
-#endif /* __USB_DEVICE__H__ */
+#endif /* USB_DEVICE_H_ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

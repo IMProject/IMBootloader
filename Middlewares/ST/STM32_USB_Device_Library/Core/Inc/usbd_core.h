@@ -18,8 +18,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CORE_H
-#define __USBD_CORE_H
+#ifndef USBD_CORE_H_
+#define USBD_CORE_H_
 
 #ifdef __cplusplus
  extern "C" {
@@ -145,7 +145,7 @@ void  USBD_LL_Delay (uint32_t Delay);
 }
 #endif
 
-#endif /* __USBD_CORE_H */
+#endif /* USBD_CORE_H_ */
 
 /**
   * @}
