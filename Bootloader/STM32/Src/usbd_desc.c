@@ -63,10 +63,10 @@
   * @{
   */
 
-#define USBD_VID     1155
-#define USBD_LANGID_STRING     1033
+#define USBD_VID            (1155U)
+#define USBD_LANGID_STRING  (1033U)
 #define USBD_MANUFACTURER_STRING     BOARD_MANUFACTURER_STRING
-#define USBD_PID_FS     22336
+#define USBD_PID_FS         (22336U)
 #define USBD_PRODUCT_STRING_FS     "STM32 Virtual ComPort"
 #define USBD_CONFIGURATION_STRING_FS     "CDC Config"
 #define USBD_INTERFACE_STRING_FS     "CDC Interface"
@@ -281,9 +281,11 @@ USBD_FS_LangIDStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
   */
 uint8_t*
 USBD_FS_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
-    if (speed == 0) {
+    if (speed == USBD_SPEED_HIGH) {
+        // cppcheck-suppress misra-c2012-11.8
         USBD_GetString((uint8_t*)USBD_PRODUCT_STRING_FS, USBD_StrDesc, length);
     } else {
+        // cppcheck-suppress misra-c2012-11.8
         USBD_GetString((uint8_t*)USBD_PRODUCT_STRING_FS, USBD_StrDesc, length);
     }
     return USBD_StrDesc;
@@ -298,6 +300,7 @@ USBD_FS_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
 uint8_t*
 USBD_FS_ManufacturerStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
     UNUSED(speed);
+    // cppcheck-suppress misra-c2012-11.8
     USBD_GetString((uint8_t*)USBD_MANUFACTURER_STRING, USBD_StrDesc, length);
     return USBD_StrDesc;
 }
@@ -331,8 +334,10 @@ USBD_FS_SerialStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
 uint8_t*
 USBD_FS_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
     if (speed == USBD_SPEED_HIGH) {
+        // cppcheck-suppress misra-c2012-11.8
         USBD_GetString((uint8_t*)USBD_CONFIGURATION_STRING_FS, USBD_StrDesc, length);
     } else {
+        // cppcheck-suppress misra-c2012-11.8
         USBD_GetString((uint8_t*)USBD_CONFIGURATION_STRING_FS, USBD_StrDesc, length);
     }
     return USBD_StrDesc;
@@ -346,9 +351,11 @@ USBD_FS_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
   */
 uint8_t*
 USBD_FS_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
-    if (speed == 0) {
+    if (speed == USBD_SPEED_HIGH) {
+        // cppcheck-suppress misra-c2012-11.8
         USBD_GetString((uint8_t*)USBD_INTERFACE_STRING_FS, USBD_StrDesc, length);
     } else {
+        // cppcheck-suppress misra-c2012-11.8
         USBD_GetString((uint8_t*)USBD_INTERFACE_STRING_FS, USBD_StrDesc, length);
     }
     return USBD_StrDesc;
@@ -376,7 +383,9 @@ USBD_FS_USR_BOSDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
   */
 static void
 Get_SerialNum(void) {
-    uint32_t deviceserial0, deviceserial1, deviceserial2;
+    uint32_t deviceserial0;
+    uint32_t deviceserial1;
+    uint32_t deviceserial2;
 
     deviceserial0 = *(uint32_t*) DEVICE_ID1;
     deviceserial1 = *(uint32_t*) DEVICE_ID2;
@@ -384,7 +393,7 @@ Get_SerialNum(void) {
 
     deviceserial0 += deviceserial2;
 
-    if (deviceserial0 != 0) {
+    if (deviceserial0 != 0U) {
         IntToUnicode(deviceserial0, &USBD_StringSerial[2], 8);
         IntToUnicode(deviceserial1, &USBD_StringSerial[18], 4);
     }
@@ -399,18 +408,19 @@ Get_SerialNum(void) {
   */
 static void
 IntToUnicode(uint32_t value, uint8_t* pbuf, uint8_t len) {
-    uint8_t idx = 0;
+    uint8_t idx;
+    uint32_t local_value = value;
 
-    for (idx = 0; idx < len; idx++) {
-        if (((value >> 28)) < 0xA) {
-            pbuf[2 * idx] = (value >> 28) + '0';
+    for (idx = 0U; idx < len; idx++) {
+        if (((local_value >> 28)) < 0xAU) {
+            pbuf[2U * idx] = (local_value >> 28) + (uint8_t)'0';
         } else {
-            pbuf[2 * idx] = (value >> 28) + 'A' - 10;
+            pbuf[2U * idx] = ((local_value >> 28) + (uint8_t)'A') - 10U;
         }
 
-        value = value << 4;
+        local_value = local_value << 4;
 
-        pbuf[2 * idx + 1] = 0;
+        pbuf[(2U * idx) + 1U] = 0;
     }
 }
 /**

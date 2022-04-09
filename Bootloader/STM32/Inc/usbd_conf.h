@@ -20,15 +20,14 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CONF__H__
-#define __USBD_CONF__H__
+#ifndef USBD_CONF_H_
+#define USBD_CONF_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "main.h"
@@ -168,6 +167,6 @@ void USBD_static_free(void* p);
 }
 #endif
 
-#endif /* __USBD_CONF__H__ */
+#endif /* USBD_CONF_H_ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

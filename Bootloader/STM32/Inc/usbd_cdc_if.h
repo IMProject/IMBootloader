@@ -20,8 +20,8 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CDC_IF_H__
-#define __USBD_CDC_IF_H__
+#ifndef USBD_CDC_IF_H_
+#define USBD_CDC_IF_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -125,6 +125,6 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 }
 #endif
 
-#endif /* __USBD_CDC_IF_H__ */
+#endif /* USBD_CDC_IF_H_ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

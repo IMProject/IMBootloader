@@ -18,8 +18,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USB_REQUEST_H
-#define __USB_REQUEST_H
+#ifndef USB_REQUEST_H_
+#define USB_REQUEST_H_
 
 #ifdef __cplusplus
  extern "C" {
@@ -91,7 +91,7 @@ void USBD_GetString         (uint8_t *desc, uint8_t *unicode, uint16_t *len);
 }
 #endif
 
-#endif /* __USB_REQUEST_H */
+#endif /* USB_REQUEST_H_ */
 
 /**
   * @}
