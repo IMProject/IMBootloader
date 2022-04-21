@@ -112,7 +112,6 @@ uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
   * @brief Public variables.
   * @{
   */
-// cppcheck-suppress misra-c2012-21.1
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
@@ -140,7 +139,6 @@ static int8_t CDC_Receive_FS(uint8_t* pbuf, uint32_t* Len);
 /**
   * @}
   */
-// cppcheck-suppress misra-c2012-21.1
 USBD_CDC_ItfTypeDef USBD_Interface_fops_FS = {
     CDC_Init_FS,
     CDC_DeInit_FS,
@@ -290,7 +288,7 @@ uint8_t
 CDC_Transmit_FS(uint8_t* Buf, uint16_t Len) {
     uint8_t result = USBD_OK;
     /* USER CODE BEGIN 7 */
-    // cppcheck-suppress misra-c2012-11.5
+    // cppcheck-suppress misra-c2012-11.5; conversion from void* to USBD_CDC_HandleTypeDef* is needed here
     USBD_CDC_HandleTypeDef* hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
     if (hcdc->TxState != 0) {
         result = USBD_BUSY;

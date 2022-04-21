@@ -65,11 +65,7 @@
 
 #define USBD_VID            (1155U)
 #define USBD_LANGID_STRING  (1033U)
-#define USBD_MANUFACTURER_STRING     BOARD_MANUFACTURER_STRING
 #define USBD_PID_FS         (22336U)
-#define USBD_PRODUCT_STRING_FS     "STM32 Virtual ComPort"
-#define USBD_CONFIGURATION_STRING_FS     "CDC Config"
-#define USBD_INTERFACE_STRING_FS     "CDC Interface"
 
 #define USB_SIZ_BOS_DESC            0x0C
 
@@ -281,13 +277,12 @@ USBD_FS_LangIDStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
   */
 uint8_t*
 USBD_FS_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
-    if (speed == USBD_SPEED_HIGH) {
-        // cppcheck-suppress misra-c2012-11.8
-        USBD_GetString((uint8_t*)USBD_PRODUCT_STRING_FS, USBD_StrDesc, length);
-    } else {
-        // cppcheck-suppress misra-c2012-11.8
-        USBD_GetString((uint8_t*)USBD_PRODUCT_STRING_FS, USBD_StrDesc, length);
-    }
+    UNUSED(speed);
+    uint8_t usbd_product_string_fs[] = {'S', 'T', 'M', '3', '2', ' ',
+                                        'V', 'i', 'r', 't', 'u', 'a', 'l', ' ',
+                                        'C', 'o', 'm', 'P', 'o', 'r', 't', '\0'
+                                       };
+    USBD_GetString(usbd_product_string_fs, USBD_StrDesc, length);
     return USBD_StrDesc;
 }
 
@@ -300,8 +295,8 @@ USBD_FS_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
 uint8_t*
 USBD_FS_ManufacturerStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
     UNUSED(speed);
-    // cppcheck-suppress misra-c2012-11.8
-    USBD_GetString((uint8_t*)USBD_MANUFACTURER_STRING, USBD_StrDesc, length);
+    uint8_t usbd_manufacturer_string[] = {'I', 'M', 'B', 'O', 'O', 'T', '\0'};
+    USBD_GetString(usbd_manufacturer_string, USBD_StrDesc, length);
     return USBD_StrDesc;
 }
 
@@ -333,13 +328,9 @@ USBD_FS_SerialStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
   */
 uint8_t*
 USBD_FS_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
-    if (speed == USBD_SPEED_HIGH) {
-        // cppcheck-suppress misra-c2012-11.8
-        USBD_GetString((uint8_t*)USBD_CONFIGURATION_STRING_FS, USBD_StrDesc, length);
-    } else {
-        // cppcheck-suppress misra-c2012-11.8
-        USBD_GetString((uint8_t*)USBD_CONFIGURATION_STRING_FS, USBD_StrDesc, length);
-    }
+    UNUSED(speed);
+    uint8_t usbd_configuration_string_fs[] = {'C', 'D', 'C', ' ', 'C', 'o', 'n', 'f', 'i', 'g', '\0'};
+    USBD_GetString(usbd_configuration_string_fs, USBD_StrDesc, length);
     return USBD_StrDesc;
 }
 
@@ -351,13 +342,9 @@ USBD_FS_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
   */
 uint8_t*
 USBD_FS_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t* length) {
-    if (speed == USBD_SPEED_HIGH) {
-        // cppcheck-suppress misra-c2012-11.8
-        USBD_GetString((uint8_t*)USBD_INTERFACE_STRING_FS, USBD_StrDesc, length);
-    } else {
-        // cppcheck-suppress misra-c2012-11.8
-        USBD_GetString((uint8_t*)USBD_INTERFACE_STRING_FS, USBD_StrDesc, length);
-    }
+    UNUSED(speed);
+    uint8_t usbd_interface_string_fs[] = {'C', 'D', 'C', ' ', 'I', 'n', 't', 'e', 'r', 'f', 'a', 'c', 'e', '\0'};
+    USBD_GetString(usbd_interface_string_fs, USBD_StrDesc, length);
     return USBD_StrDesc;
 }
 
