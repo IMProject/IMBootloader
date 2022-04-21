@@ -51,13 +51,13 @@ main(void) {
     pFunction JumpToApplication;
 
     // Check RAM KEY
-    // cppcheck-suppress misra-c2012-11.4
+    // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_RAM
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_RAM == MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
 
     // Check FLASH KEY
-    // cppcheck-suppress misra-c2012-11.4
+    // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_FLASH
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_FLASH != MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
@@ -92,9 +92,9 @@ main(void) {
     SysTick->VAL  = 0;
 
     SCB->VTOR = FLASH_FIRMWARE_ADDRESS;
-    // cppcheck-suppress misra-c2012-11.4
+    // cppcheck-suppress misra-c2012-11.4; conversion is needed to jump to the application
     JumpToApplication = (pFunction) (*(__IO uint32_t*) (FLASH_FIRMWARE_ADDRESS + 4U));
-    // cppcheck-suppress misra-c2012-11.4
+    // cppcheck-suppress misra-c2012-11.4; conversion is needed to jump to the application
     __set_MSP(*(__IO uint32_t*) FLASH_FIRMWARE_ADDRESS);
     JumpToApplication();
 

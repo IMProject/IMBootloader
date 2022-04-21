@@ -219,7 +219,7 @@ SystemInit (void) {
     if ((DBGMCU->IDCODE & 0xFFFF0000U) < 0x20000000U) {
         /* if stm32h7 revY*/
         /* Change  the switch matrix read issuing capability to 1 for the AXI SRAM target (Target 7) */
-        // cppcheck-suppress misra-c2012-11.4
+        // cppcheck-suppress misra-c2012-11.4; part of system init, conversion is needed
         *((__IO uint32_t*)0x51008108) = 0x000000001U;
     }
 

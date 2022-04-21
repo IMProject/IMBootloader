@@ -39,7 +39,6 @@
 extern "C" {
 #endif
 
-#define BOARD_MANUFACTURER_STRING "IMBOOT"
 #define WAIT_FOR_FLASH_TIMEOUT      2000
 
 #include "system_clock_adapter.h"
@@ -63,4 +62,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* MAIN_H_ */
-

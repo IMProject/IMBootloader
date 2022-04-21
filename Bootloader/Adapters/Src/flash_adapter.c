@@ -321,14 +321,12 @@ FlashAdapter_blockErase(uint32_t address) {
 bool
 FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
-    // cppcheck-suppress misra-c2012-12.4
-    uint64_t data = (uint64_t)UINT64_MAX;
+    uint64_t data;
 
     if (length % sizeof(uint64_t) == 0U ) {
         for (uint32_t i = 0U; i < (length / sizeof(uint64_t)); ++i) {
             uint32_t memory_index = i * sizeof(uint64_t);
-            // cppcheck-suppress misra-c2012-17.7
-            memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(uint64_t));
+            (void*)memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(uint64_t));
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, data);
 
             if (status != HAL_OK) {
@@ -337,8 +335,7 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
             }
         }
     } else if (length < sizeof(uint64_t)) {
-        // cppcheck-suppress misra-c2012-17.7
-        memcpy((void*)&data, (void*)buffer, length);
+        (void*)memcpy((void*)&data, (void*)buffer, length);
         HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address, data);
         if (status != HAL_OK) {
             success = false;
@@ -361,7 +358,7 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
 
         for (uint32_t i = 0U; i < (length_program / FLASH_WORD_SIZE); ++i) {
             memory_index = i * FLASH_WORD_SIZE;
-            // cppcheck-suppress misra-c2012-11.4
+            // cppcheck-suppress misra-c2012-11.4; function expects address of data as uint32_t
             HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)&buffer[memory_index]);
 
             if (status != HAL_OK) {
@@ -379,9 +376,8 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
     if ((length_program != 0U) && (length_program < FLASH_WORD_SIZE)) {
 
         uint8_t data[32];
-        // cppcheck-suppress misra-c2012-17.7
-        memcpy((void*)data, (void*)&buffer[memory_index], length_program);
-        // cppcheck-suppress misra-c2012-11.4
+        (void*)memcpy((void*)data, (void*)&buffer[memory_index], length_program);
+        // cppcheck-suppress misra-c2012-11.4; function expects address of data as uint32_t
         HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)data);
         if (status != HAL_OK) {
             success = false;
@@ -404,8 +400,7 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
         for (uint32_t i = 0U; i < (length_program / FLASH_WORD_SIZE); ++i) {
 
             memory_index = i * FLASH_WORD_SIZE;
-            // cppcheck-suppress misra-c2012-17.7
-            memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(data));
+            (void*)memcpy((void*)&data, (void*)&buffer[memory_index], sizeof(data));
 
             HAL_StatusTypeDef status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address + memory_index, (uint64_t) data);
 
@@ -442,9 +437,8 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
 bool
 FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
     bool success = true;
-    // cppcheck-suppress misra-c2012-11.6
-    // cppcheck-suppress misra-c2012-17.7
-    memcpy((void*)buffer, (void*)address, length);
+    // cppcheck-suppress misra-c2012-11.6; address is received as uint32_t
+    (void*)memcpy((void*)buffer, (void*)address, length);
 
     return success;
 }
@@ -460,9 +454,8 @@ FlashAdapter_finish(void) {
 #elif defined(STM32H7xx)
     uint8_t data[32];
     uint64_t magic_key_value = MAGIC_KEY_VALUE;
-    // cppcheck-suppress misra-c2012-17.7
-    memcpy((void*)data, (void*)&magic_key_value, sizeof(uint64_t));
-    // cppcheck-suppress misra-c2012-11.4
+    (void*)memcpy((void*)data, (void*)&magic_key_value, sizeof(uint64_t));
+    // cppcheck-suppress misra-c2012-11.4; function expects address of data as uint32_t
     status = HAL_FLASH_Program(type_program, MAGIC_KEY_ADDRESS_FLASH, (uint32_t)data);
 #elif defined(STM32F7xx)
     uint32_t least_significant_data = (uint32_t) MAGIC_KEY_VALUE;

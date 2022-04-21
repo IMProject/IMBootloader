@@ -164,7 +164,6 @@ PCD_SetupStageCallback(PCD_HandleTypeDef* hpcd)
 void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_SetupStage((USBD_HandleTypeDef*)hpcd->pData, (uint8_t*)hpcd->Setup) == USBD_OK) {
         // MISRA
     }
@@ -183,7 +182,6 @@ PCD_DataOutStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_DataOutStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff) == USBD_OK) {
         // MISRA
     }
@@ -202,7 +200,6 @@ PCD_DataInStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_DataInStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->IN_ep[epnum].xfer_buff) == USBD_OK) {
         // MISRA
     }
@@ -220,7 +217,6 @@ PCD_SOFCallback(PCD_HandleTypeDef* hpcd)
 void HAL_PCD_SOFCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_SOF((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
         // MISRA
     }
@@ -244,13 +240,11 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef* hpcd)
         Error_Handler();
     }
     /* Set Speed. */
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_SetSpeed((USBD_HandleTypeDef*)hpcd->pData, speed) == USBD_OK) {
         // MISRA
     }
 
     /* Reset Device. */
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_Reset((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
         // MISRA
     }
@@ -271,7 +265,6 @@ void HAL_PCD_SuspendCallback(PCD_HandleTypeDef* hpcd)
 {
     __HAL_PCD_GATE_PHYCLOCK(hpcd);
     /* Inform USB library that core enters in suspend Mode. */
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_Suspend((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
         // MISRA
     }
@@ -306,7 +299,6 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef* hpcd)
         SystemClockConfig_Resume();
     }
     /* USER CODE END 3 */
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_Resume((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
         // MISRA
     }
@@ -325,7 +317,6 @@ PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 void HAL_PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_IsoOUTIncomplete((USBD_HandleTypeDef*)hpcd->pData, epnum) == USBD_OK) {
         // MISRA
     }
@@ -344,7 +335,6 @@ PCD_ISOINIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 void HAL_PCD_ISOINIncompleteCallback(PCD_HandleTypeDef* hpcd, uint8_t epnum)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_IsoINIncomplete((USBD_HandleTypeDef*)hpcd->pData, epnum) == USBD_OK) {
         // MISRA
     }
@@ -362,7 +352,6 @@ PCD_ConnectCallback(PCD_HandleTypeDef* hpcd)
 void HAL_PCD_ConnectCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_DevConnected((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
         // MISRA
     }
@@ -380,7 +369,6 @@ PCD_DisconnectCallback(PCD_HandleTypeDef* hpcd)
 void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef* hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-    // cppcheck-suppress misra-c2012-21.1
     if (USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData) == USBD_OK) {
         // MISRA
     }
@@ -396,7 +384,6 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef* hpcd)
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Init(USBD_HandleTypeDef* pdev) {
     /* Init USB Ip. */
     if (pdev->id == (uint8_t)DEVICE_FS) {
@@ -447,7 +434,6 @@ USBD_LL_Init(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_DeInit(USBD_HandleTypeDef* pdev) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -480,7 +466,6 @@ USBD_LL_DeInit(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Start(USBD_HandleTypeDef* pdev) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -513,7 +498,6 @@ USBD_LL_Start(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Stop(USBD_HandleTypeDef* pdev) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -549,7 +533,6 @@ USBD_LL_Stop(USBD_HandleTypeDef* pdev) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_OpenEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t ep_type, uint16_t ep_mps) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -583,7 +566,6 @@ USBD_LL_OpenEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t ep_type, uint1
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_CloseEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -617,7 +599,6 @@ USBD_LL_CloseEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_FlushEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -651,7 +632,6 @@ USBD_LL_FlushEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_StallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -685,7 +665,6 @@ USBD_LL_StallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_ClearStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -719,7 +698,6 @@ USBD_LL_ClearStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval Stall (1: Yes, 0: No)
   */
 uint8_t
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_IsStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     uint8_t result;
     PCD_HandleTypeDef* hpcd = (PCD_HandleTypeDef*) pdev->pData;
@@ -740,7 +718,6 @@ USBD_LL_IsStallEP(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_SetUSBAddress(USBD_HandleTypeDef* pdev, uint8_t dev_addr) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -776,7 +753,6 @@ USBD_LL_SetUSBAddress(USBD_HandleTypeDef* pdev, uint8_t dev_addr) {
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_Transmit(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf, uint16_t size) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -812,7 +788,6 @@ USBD_LL_Transmit(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf, uint1
   * @retval USBD status
   */
 USBD_StatusTypeDef
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_PrepareReceive(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf, uint16_t size) {
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
@@ -846,7 +821,6 @@ USBD_LL_PrepareReceive(USBD_HandleTypeDef* pdev, uint8_t ep_addr, uint8_t* pbuf,
   * @retval Recived Data Size
   */
 uint32_t
-// cppcheck-suppress misra-c2012-21.1
 USBD_LL_GetRxDataSize(USBD_HandleTypeDef* pdev, uint8_t ep_addr) {
     return HAL_PCD_EP_GetRxCount((PCD_HandleTypeDef*) pdev->pData, ep_addr);
 }

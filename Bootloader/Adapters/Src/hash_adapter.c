@@ -85,8 +85,7 @@ bool
 BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id) {
     bool success = false;
 
-    // cppcheck-suppress misra-c2012-11.8
-    int32_t ret = Base64_decode((char*)MANUFACTURER_ID_BASE64_STR, strlen(MANUFACTURER_ID_BASE64_STR), manufacturer_id, MANUFACTURER_ID_SIZE);
+    int32_t ret = Base64_decode(MANUFACTURER_ID_BASE64_STR, strlen(MANUFACTURER_ID_BASE64_STR), manufacturer_id, MANUFACTURER_ID_SIZE);
 
     if (0 == ret) {
         success = true;

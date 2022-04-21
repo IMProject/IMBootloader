@@ -95,16 +95,11 @@ FirmwareUpdate_init(void) {
 
 bool
 FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
-    // cppcheck-suppress misra-c2012-7.4
-    static uint8_t im_bootloader[] = "IMBootloader";
-    // cppcheck-suppress misra-c2012-7.4
-    static uint8_t ack_pack[]      = "OK";
-    // cppcheck-suppress misra-c2012-7.4
-    static uint8_t no_ack_pack[]   = "NOK";
-    // cppcheck-suppress misra-c2012-7.4
-    static uint8_t true_str[]      = "TRUE";
-    // cppcheck-suppress misra-c2012-7.4
-    static uint8_t false_str[]     = "FALSE";
+    static uint8_t im_bootloader[]  = {'I', 'M', 'B', 'o', 'o', 't', 'l', 'o', 'a', 'd', 'e', 'r', '\0'};
+    static uint8_t ack_pack[]       = {'O', 'K', '\0'};
+    static uint8_t no_ack_pack[]    = {'N', 'O', 'K', '\0'};
+    static uint8_t true_str[]       = {'T', 'R', 'U', 'E', '\0'};
+    static uint8_t false_str[]      = {'F', 'A', 'L', 'S', 'E', '\0'};
 
     static fwUpdateState_E s_update_state = fwUpdateState_IDLE;
     uint8_t fw_buffer[BUFFER_SIZE];
@@ -159,11 +154,10 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
             } else if (0 == strcmp((char*)buf, GET_BOARD_ID_CMD)) {
 
 #ifdef FAKE_BOARD_ID
-                memcpy(tx_buffer, FAKE_BOARD_ID, HASHED_BOARD_ID_SIZE);
+                (void*)memcpy(tx_buffer, FAKE_BOARD_ID, HASHED_BOARD_ID_SIZE);
 
 #else
-                // cppcheck-suppress misra-c2012-17.7
-                memcpy(tx_buffer, s_hashed_board_key, HASHED_BOARD_ID_SIZE);
+                (void*)memcpy(tx_buffer, s_hashed_board_key, HASHED_BOARD_ID_SIZE);
 #endif
                 uint32_t crc = CalculateCRC32(tx_buffer, HASHED_BOARD_ID_SIZE, s_crc_calculated, XOR_CRC_VALUE, false, false, true);
                 Utils_Serialize32BE(&tx_buffer[HASHED_BOARD_ID_SIZE], crc);
@@ -183,9 +177,8 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
             } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
                 s_update_state = fwUpdateState_IDLE;
-                // cppcheck-suppress misra-c2012-11.6
-                // cppcheck-suppress misra-c2012-17.7
-                memset((void*)MAGIC_KEY_ADDRESS_RAM, 0, sizeof(uint64_t));
+                // cppcheck-suppress misra-c2012-11.6; conversion is needed to set value stored at MAGIC_KEY_ADDRESS_RAM to 0
+                (void*)memset((void*)MAGIC_KEY_ADDRESS_RAM, 0, sizeof(uint64_t));
                 s_exit_loop = true;
                 success = FirmwareUpdate_sendMessage(ack_pack, sizeof(ack_pack));
 
@@ -214,8 +207,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 
         case fwUpdateState_CHECK_SIGNATURE: {
             uint64_t signature;
-            // cppcheck-suppress misra-c2012-17.7
-            memcpy((void*)&signature, (void*)buf, sizeof(uint64_t));
+            (void*)memcpy((void*)&signature, (void*)buf, sizeof(uint64_t));
             success = FirmwareUpdate_hasSignature(&signature);
             s_update_state = fwUpdateState_CMD_ACTION_SELECT;
 
@@ -262,8 +254,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
         case fwUpdateState_DOWNLOADING_AND_FLASHING:
 
             package_index = firmware_size_counter % PACKET_SIZE;
-            // cppcheck-suppress misra-c2012-17.7
-            memcpy(&(fw_buffer[package_index]), buf, length);
+            (void*)memcpy(&(fw_buffer[package_index]), buf, length);
             firmware_size_counter += length;
 
             package_index = firmware_size_counter % PACKET_SIZE;
@@ -328,7 +319,7 @@ FirmwareUpdate_communicationHandler(uint8_t* buf, uint32_t length) {
 bool
 FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length) {
     bool success = false;
-    // cppcheck-suppress misra-c2012-18.8
+    // cppcheck-suppress misra-c2012-18.8; PACKET_SIZE is defined as 256 or W25Q_PAGE_SIZE, depends on EXTERNAL_FLASH
     uint8_t readout_buffer[PACKET_SIZE];
     static uint32_t index = 0U;
     const uint32_t address_addition = index * PACKET_SIZE;
