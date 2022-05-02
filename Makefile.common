@@ -1,5 +1,11 @@
 # Build path
-export BUILD_DIR = build/$(TARGET_FILE_NAME)
+ifdef BOARD
+export BUILD_DIR = build/$(BOARD_FILE_NAME)/build
+else
+export BUILD_DIR = build/$(TARGET_FILE_NAME)/build
+endif
+
+export TARGET_DIR = $(BUILD_DIR)/..
 
 C_DEFS += \
 -DGIT_BRANCH=\"$(BRANCH)\" \
@@ -17,9 +23,10 @@ endif
 
 ifdef BOARD
 CFLAGS += -D$(BOARD)
-endif
-
+TARGET := $(TARGET)_$(BOARD_FILE_NAME)
+else
 TARGET := $(TARGET)_$(TARGET_FILE_NAME)
+endif
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
@@ -30,7 +37,7 @@ LIBDIR =
 LDFLAGS = $(MCU) -specs=nano.specs -TLinker/$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: $(TARGET_DIR)/$(TARGET).elf $(TARGET_DIR)/$(TARGET).hex $(TARGET_DIR)/$(TARGET).bin
 
 
 #######################################
@@ -49,14 +56,14 @@ $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+$(TARGET_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 
-$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(TARGET_DIR)/%.hex: $(TARGET_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
 	
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(TARGET_DIR)/%.bin: $(TARGET_DIR)/%.elf | $(BUILD_DIR)
 	$(BIN) $< $@	
 	
 $(BUILD_DIR):
