@@ -2,7 +2,7 @@
 ifdef BOARD
 export BUILD_DIR = build/$(BOARD_FILE_NAME)/build
 else
-export BUILD_DIR = build/$(TARGET_FILE_NAME)/build
+export BUILD_DIR = build/$(MCU_FILE_NAME)/build
 endif
 
 export TARGET_DIR = $(BUILD_DIR)/..
@@ -18,14 +18,14 @@ ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffuncti
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
 ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2 -D$(TARGET_FILE_NAME) -D$(FLASH)
+CFLAGS += -g -gdwarf-2 -D$(MCU_FILE_NAME) -D$(FLASH)
 endif
 
 ifdef BOARD
 CFLAGS += -D$(BOARD)
 TARGET := $(TARGET)_$(BOARD_FILE_NAME)
 else
-TARGET := $(TARGET)_$(TARGET_FILE_NAME)
+TARGET := $(TARGET)_$(MCU_FILE_NAME)
 endif
 
 # Generate dependency information
