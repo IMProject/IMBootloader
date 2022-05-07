@@ -24,7 +24,7 @@
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_cdc.h"
-#include "firmware_update.h"
+#include "communication.h"
 
 /* USER CODE BEGIN Includes */
 
