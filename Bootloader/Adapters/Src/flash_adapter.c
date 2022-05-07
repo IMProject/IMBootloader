@@ -470,8 +470,6 @@ FlashAdapter_finish(void) {
     status = HAL_ERROR;
 #endif
 
-    //FlashAdapter_readProtection(true, 0x08020000UL, 0x08040000UL-1UL);
-
     if (status == HAL_OK) {
 
         HAL_NVIC_SystemReset();
