@@ -29,6 +29,7 @@ Bootloader/Src/board_info.c \
 Bootloader/Adapters/Src/gpio_adapter.c \
 Bootloader/Adapters/Src/flash_adapter.c \
 Bootloader/Adapters/Src/hash_adapter.c \
+Bootloader/Adapters/Src/system_adapter.c \
 Bootloader/Adapters/Src/system_clock_adapter.c \
 Bootloader/STM32/Src/usb_device.c \
 Bootloader/STM32/Src/usbd_conf.c \

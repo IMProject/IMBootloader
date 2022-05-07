@@ -34,6 +34,7 @@
 
 #include <stdbool.h>
 #include "main.h"
+#include "system_adapter.h"
 #include "system_clock_adapter.h"
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
@@ -84,7 +85,7 @@ main(void) {
         }
 
         GpioAdapter_led1Off();
-        HAL_NVIC_SystemReset();
+        SystemAdapter_reset();
     }
 
     SysTick->CTRL = 0;
