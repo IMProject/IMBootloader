@@ -32,15 +32,12 @@
  *
  ****************************************************************************/
 
-#include "firmware_update.h"
-
 #include <string.h>
-
+#include "communication.h"
 #include "utils.h"
-#include "usbd_cdc_if.h"
 #include "crc32.h"
 #include "version.h"
-
+#include "usbd_cdc_if.h"
 
 #define CHECK_SINGATURE_CMD         "check_signature"       //!< String command for bootloader to check firmware signature
 #define ERASE_CMD                   "erase"                 //!< String command for bootloader to erase the flash

@@ -21,8 +21,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_if.h"
+#include "communication.h"
 
-#include "firmware_update.h"
 
 /* USER CODE BEGIN INCLUDE */
 

@@ -37,7 +37,7 @@
 #include "system_clock_adapter.h"
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
-#include "firmware_update.h"
+#include "communication.h"
 
 typedef void (*pFunction)(void);
 
