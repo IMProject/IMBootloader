@@ -214,10 +214,8 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             s_update_state = communicationState_CMD_ACTION_SELECT;
 
             if (success) {
-                s_is_flashing = true;
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
-                s_is_flashing = false;
                 success = Communication_sendMessage(no_ack_pack, sizeof(no_ack_pack));
             }
 
@@ -228,6 +226,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             firmware_size = Utils_StringToInt(buf, length);
 
             if (firmware_size <= FIRMWARE_FLASH_SIZE_LIMIT) {
+                s_is_flashing = true;
                 s_update_state = communicationState_ERASE;
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
