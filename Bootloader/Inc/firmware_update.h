@@ -32,14 +32,13 @@
  *
  ****************************************************************************/
 
-#ifndef BOOTLOADER_INC_COMMUNICATION_H_
-#define BOOTLOADER_INC_COMMUNICATION_H_
+#ifndef BOOTLOADER_INC_FIRMWAREUPDATE_H_
+#define BOOTLOADER_INC_FIRMWAREUPDATE_H_
 
 #include <stdint.h>
 #include <stdbool.h>
 
-void Communication_init(void);
-bool Communication_handler(uint8_t* buf, uint32_t length);
-bool Communication_mainLoop(const uint32_t timeout);
+bool FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length, uint32_t* crc);
+bool FirmwareUpdate_finish(void);
 
-#endif /* BOOTLOADER_INC_COMMUNICATION_H_ */
+#endif /* BOOTLOADER_INC_FIRMWAREUPDATE_H_ */
