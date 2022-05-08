@@ -34,6 +34,8 @@
 
 #include <stdbool.h>
 #include "main.h"
+#include "gpio_adapter.h"
+#include "flash_adapter.h"
 #include "system_adapter.h"
 #include "system_clock_adapter.h"
 #include "usb_device.h"
@@ -47,7 +49,7 @@ main(void) {
     HAL_Init();
     SystemClock_Config();
     GpioAdapter_init();
-    FirmwareUpdate_init();
+    Communication_init();
     bool enter_bootloader_loop = false;
     pFunction JumpToApplication;
 
@@ -80,7 +82,7 @@ main(void) {
         MX_USB_DEVICE_Init();
         GpioAdapter_led1On();
 
-        while (FirmwareUpdate_bootloaderLoop(0U)) {
+        while (Communication_mainLoop(0U)) {
             //wait here until flashing is finished
         }
 

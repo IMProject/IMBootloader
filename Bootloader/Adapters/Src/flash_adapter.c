@@ -443,9 +443,10 @@ FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
     return success;
 }
 
-void
+bool
 FlashAdapter_finish(void) {
 
+    bool success = false;
     HAL_FLASH_Unlock();
     HAL_StatusTypeDef status;
 
@@ -471,9 +472,10 @@ FlashAdapter_finish(void) {
 #endif
 
     if (status == HAL_OK) {
-
-        HAL_NVIC_SystemReset();
+        success = true;
     }
+
+    return success;
 }
 
 bool
