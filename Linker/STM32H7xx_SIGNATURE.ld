@@ -73,6 +73,11 @@ FLASH (rx)       : ORIGIN = 0x08000000, LENGTH = 128K
 /* Define output sections */
 SECTIONS
 {
+  .bl_flash_signature : ALIGN(4)
+  {
+    KEEP(*(.bl_flash_signature))
+  } >SIGNATURE
+  
   /* The startup code goes first into FLASH */
   .isr_vector :
   {
@@ -134,14 +139,14 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
-
-  /* used by the startup to initialize data */
-  _sidata = LOADADDR(.data);
   
   .restart_info : ALIGN(4)
   {
     KEEP(*(.restart_info))
   } >DTCMRAM AT> FLASH
+
+  /* used by the startup to initialize data */
+  _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : 

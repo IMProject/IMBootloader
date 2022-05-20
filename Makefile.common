@@ -12,6 +12,13 @@ C_DEFS += \
 -DGIT_HASH=\"$(HASH)\" \
 -DGIT_TAG=\"$(TAG)\"
 
+# Check if the linker data script (LDS) is RAM version
+ifeq (RAM, $(findstring RAM, $(LDSCRIPT))) 
+	C_DEFS +=  \
+	-DLDS_RAM_VERSION \
+	-DVECT_TAB_SRAM 
+endif
+
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
@@ -31,14 +38,22 @@ endif
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
+#linker
+LD_NAME = $(basename $(LDSCRIPT))
+LD_SUFFIX = $(suffix $(LDSCRIPT))
+
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -TLinker/$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) -specs=nano.specs -TLinker/$(LD_NAME)$(LD_SUFFIX) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS_SIGNATURE = $(MCU) -specs=nano.specs -TLinker/$(LD_NAME)_SIGNATURE$(LD_SUFFIX) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(TARGET_DIR)/$(TARGET).elf $(TARGET_DIR)/$(TARGET).hex $(TARGET_DIR)/$(TARGET).bin
+all: debug signed
 
+debug: $(TARGET_DIR)/$(TARGET).elf $(TARGET_DIR)/$(TARGET).hex $(TARGET_DIR)/$(TARGET).bin
+
+signed: $(TARGET_DIR)/$(TARGET)_signed.elf $(TARGET_DIR)/$(TARGET)_signed.bin
 
 #######################################
 # build the application
@@ -59,12 +74,19 @@ $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 $(TARGET_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
+	
+$(TARGET_DIR)/$(TARGET)_signed.elf: $(OBJECTS) Makefile
+	$(CC) $(OBJECTS) $(LDFLAGS_SIGNATURE) -o $@
+	$(SZ) $@
 
 $(TARGET_DIR)/%.hex: $(TARGET_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
 	
 $(TARGET_DIR)/%.bin: $(TARGET_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
+	$(BIN) $< $@
+	
+$(TARGET_DIR)/%_signed.bin: $(TARGET_DIR)/%_signed.elf | $(BUILD_DIR)
+	$(BIN) $< $@
 	
 $(BUILD_DIR):
 	mkdir -p $@

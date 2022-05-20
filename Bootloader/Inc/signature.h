@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2021 - 2022 IMProject Development Team. All rights reserved.
+ *   Copyright (c) 2022 IMProject Development Team. All rights reserved.
  *   Authors: Igor Misic <igy1000mb@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,40 +32,26 @@
  *
  ****************************************************************************/
 
-#include "crc32.h"
-#include "firmware_update.h"
-#include "flash_adapter.h"
+#ifndef BOOTLOADER_INC_SIGNATURE_H_
+#define BOOTLOADER_INC_SIGNATURE_H_
 
-bool
-FirmwareUpdate_flash(uint8_t* write_buffer, const uint32_t flash_length, uint32_t* crc) {
-    bool success = false;
-    // cppcheck-suppress misra-c2012-18.8; PACKET_SIZE is defined as 256 or W25Q_PAGE_SIZE, depends on EXTERNAL_FLASH
-    uint8_t readout_buffer[PACKET_SIZE];
-    static uint32_t index = 0U;
-    const uint32_t address_addition = index * PACKET_SIZE;
-    uint64_t address = FLASH_FIRMWARE_ADDRESS + address_addition;
+#include <stdint.h>
 
-    success = FlashAdapter_program((uint32_t)address, write_buffer, flash_length);
+#define SIGNATURE_SIZE 64 //!< Signature size is 64 bytes
 
-    if (success) {
-        success = FlashAdapter_readBytes((uint32_t)address, readout_buffer, flash_length);
+typedef struct signature {
+    uint64_t magic_key;    //!< First 8 bytes for the magic key
+    uint64_t unused[7];    //!< The rest of the 56 bytes are reserved for future use
+} signature_S;
 
-        if (success) {
-            *crc = CalculateCRC32(readout_buffer, flash_length, *crc, 0U, false, false, false);
-            for (uint32_t i = 0U; (success) && (i < flash_length); ++i) {
-                if (write_buffer[i] != readout_buffer[i]) {
-                    success = false;
-                }
-            }
-        }
-    }
+//! Enumeration for different signatures
+typedef enum detectedBinary_ENUM {
+    detectedBinary_FIRMWARE_FLASH,   //!< New firmware for FLASH
+    detectedBinary_FIRMWARE_RAM,     //!< Firmware for RAM
+    detectedBinary_BOOTLOADER_FLASH, //!< New bootloader for FLASH
+    detectedBinary_BOOTLOADER_RAM,   //!< Bootloader for RAM
+} detectedBinary_E;
 
-    ++index;
+detectedBinary_E Signature_verification(const signature_S* signature);
 
-    return success;
-}
-
-bool
-FirmwareUpdate_finish(void) {
-    return FlashAdapter_finish();
-}
+#endif /* BOOTLOADER_INC_SIGNATURE_H_ */

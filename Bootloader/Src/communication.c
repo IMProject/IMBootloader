@@ -37,11 +37,12 @@
 #include "gpio_adapter.h"
 #include "flash_adapter.h"
 #include "hash_adapter.h"
+#include "binary_update.h"
 #include "communication.h"
-#include "firmware_update.h"
-#include "utils.h"
+#include "signature.h"
 #include "crc32.h"
-#include "version.h"
+#include "utils.h"
+#include "software_info.h"
 #include "usbd_cdc_if.h"
 
 #define CHECK_SINGATURE_CMD         "check_signature"       //!< String command for bootloader to check firmware signature
@@ -49,7 +50,7 @@
 #define GET_BOARD_ID_CMD            "board_id"              //!< String command for bootloader to send board id
 #define GET_BOARD_INFO_JSON_CMD     "board_info_json"       //!< String command for bootloader to send board info in JSON format
 #define GET_VERSION_CMD             "version"               //!< String command for bootloader to send version
-#define GET_VERSION_JSON_CMD        "version_json"          //!< String command for bootloader to send version in JSON format
+#define GET_SW_INFO_JSON_CMD        "software_info_json"    //!< String command for bootloader to send software info in JSON format
 #define DISCONNECT_CMD              "disconnect"            //!< String command for bootloader to disconnect
 #define VERIFY_FLASHER_CMD          "IMFlasher_Verify"      //!< String for bootloader to verify IMFlasher application
 #define EXIT_BL_CMD                 "exit_bl"               //!< String command for exit bootloader
@@ -77,7 +78,6 @@ typedef enum communicationState_ENUM {
 
 static bool Communication_sendStringWithCrc(uint8_t* string, size_t size);
 inline static bool Communication_sendMessage(uint8_t* data, uint16_t length);
-inline static bool Communication_hasSignature(const uint64_t* buffer);
 
 static bool s_exit_loop = false;        //!< Exit flash loop if needed
 static bool s_rdp_enable_flag = false;  //!< Enable RDP flag
@@ -148,7 +148,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
 
             } else if (0 == strcmp((char*)buf, GET_VERSION_CMD)) {
-                success = Version_getData(tx_buffer, sizeof(tx_buffer));
+                success = SwInfo_getVersion(tx_buffer, sizeof(tx_buffer));
                 if (success) {
                     success = Communication_sendMessage(tx_buffer, strlen((char*)tx_buffer));
                 }
@@ -171,8 +171,8 @@ Communication_handler(uint8_t* buf, uint32_t length) {
                 }
                 success = Communication_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
 
-            } else if (0 == strcmp((char*)buf, GET_VERSION_JSON_CMD)) {
-                success = Version_getDataJson(tx_buffer, sizeof(tx_buffer));
+            } else if (0 == strcmp((char*)buf, GET_SW_INFO_JSON_CMD)) {
+                success = SwInfo_getDataJson(tx_buffer, sizeof(tx_buffer));
                 if (success) {
                     success = Communication_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
                 }
@@ -208,9 +208,10 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             break;
 
         case communicationState_CHECK_SIGNATURE: {
-            uint64_t signature;
-            (void*)memcpy((void*)&signature, (void*)buf, sizeof(uint64_t));
-            success = Communication_hasSignature(&signature);
+            signature_S signature;
+            (void*)memcpy((void*)&signature, (void*)buf, SIGNATURE_SIZE);
+            detectedBinary_E binary_detected = Signature_verification(&signature);
+            success = BinaryUpdate_handleDetectedBinary(binary_detected);
             s_update_state = communicationState_CMD_ACTION_SELECT;
 
             if (success) {
@@ -239,7 +240,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
 
         case communicationState_ERASE:
 
-            success = FlashAdapter_erase(firmware_size, FLASH_FIRMWARE_ADDRESS);
+            success = BinaryUpdate_erase(firmware_size);
 
             if (success) {
                 s_update_state = communicationState_DOWNLOADING_AND_FLASHING;
@@ -261,7 +262,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             package_index = firmware_size_counter % PACKET_SIZE;
 
             if ((0u == package_index) && (firmware_size != firmware_size_counter)) {
-                success = FirmwareUpdate_flash(&(fw_buffer[0]), PACKET_SIZE, &s_crc_calculated);
+                success = BinaryUpdate_write(&(fw_buffer[0]), PACKET_SIZE, &s_crc_calculated);
                 if (success) {
                     success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
                 } else {
@@ -275,7 +276,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
                 if (flash_length == 0u) {
                     flash_length = PACKET_SIZE;
                 }
-                success = FirmwareUpdate_flash(&(fw_buffer[0]), flash_length, &s_crc_calculated);
+                success = BinaryUpdate_write(&(fw_buffer[0]), flash_length, &s_crc_calculated);
                 if (success) {
                     s_update_state = communicationState_CRC;
                     success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
@@ -327,7 +328,7 @@ Communication_mainLoop(const uint32_t timeout) {
 
     if (s_is_flashed) {
         HAL_Delay(100); // wait for last ACK to be send (main loop shall wait)
-        bool success = FirmwareUpdate_finish();
+        bool success = BinaryUpdate_finish();
         if (success) {
             stay_in_loop = false;
         }
@@ -340,6 +341,7 @@ Communication_mainLoop(const uint32_t timeout) {
 
     if (s_exit_loop) {
         HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
+        BinaryUpdate_resetJumpAddress();
         stay_in_loop = false;
     }
 
@@ -387,10 +389,4 @@ Communication_sendStringWithCrc(uint8_t* string, size_t size) {
 inline static bool
 Communication_sendMessage(uint8_t* data, uint16_t length) {
     return (CDC_Transmit_FS(data, length) == (uint8_t)USBD_OK);
-}
-
-inline static bool
-Communication_hasSignature(const uint64_t* buffer) {
-    const uint64_t signature_magic_key = SIGNATURE_MAGIC_KEY;
-    return (0 == memcmp(buffer, &signature_magic_key, sizeof(SIGNATURE_MAGIC_KEY)));
 }

@@ -40,7 +40,9 @@
 #include "system_clock_adapter.h"
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
+#include "binary_update.h"
 #include "communication.h"
+#include "signature.h"
 
 typedef void (*pFunction)(void);
 
@@ -50,6 +52,7 @@ main(void) {
     SystemClock_Config();
     GpioAdapter_init();
     Communication_init();
+    BinaryUpdate_handleBootInfo();
     bool enter_bootloader_loop = false;
     pFunction JumpToApplication;
 
@@ -63,6 +66,12 @@ main(void) {
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_FLASH
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_FLASH != MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
+    }
+
+    // Check for skip flag
+    if (BinaryUpdate_checkSkipLoopFlag()) {
+        BinaryUpdate_disableLoopFlag();
+        enter_bootloader_loop = false;
     }
 
 #if defined(BL_BUTTON_Pin) && defined(BL_BUTTON_Port) && defined(BL_BUTTON_ON) && defined(BL_BUTTON_PRESS_TIME)
@@ -94,11 +103,13 @@ main(void) {
     SysTick->LOAD = 0;
     SysTick->VAL  = 0;
 
-    SCB->VTOR = FLASH_FIRMWARE_ADDRESS;
+    uint32_t jump_address = BinaryUpdate_getJumpAddress();
+
+    SCB->VTOR = jump_address;
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to jump to the application
-    JumpToApplication = (pFunction) (*(__IO uint32_t*) (FLASH_FIRMWARE_ADDRESS + 4U));
+    JumpToApplication = (pFunction) (*(__IO uint32_t*) (jump_address + 4U));
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to jump to the application
-    __set_MSP(*(__IO uint32_t*) FLASH_FIRMWARE_ADDRESS);
+    __set_MSP(*(__IO uint32_t*) jump_address);
     JumpToApplication();
 
     return -1; //error

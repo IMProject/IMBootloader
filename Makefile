@@ -24,8 +24,9 @@ export TAG := $(shell git tag --sort=committerdate | tail -1)
 
 export COMMON_SRCS =  \
 Bootloader/Src/main.c \
+Bootloader/Src/binary_update.c \
 Bootloader/Src/communication.c \
-Bootloader/Src/firmware_update.c \
+Bootloader/Src/signature.c \
 Bootloader/Src/board_info.c \
 Bootloader/Adapters/Src/gpio_adapter.c \
 Bootloader/Adapters/Src/flash_adapter.c \
@@ -36,11 +37,11 @@ Bootloader/STM32/Src/usb_device.c \
 Bootloader/STM32/Src/usbd_conf.c \
 Bootloader/STM32/Src/usbd_desc.c \
 Bootloader/STM32/Src/usbd_cdc_if.c \
-Bootloader/Utility/Src/version.c \
-Bootloader/Utility/Src/utils.c \
-Bootloader/Utility/Src/crc32.c \
 Bootloader/Utility/Src/base64.c \
+Bootloader/Utility/Src/crc32.c \
 Bootloader/Utility/Src/json.c \
+Bootloader/Utility/Src/utils.c \
+Bootloader/Utility/Src/software_info.c \
 Monocypher/src/monocypher.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
@@ -110,9 +111,13 @@ misra:
 TARGETS	= \
 	stm32l4xx \
 	stm32h7xx \
+	stm32h7xx_ram \
 	stm32f7xx \
+	stm32f7xx_ram \
 	matek_H7_slim \
-	pixhawk4
+	matek_H7_slim_ram \
+	pixhawk4 \
+	pixhawk4_ram
 
 all:	$(TARGETS)
 
@@ -133,6 +138,9 @@ matek_H7_slim_ram:
 
 pixhawk4:
 	${MAKE} stm32f7xx BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
+	
+pixhawk4_ram:
+	${MAKE} stm32f7xx_ram BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
 
 #
 # Microcontroller (MCU) specific targets.
@@ -152,3 +160,6 @@ stm32h7xx_ext: $(MAKEFILE_LIST)
 
 stm32f7xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
+	
+stm32f7xx_ram: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx_RAM.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@

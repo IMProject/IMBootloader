@@ -53,7 +53,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x20020000;    /* end of RAM */
+_estack = 0x20010000;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -62,26 +62,31 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
 DTCMRAM (xrw)    : ORIGIN = 0x20000000, LENGTH = 128K
+SIGNATURE (rx)   : ORIGIN = 0x23FFFFC0, LENGTH = 64 /* Never written to the RAM, it is for binary signature. */
 RAM_D1 (xrw)     : ORIGIN = 0x24000000, LENGTH = 512K
 RAM_D2 (xrw)     : ORIGIN = 0x30000000, LENGTH = 288K
 RAM_D3 (xrw)     : ORIGIN = 0x38000000, LENGTH = 64K
 ITCMRAM (xrw)    : ORIGIN = 0x00000000, LENGTH = 64K
-SIGNATURE (rx)   : ORIGIN = 0x07FFFFC0, LENGTH = 64 /* Never written to the FLASH, it is for binary signature. */
 FLASH (rx)       : ORIGIN = 0x08000000, LENGTH = 128K
 }
 
 /* Define output sections */
 SECTIONS
 {
-  /* The startup code goes first into FLASH */
+  .bl_ram_signature : ALIGN(4)
+  {
+    KEEP(*(.bl_ram_signature))
+  } >SIGNATURE
+  
+  /* The startup code goes first into RAM_D1 */
   .isr_vector :
   {
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+  } >RAM_D1
 
-  /* The program code and other data goes into FLASH */
+  /* The program code and other data goes into RAM_D1 */
   .text :
   {
     . = ALIGN(4);
@@ -96,52 +101,52 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >FLASH
+  } >RAM_D1
 
-  /* Constant data goes into FLASH */
+  /* Constant data goes into RAM_D1 */
   .rodata :
   {
     . = ALIGN(4);
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >FLASH
+  } >RAM_D1
 
-  .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
+  .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >RAM_D1
   .ARM : {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-  } >FLASH
+  } >RAM_D1
 
   .preinit_array     :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-  } >FLASH
+  } >RAM_D1
   .init_array :
   {
     PROVIDE_HIDDEN (__init_array_start = .);
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
-  } >FLASH
+  } >RAM_D1
   .fini_array :
   {
     PROVIDE_HIDDEN (__fini_array_start = .);
     KEEP (*(SORT(.fini_array.*)))
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
-  } >FLASH
-
-  /* used by the startup to initialize data */
-  _sidata = LOADADDR(.data);
+  } >RAM_D1
   
   .restart_info : ALIGN(4)
   {
     KEEP(*(.restart_info))
-  } >DTCMRAM AT> FLASH
+  } >DTCMRAM AT> RAM_D1
+
+  /* used by the startup to initialize data */
+  _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : 
@@ -153,7 +158,7 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >DTCMRAM AT> FLASH
+  } >DTCMRAM AT> RAM_D1
 
   
   /* Uninitialized data section */
@@ -170,7 +175,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >DTCMRAM
+  } >DTCMRAM AT> RAM_D1
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
@@ -181,8 +186,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >DTCMRAM
-
+  } >DTCMRAM AT> RAM_D1
   
 
   /* Remove information from the standard libraries */
