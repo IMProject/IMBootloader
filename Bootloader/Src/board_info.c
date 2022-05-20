@@ -33,10 +33,10 @@
  ****************************************************************************/
 
 #include "board_info.h"
-#include "version.h"
 #include "hash_adapter.h"
 #include "json.h"
 #include "base64.h"
+#include "software_info.h"
 
 /* JSON String
  *
