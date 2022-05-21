@@ -18,9 +18,13 @@ jobs:
         config: [
           stm32l4xx,
           stm32f7xx,
+          stm32f7xx_ram,
           stm32h7xx,
+          stm32h7xx_ram,
           matek_H7_slim,
-          pixhawk4
+          matek_H7_slim_ram,
+          pixhawk4,
+          pixhawk4_ram
           ]
           
     container:       
