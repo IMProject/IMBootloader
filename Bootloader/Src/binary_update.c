@@ -120,7 +120,7 @@ BinaryUpdate_erase(uint32_t firmware_size) {
             success = FlashAdapter_erase(firmware_size, s_address);
             break;
         case detectedBinary_BOOTLOADER_FLASH:
-            if (detectedBinary_BOOTLOADER_RAM != boot_info.previus_binary) {
+            if (detectedBinary_BOOTLOADER_RAM == boot_info.previus_binary) {
                 //Only allowed to erase if RAM version is running
                 success = FlashAdapter_erase(firmware_size, s_address);
             }

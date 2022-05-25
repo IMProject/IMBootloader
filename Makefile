@@ -92,7 +92,7 @@ check_format:
 format:
 	$(call colorecho,'Formatting with astyle')
 	@Tools/astyle/check_code_style_all.sh --fix
-	
+
 #######################################
 # Cppcheck
 #######################################
@@ -100,7 +100,7 @@ format:
 cppcheck:
 	$(call colorecho,'Checking code with cppcheck')
 	@cppcheck --error-exitcode=1 Bootloader
-	
+
 misra:
 	$(call colorecho,'Checking MISRA C:2012 with cppcheck')
 	@cppcheck cppcheck $(COMMON_INCS) Bootloader --force --addon=misra.py --inline-suppr --error-exitcode=1 \
@@ -138,7 +138,7 @@ matek_H7_slim_ram:
 
 pixhawk4:
 	${MAKE} stm32f7xx BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
-	
+
 pixhawk4_ram:
 	${MAKE} stm32f7xx_ram BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
 
@@ -151,7 +151,7 @@ stm32l4xx: $(MAKEFILE_LIST)
 
 stm32h7xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
-	
+
 stm32h7xx_ram: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx_RAM.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
 
@@ -160,6 +160,6 @@ stm32h7xx_ext: $(MAKEFILE_LIST)
 
 stm32f7xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
-	
+
 stm32f7xx_ram: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx_RAM.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
