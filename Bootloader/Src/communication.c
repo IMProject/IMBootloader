@@ -137,8 +137,6 @@ Communication_handler(uint8_t* buf, uint32_t length) {
         case communicationState_CMD_ACTION_SELECT:
             /* Different bootloader actions. Not necessary to flash firmware from here. */
 
-            firmware_size = Utils_StringToInt(buf, length);
-
             if (0 == strcmp((char*)buf, VERIFY_FLASHER_CMD)) {
                 s_update_state = communicationState_RECEIVE_FIRMWARE_SIZE;
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
