@@ -59,7 +59,7 @@ Signature_verification(const signature_S* signature) {
     } else if (0 == memcmp(&(signature->magic_key), &bl_ram_signature_magic_key, sizeof(bl_ram_signature_magic_key))) {
         detected_binary = detectedBinary_BOOTLOADER_RAM;
     } else {
-        detected_binary = detectedBinary_FIRMWARE_FLASH;
+        detected_binary = detectedBinary_UNKNOWN;
     }
 
     return detected_binary;

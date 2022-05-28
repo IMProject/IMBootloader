@@ -50,6 +50,7 @@ typedef enum detectedBinary_ENUM {
     detectedBinary_FIRMWARE_RAM,     //!< Firmware for RAM
     detectedBinary_BOOTLOADER_FLASH, //!< New bootloader for FLASH
     detectedBinary_BOOTLOADER_RAM,   //!< Bootloader for RAM
+    detectedBinary_UNKNOWN,          //!< Not existing or unknown signature
 } detectedBinary_E;
 
 detectedBinary_E Signature_verification(const signature_S* signature);

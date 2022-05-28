@@ -63,9 +63,13 @@ BinaryUpdate_handleDetectedBinary(detectedBinary_E detected_binary) {
             s_address = RAM_FIRMWARE_ADDRESS;
             break;
 
-        default:
+        case detectedBinary_UNKNOWN:
+            //we support unsigned binary but handle it as firmware for flash
             success = false;
             s_address = FLASH_FIRMWARE_ADDRESS;
+            break;
+
+        default:
             break;
     }
 
@@ -130,8 +134,11 @@ BinaryUpdate_erase(uint32_t firmware_size) {
         case detectedBinary_BOOTLOADER_RAM:
             break;
 
-        default:
+        case detectedBinary_UNKNOWN:
             success = FlashAdapter_erase(firmware_size, s_address);
+            break;
+
+        default:
             break;
     }
 
@@ -195,10 +202,13 @@ BinaryUpdate_finish(void) {
             boot_info.skip_bl_loop = true;
             break;
 
-        default:
+        case detectedBinary_UNKNOWN:
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = false;
             success = FlashAdapter_finish();
+            break;
+
+        default:
             break;
     }
 
