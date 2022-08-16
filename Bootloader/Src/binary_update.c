@@ -35,6 +35,7 @@
 #include "crc32.h"
 #include "binary_update.h"
 #include "flash_adapter.h"
+#include "security.h"
 #include "signature.h"
 
 __attribute__ ((section(".restart_info")))
@@ -146,22 +147,20 @@ BinaryUpdate_erase(uint32_t firmware_size) {
 }
 
 bool
-BinaryUpdate_write(uint8_t* write_buffer, const uint32_t flash_length, uint32_t* crc) {
-    bool success = false;
-    // cppcheck-suppress misra-c2012-18.8; PACKET_SIZE is defined as 256 or W25Q_PAGE_SIZE, depends on EXTERNAL_FLASH
-    uint8_t readout_buffer[PACKET_SIZE];
-    static uint32_t index = 0U;
-    const uint32_t address_addition = index * PACKET_SIZE;
-    uint64_t address = s_address + address_addition;
+BinaryUpdate_write(uint8_t* write_buffer, const uint32_t data_length, uint32_t* crc) {
 
-    success = FlashAdapter_program((uint32_t)address, write_buffer, flash_length);
+    bool success = false;
+
+    success = FlashAdapter_program((uint32_t)s_address, write_buffer, data_length);
 
     if (success) {
-        success = FlashAdapter_readBytes((uint32_t)address, readout_buffer, flash_length);
+        // cppcheck-suppress misra-c2012-18.8;
+        uint8_t readout_buffer[data_length];
+        success = FlashAdapter_readBytes((uint32_t)s_address, readout_buffer, data_length);
 
         if (success) {
-            *crc = CalculateCRC32(readout_buffer, flash_length, *crc, 0U, false, false, false);
-            for (uint32_t i = 0U; (success) && (i < flash_length); ++i) {
+            *crc = CalculateCRC32(readout_buffer, data_length, *crc, 0U, false, false, false);
+            for (uint32_t i = 0U; (success) && (i < data_length); ++i) {
                 if (write_buffer[i] != readout_buffer[i]) {
                     success = false;
                 }
@@ -169,7 +168,7 @@ BinaryUpdate_write(uint8_t* write_buffer, const uint32_t flash_length, uint32_t*
         }
     }
 
-    ++index;
+    s_address += data_length;
 
     return success;
 }
