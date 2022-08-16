@@ -54,7 +54,7 @@ void BinaryUpdate_resetJumpAddress(void);
 bool BinaryUpdate_checkSkipLoopFlag(void);
 void BinaryUpdate_disableLoopFlag(void);
 bool BinaryUpdate_erase(uint32_t firmware_size);
-bool BinaryUpdate_write(uint8_t* write_buffer, const uint32_t flash_length, uint32_t* crc);
+bool BinaryUpdate_write(uint8_t* write_buffer, const uint32_t data_length, uint32_t* crc);
 bool BinaryUpdate_finish(void);
 
 #endif /* BOOTLOADER_INC_BINARYUPDATE_H_ */
