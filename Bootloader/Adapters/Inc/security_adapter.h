@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2021 - 2022 IMProject Development Team. All rights reserved.
+ *   Copyright (c) 2022 IMProject Development Team. All rights reserved.
  *   Authors: Igor Misic <igy1000mb@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,29 +32,13 @@
  *
  ****************************************************************************/
 
-#ifndef BOOTLOADER_INC_BINARYUPDATE_H_
-#define BOOTLOADER_INC_BINARYUPDATE_H_
+#ifndef BOOTLOADER_ADAPTERS_INC_SECURITY_ADAPTER_H_
+#define BOOTLOADER_ADAPTERS_INC_SECURITY_ADAPTER_H_
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "signature.h"
 
-#pragma pack(push, 1)
-typedef struct bootInfo {
-    uint32_t jump_address;                  //!< Address for BL to jump
-    bool skip_bl_loop;                      //!< Flag to skip BL loop
-    detectedBinary_E previus_binary;        //!< Previous detected binary
-} bootInfo_S;
-#pragma pack(pop)
+void SecurityAdapter_init(void);
+bool SecurityAdapter_getRandomData(uint8_t* data, uint32_t size);
 
-bool BinaryUpdate_handleDetectedBinary(detectedBinary_E detected_binary);
-void BinaryUpdate_handleBootInfo(void);
-uint32_t BinaryUpdate_getJumpAddress(void);
-void BinaryUpdate_resetJumpAddress(void);
-bool BinaryUpdate_checkSkipLoopFlag(void);
-void BinaryUpdate_disableLoopFlag(void);
-bool BinaryUpdate_erase(uint32_t firmware_size);
-bool BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length, uint32_t* crc);
-bool BinaryUpdate_finish(void);
-
-#endif /* BOOTLOADER_INC_BINARYUPDATE_H_ */
+#endif /* BOOTLOADER_ADAPTERS_INC_SECURITY_ADAPTER_H_ */

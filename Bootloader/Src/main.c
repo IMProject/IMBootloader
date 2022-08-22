@@ -42,6 +42,7 @@
 #include "usbd_cdc_if.h"
 #include "binary_update.h"
 #include "communication.h"
+#include "security_adapter.h"
 #include "signature.h"
 
 typedef void (*pFunction)(void);
@@ -52,9 +53,25 @@ main(void) {
     SystemClock_Config();
     GpioAdapter_init();
     Communication_init();
+    SecurityAdapter_init();
     BinaryUpdate_handleBootInfo();
     bool enter_bootloader_loop = false;
     pFunction JumpToApplication;
+
+#ifdef SECURED
+    if (!FlashAdapter_isFlashRDPProtected()) {
+
+        bool success = FlashAdapter_setReadProtection(true);
+
+        if (success) {
+            success = FlashAdapter_isFlashRDPProtected();
+
+            if (!success) {
+                Error_Handler();
+            }
+        }
+    }
+#endif
 
     // Check RAM KEY
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_RAM

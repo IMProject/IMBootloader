@@ -375,7 +375,8 @@ FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
 
     if ((length_program != 0U) && (length_program < FLASH_WORD_SIZE)) {
 
-        uint8_t data[32];
+        uint8_t data[FLASH_WORD_SIZE];
+        (void*)memset((void*)data, 0xFF, FLASH_WORD_SIZE);
         (void*)memcpy((void*)data, (void*)&buffer[memory_index], length_program);
         // cppcheck-suppress misra-c2012-11.4; function expects address of data as uint32_t
         HAL_StatusTypeDef status = HAL_FLASH_Program(type_program, address + memory_index, (uint32_t)data);

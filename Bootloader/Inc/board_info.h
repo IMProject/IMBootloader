@@ -40,15 +40,10 @@
 #include <assert.h>
 #include <string.h>
 #include <main.h>
+#include "security.h"
 
 /* 32 bytes fake board id. If enabled, board and manufacturer id communication will be skipped. */
 //#define FAKE_BOARD_ID  "NOT_SECURED_MAGIC_STRING_1234567"
-
-typedef enum secureHash_ENUM {
-    BLAKE2B = 0,
-    SHA256,
-    MD5
-} secureHash_E;
 
 #define HASH_BOARD_ID_ALGORITHM             BLAKE2B //!< Selected algorithm for calculating hashed board id from UUID
 

@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2021 - 2022 IMProject Development Team. All rights reserved.
+ *   Copyright (c) 2022 IMProject Development Team. All rights reserved.
  *   Authors: Igor Misic <igy1000mb@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,29 +32,43 @@
  *
  ****************************************************************************/
 
-#ifndef BOOTLOADER_INC_BINARYUPDATE_H_
-#define BOOTLOADER_INC_BINARYUPDATE_H_
+#ifndef BOOTLOADER_INC_SECURITY_H_
+#define BOOTLOADER_INC_SECURITY_H_
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "signature.h"
+#include <assert.h>
+#include <string.h>
 
-#pragma pack(push, 1)
-typedef struct bootInfo {
-    uint32_t jump_address;                  //!< Address for BL to jump
-    bool skip_bl_loop;                      //!< Flag to skip BL loop
-    detectedBinary_E previus_binary;        //!< Previous detected binary
-} bootInfo_S;
-#pragma pack(pop)
+typedef enum securityAlgorithm_ENUM {
+    BLAKE2B = 0,
+    SHA256
+} securityAlgorithm_E;
 
-bool BinaryUpdate_handleDetectedBinary(detectedBinary_E detected_binary);
-void BinaryUpdate_handleBootInfo(void);
-uint32_t BinaryUpdate_getJumpAddress(void);
-void BinaryUpdate_resetJumpAddress(void);
-bool BinaryUpdate_checkSkipLoopFlag(void);
-void BinaryUpdate_disableLoopFlag(void);
-bool BinaryUpdate_erase(uint32_t firmware_size);
-bool BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length, uint32_t* crc);
-bool BinaryUpdate_finish(void);
+#define MAC_SIZE                    16U
+#define NONCE_SIZE                  24U
+#define DATA_SIZE                   256U
+#define SECURE_PACKET_SIZE          296U // PACKET_SIZE = MAC_SIZE + NONCE_SIZE + DATA_SIZE
 
-#endif /* BOOTLOADER_INC_BINARYUPDATE_H_ */
+#define SERVER_SECURITY_DATA_SIZE 175U
+
+#define SIGNATURE_ALGORITHM               BLAKE2B //!< Selected algorithm for calculating public key signature
+
+#define PRESHARED_KEY_SIZE                32U //!< Size for preshared key binary
+#define PRESHARED_KEY_SIZE_BASE64_STR     45U //!< Size for preshared key string in base64 format including null-terminator
+#define PRESHARED_KEY_BASE64_STR          (const char*)("cHJlc2hhcmVkX2tleV9pbl8zMl9ieXRlc19mb3JtYXQ=")
+
+static_assert(strlen((const char*)PRESHARED_KEY_BASE64_STR) == (PRESHARED_KEY_SIZE_BASE64_STR - 1U), "PRESHARED_KEY_BASE64_STR is wrong size");
+
+bool Security_setServerSecurityDataJson(char* buffer, uint16_t buffer_size);
+bool Security_getClientSecurityDataJson(char* buffer, uint16_t buffer_size);
+bool Security_isSecured(void);
+bool Security_decrypt(
+    const uint8_t mac[MAC_SIZE],
+    const uint8_t nonce[NONCE_SIZE],
+    const uint8_t* cipher_data,
+    uint8_t* plain_data,
+    const uint16_t data_length);
+void Security_wipeKeys(void);
+
+#endif /* BOOTLOADER_INC_SECURITY_H_ */
