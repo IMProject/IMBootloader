@@ -42,6 +42,7 @@
 #include "signature.h"
 #include "crc32.h"
 #include "utils.h"
+#include "security.h"
 #include "software_info.h"
 #include "usbd_cdc_if.h"
 
@@ -51,6 +52,7 @@
 #define GET_BOARD_INFO_JSON_CMD     "board_info_json"       //!< String command for bootloader to send board info in JSON format
 #define GET_VERSION_CMD             "version"               //!< String command for bootloader to send version
 #define GET_SW_INFO_JSON_CMD        "software_info_json"    //!< String command for bootloader to send software info in JSON format
+#define GET_SECURITY_JSON_CMD       "security_json"         //!< String command for bootloader to send security data in JSON format
 #define DISCONNECT_CMD              "disconnect"            //!< String command for bootloader to disconnect
 #define VERIFY_FLASHER_CMD          "IMFlasher_Verify"      //!< String for bootloader to verify IMFlasher application
 #define EXIT_BL_CMD                 "exit_bl"               //!< String command for exit bootloader
@@ -59,7 +61,7 @@
 #define DISABLE_FW_PROTECTION_CMD   "disable_fw_protection" //!< String command to unprotect application flash
 #define SW_TYPE_STR                 "software_type"         //!< String for bootloader to send if IMFlasher is connected to bootloader
 
-#define BUFFER_SIZE     (2048U)         //!< Bootloader buffer size
+#define RX_BUFFER_SIZE  (2048U)         //!< Size for buffering rx data
 #define CRC_SIZE        (4U)            //!< CRC size in bytes (CRC32)
 #define CRC_INIT_VALUE  (0xFFFFFFFFU)   //!< CRC init value
 #define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
@@ -71,6 +73,7 @@ typedef enum communicationState_ENUM {
     communicationState_CMD_ACTION_SELECT,
     communicationState_ERASE,
     communicationState_RECEIVE_FIRMWARE_SIZE,
+    communicationState_RECEIVE_SERVER_SECURITY_DATA,
     communicationState_CHECK_SIGNATURE,
     communicationState_DOWNLOADING_AND_FLASHING,
     communicationState_CRC
@@ -85,6 +88,7 @@ static bool s_rdp_disable_flag = false; //!< Disable RDP flag
 static bool s_is_flashing = false;      //!< Flash for main loop indicating flashing state
 static bool s_is_flashed = false;       //!< Flash for main loop indicating end of the flashing process
 
+static uint32_t s_packet_size = PACKET_SIZE;
 static uint8_t s_hashed_board_key[HASHED_BOARD_ID_SIZE];
 static uint32_t s_crc_calculated = CRC_INIT_VALUE;
 
@@ -104,10 +108,10 @@ Communication_handler(uint8_t* buf, uint32_t length) {
     static uint8_t false_str[]      = {'F', 'A', 'L', 'S', 'E', '\0'};
 
     static communicationState_E s_update_state = communicationState_IDLE;
-    uint8_t fw_buffer[BUFFER_SIZE];
+    uint8_t rx_buffer[RX_BUFFER_SIZE];
     static uint32_t firmware_size = 0U;
     uint32_t crc_received;
-    static uint32_t firmware_size_counter = 0U;
+    static uint32_t buffer_size_counter = 0U;
     uint32_t flash_length;
     bool success = true;
     uint32_t package_index;
@@ -175,6 +179,14 @@ Communication_handler(uint8_t* buf, uint32_t length) {
                     success = Communication_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
                 }
 
+            } else if (0 == strcmp((char*)buf, GET_SECURITY_JSON_CMD)) {
+                success = Security_getClientSecurityDataJson((char*)tx_buffer, sizeof(tx_buffer));
+                if (success) {
+                    success = Communication_sendStringWithCrc(tx_buffer, sizeof(tx_buffer));
+                    buffer_size_counter = 0U;
+                    s_update_state = communicationState_RECEIVE_SERVER_SECURITY_DATA;
+                }
+
             } else if (0 == strcmp((char*)buf, EXIT_BL_CMD)) {
                 s_update_state = communicationState_IDLE;
                 // cppcheck-suppress misra-c2012-11.6; conversion is needed to set value stored at MAGIC_KEY_ADDRESS_RAM to 0
@@ -204,6 +216,29 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             }
 
             break;
+
+        case communicationState_RECEIVE_SERVER_SECURITY_DATA: {
+
+            (void*)memcpy(&(rx_buffer[buffer_size_counter]), buf, length);
+            buffer_size_counter += length;
+
+            if (buffer_size_counter >= SERVER_SECURITY_DATA_SIZE) {
+                success = Security_setServerSecurityDataJson((char*)rx_buffer, buffer_size_counter);
+
+                if (success) {
+                    s_packet_size = SECURE_PACKET_SIZE;
+                    success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
+                } else {
+                    success = Communication_sendMessage(no_ack_pack, sizeof(no_ack_pack));
+                }
+
+                s_update_state = communicationState_CMD_ACTION_SELECT;
+
+            } else {
+                // keep collecting server security data
+            }
+            break;
+        }
 
         case communicationState_CHECK_SIGNATURE: {
             signature_S signature;
@@ -241,6 +276,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             success = BinaryUpdate_erase(firmware_size);
 
             if (success) {
+                buffer_size_counter = 0;
                 s_update_state = communicationState_DOWNLOADING_AND_FLASHING;
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
@@ -253,14 +289,14 @@ Communication_handler(uint8_t* buf, uint32_t length) {
 
         case communicationState_DOWNLOADING_AND_FLASHING:
 
-            package_index = firmware_size_counter % PACKET_SIZE;
-            (void*)memcpy(&(fw_buffer[package_index]), buf, length);
-            firmware_size_counter += length;
+            package_index = buffer_size_counter % s_packet_size;
+            (void*)memcpy(&(rx_buffer[package_index]), buf, length);
+            buffer_size_counter += length;
 
-            package_index = firmware_size_counter % PACKET_SIZE;
+            package_index = buffer_size_counter % s_packet_size;
 
-            if ((0u == package_index) && (firmware_size != firmware_size_counter)) {
-                success = BinaryUpdate_write(&(fw_buffer[0]), PACKET_SIZE, &s_crc_calculated);
+            if ((0u == package_index) && (firmware_size != buffer_size_counter)) {
+                success = BinaryUpdate_write(&(rx_buffer[0]), s_packet_size, &s_crc_calculated);
                 if (success) {
                     success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
                 } else {
@@ -269,12 +305,12 @@ Communication_handler(uint8_t* buf, uint32_t length) {
                     success = Communication_sendMessage(no_ack_pack, sizeof(no_ack_pack));
                 }
 
-            } else if (firmware_size == firmware_size_counter) {
-                flash_length = (firmware_size_counter % PACKET_SIZE);
+            } else if (firmware_size == buffer_size_counter) {
+                flash_length = (buffer_size_counter % s_packet_size);
                 if (flash_length == 0u) {
-                    flash_length = PACKET_SIZE;
+                    flash_length = s_packet_size;
                 }
-                success = BinaryUpdate_write(&(fw_buffer[0]), flash_length, &s_crc_calculated);
+                success = BinaryUpdate_write(&(rx_buffer[0]), flash_length, &s_crc_calculated);
                 if (success) {
                     s_update_state = communicationState_CRC;
                     success = Communication_sendMessage(ack_pack, sizeof(ack_pack));

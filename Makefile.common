@@ -35,6 +35,12 @@ else
 TARGET := $(TARGET)_$(MCU_FILE_NAME)
 endif
 
+# Check secure flag
+ifeq ($(secure), true)
+	C_DEFS +=  \
+	-DSECURED
+endif
+
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 

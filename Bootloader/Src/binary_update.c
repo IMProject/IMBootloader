@@ -33,6 +33,7 @@
  ****************************************************************************/
 
 #include "crc32.h"
+#include "utils.h"
 #include "binary_update.h"
 #include "flash_adapter.h"
 #include "security.h"
@@ -42,6 +43,8 @@ __attribute__ ((section(".restart_info")))
 bootInfo_S boot_info;                       //!< Instruction on where to jump after the restart
 static uint64_t s_address;                  //!< Address from where to erase flash and write binary
 static detectedBinary_E s_detected_binary;  //!< Detected binary
+
+static bool BinaryUpdate_writeToFlash(uint8_t* write_buffer, const uint32_t data_length);
 
 bool
 BinaryUpdate_handleDetectedBinary(detectedBinary_E detected_binary) {
@@ -147,28 +150,41 @@ BinaryUpdate_erase(uint32_t firmware_size) {
 }
 
 bool
-BinaryUpdate_write(uint8_t* write_buffer, const uint32_t data_length, uint32_t* crc) {
+BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length, uint32_t* crc) {
 
     bool success = false;
 
-    success = FlashAdapter_program((uint32_t)s_address, write_buffer, data_length);
+    bool is_secured = Security_isSecured();
 
-    if (success) {
-        // cppcheck-suppress misra-c2012-18.8;
-        uint8_t readout_buffer[data_length];
-        success = FlashAdapter_readBytes((uint32_t)s_address, readout_buffer, data_length);
+    if (is_secured) {
 
-        if (success) {
-            *crc = CalculateCRC32(readout_buffer, data_length, *crc, 0U, false, false, false);
-            for (uint32_t i = 0U; (success) && (i < data_length); ++i) {
-                if (write_buffer[i] != readout_buffer[i]) {
-                    success = false;
-                }
+        uint32_t data_length = packet_length - (MAC_SIZE + NONCE_SIZE);
+
+        if (data_length > 0U) {
+
+            uint8_t mac[MAC_SIZE];
+            uint8_t nonce[NONCE_SIZE];
+            uint8_t encrypted_data[DATA_SIZE];
+            uint8_t decrypted_data[DATA_SIZE];
+
+            Utils_DeserializeBlobLE(&(write_buffer[0]), mac, MAC_SIZE);
+            Utils_DeserializeBlobLE(&(write_buffer[MAC_SIZE]), nonce, NONCE_SIZE);
+            Utils_DeserializeBlobLE(&(write_buffer[MAC_SIZE + NONCE_SIZE]), encrypted_data, data_length);
+
+            success = Security_decrypt(mac, nonce, encrypted_data, decrypted_data, data_length);
+
+            if (success) {
+                success = BinaryUpdate_writeToFlash(decrypted_data, data_length);
             }
         }
+
+    } else {
+        success = BinaryUpdate_writeToFlash(write_buffer, packet_length);
     }
 
-    s_address += data_length;
+    if (success) {
+        *crc = CalculateCRC32(write_buffer, packet_length, *crc, 0U, false, false, false);
+    }
 
     return success;
 }
@@ -177,6 +193,12 @@ bool
 BinaryUpdate_finish(void) {
 
     bool success = true;
+
+    bool is_secured = Security_isSecured();
+
+    if (is_secured) {
+        Security_wipeKeys();
+    }
 
     switch (s_detected_binary) {
 
@@ -212,5 +234,31 @@ BinaryUpdate_finish(void) {
     }
 
     boot_info.previus_binary = s_detected_binary;
+    return success;
+}
+
+bool
+BinaryUpdate_writeToFlash(uint8_t* write_buffer, const uint32_t data_length) {
+
+    bool success = false;
+
+    success = FlashAdapter_program((uint32_t)s_address, write_buffer, data_length);
+
+    if (success) {
+        // cppcheck-suppress misra-c2012-18.8;
+        uint8_t readout_buffer[data_length];
+        success = FlashAdapter_readBytes((uint32_t)s_address, readout_buffer, data_length);
+
+        if (success) {
+            for (uint32_t i = 0U; (success) && (i < data_length); ++i) {
+                if (write_buffer[i] != readout_buffer[i]) {
+                    success = false;
+                }
+            }
+        }
+    }
+
+    s_address += data_length;
+
     return success;
 }

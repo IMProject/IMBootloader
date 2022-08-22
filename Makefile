@@ -26,11 +26,13 @@ export COMMON_SRCS =  \
 Bootloader/Src/main.c \
 Bootloader/Src/binary_update.c \
 Bootloader/Src/communication.c \
+Bootloader/Src/security.c \
 Bootloader/Src/signature.c \
 Bootloader/Src/board_info.c \
 Bootloader/Adapters/Src/gpio_adapter.c \
 Bootloader/Adapters/Src/flash_adapter.c \
 Bootloader/Adapters/Src/hash_adapter.c \
+Bootloader/Adapters/Src/security_adapter.c \
 Bootloader/Adapters/Src/system_adapter.c \
 Bootloader/Adapters/Src/system_clock_adapter.c \
 Bootloader/STM32/Src/usb_device.c \
@@ -99,7 +101,7 @@ format:
 .PHONY: cppcheck misra
 cppcheck:
 	$(call colorecho,'Checking code with cppcheck')
-	@cppcheck --error-exitcode=1 Bootloader
+	@cppcheck --error-exitcode=1 Bootloader -DSECURED
 
 misra:
 	$(call colorecho,'Checking MISRA C:2012 with cppcheck')

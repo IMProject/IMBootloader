@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2021 - 2022 IMProject Development Team. All rights reserved.
+ *   Copyright (c) 2022 IMProject Development Team. All rights reserved.
  *   Authors: Igor Misic <igy1000mb@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,29 +32,50 @@
  *
  ****************************************************************************/
 
-#ifndef BOOTLOADER_INC_BINARYUPDATE_H_
-#define BOOTLOADER_INC_BINARYUPDATE_H_
+#include "security_adapter.h"
+#include "main.h"
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "signature.h"
+#if defined(STM32H7xx)
+static RNG_HandleTypeDef hrng;
+#endif
 
-#pragma pack(push, 1)
-typedef struct bootInfo {
-    uint32_t jump_address;                  //!< Address for BL to jump
-    bool skip_bl_loop;                      //!< Flag to skip BL loop
-    detectedBinary_E previus_binary;        //!< Previous detected binary
-} bootInfo_S;
-#pragma pack(pop)
+void
+SecurityAdapter_init() {
 
-bool BinaryUpdate_handleDetectedBinary(detectedBinary_E detected_binary);
-void BinaryUpdate_handleBootInfo(void);
-uint32_t BinaryUpdate_getJumpAddress(void);
-void BinaryUpdate_resetJumpAddress(void);
-bool BinaryUpdate_checkSkipLoopFlag(void);
-void BinaryUpdate_disableLoopFlag(void);
-bool BinaryUpdate_erase(uint32_t firmware_size);
-bool BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length, uint32_t* crc);
-bool BinaryUpdate_finish(void);
+#if defined(STM32H7xx)
+    hrng.Instance = RNG;
+    HAL_RNG_Init(&hrng);
+#endif
+}
 
-#endif /* BOOTLOADER_INC_BINARYUPDATE_H_ */
+bool
+SecurityAdapter_getRandomData(uint8_t* data, uint32_t size) {
+
+#if defined(STM32H7xx)
+    bool success = true;
+    uint32_t random_data;
+
+    HAL_StatusTypeDef status = HAL_OK;
+
+    for (uint32_t i = 0u; i < size; ++i) {
+
+        if ((i % 4u) == 0u) {
+            status = HAL_RNG_GenerateRandomNumber(&hrng, &random_data);
+        }
+
+        if (status != HAL_OK) {
+            success = false;
+            break;
+        }
+
+        data[i] = (uint8_t)(random_data >> (8u * (i % 4u)));
+    }
+
+#else
+    if (data && size) {} //make MISRA happy
+    bool success = false;
+#endif
+
+    return success;
+
+}
