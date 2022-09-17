@@ -108,6 +108,7 @@ Security_setServerSecurityDataJson(char* buffer, uint16_t buffer_size) {
 bool
 Security_getClientSecurityDataJson(char* buffer, uint16_t buffer_size) {
 
+#ifdef SECURED
     bool success = true;
 
     char public_key_base64[KEY_SIZE_BASE64_STR];
@@ -147,6 +148,10 @@ Security_getClientSecurityDataJson(char* buffer, uint16_t buffer_size) {
     }
 
     return success;
+#else
+    if (buffer && buffer_size) {}
+    return false;
+#endif
 }
 
 bool
