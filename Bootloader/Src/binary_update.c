@@ -42,32 +42,32 @@
 __attribute__ ((section(".restart_info")))
 bootInfo_S boot_info;                       //!< Instruction on where to jump after the restart
 static uint64_t s_address;                  //!< Address from where to erase flash and write binary
-static detectedBinary_E s_detected_binary;  //!< Detected binary
+static signatureType_E s_detected_binary;  //!< Detected binary
 
 static bool BinaryUpdate_writeToFlash(uint8_t* write_buffer, const uint32_t data_length);
 
 bool
-BinaryUpdate_handleDetectedBinary(detectedBinary_E detected_binary) {
+BinaryUpdate_handleDetectedBinary(signatureType_E detected_binary) {
 
     bool success = true;
     s_detected_binary = detected_binary;
 
     switch (detected_binary) {
 
-        case detectedBinary_FIRMWARE_FLASH:
+        case signatureType_FIRMWARE_FLASH:
             s_address = FLASH_FIRMWARE_ADDRESS;
             break;
 
-        case detectedBinary_BOOTLOADER_FLASH:
+        case signatureType_BOOTLOADER_FLASH:
             s_address = FLASH_BOOTLOADER_ADDRESS;
             break;
 
-        case detectedBinary_FIRMWARE_RAM:
-        case detectedBinary_BOOTLOADER_RAM:
+        case signatureType_FIRMWARE_RAM:
+        case signatureType_BOOTLOADER_RAM:
             s_address = RAM_FIRMWARE_ADDRESS;
             break;
 
-        case detectedBinary_UNKNOWN:
+        case signatureType_UNKNOWN:
             //we support unsigned binary but handle it as firmware for flash
             success = false;
             s_address = FLASH_FIRMWARE_ADDRESS;
@@ -93,7 +93,7 @@ BinaryUpdate_handleBootInfo(void) {
         default:
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = false;
-            boot_info.previus_binary = detectedBinary_FIRMWARE_FLASH;
+            boot_info.previus_binary = signatureType_FIRMWARE_FLASH;
             break;
     }
 }
@@ -105,7 +105,7 @@ BinaryUpdate_getJumpAddress(void) {
 
 void
 BinaryUpdate_resetJumpAddress(void) {
-    boot_info.jump_address = detectedBinary_FIRMWARE_FLASH;;
+    boot_info.jump_address = signatureType_FIRMWARE_FLASH;;
 }
 
 bool
@@ -124,21 +124,21 @@ BinaryUpdate_erase(uint32_t firmware_size) {
     bool success = true;
     switch (s_detected_binary) {
 
-        case detectedBinary_FIRMWARE_FLASH:
+        case signatureType_FIRMWARE_FLASH:
             success = FlashAdapter_erase(firmware_size, s_address);
             break;
-        case detectedBinary_BOOTLOADER_FLASH:
-            if (detectedBinary_BOOTLOADER_RAM == boot_info.previus_binary) {
+        case signatureType_BOOTLOADER_FLASH:
+            if (signatureType_BOOTLOADER_RAM == boot_info.previus_binary) {
                 //Only allowed to erase if RAM version is running
                 success = FlashAdapter_erase(firmware_size, s_address);
             }
             break;
 
-        case detectedBinary_FIRMWARE_RAM:
-        case detectedBinary_BOOTLOADER_RAM:
+        case signatureType_FIRMWARE_RAM:
+        case signatureType_BOOTLOADER_RAM:
             break;
 
-        case detectedBinary_UNKNOWN:
+        case signatureType_UNKNOWN:
             success = FlashAdapter_erase(firmware_size, s_address);
             break;
 
@@ -202,28 +202,28 @@ BinaryUpdate_finish(void) {
 
     switch (s_detected_binary) {
 
-        case detectedBinary_FIRMWARE_FLASH:
+        case signatureType_FIRMWARE_FLASH:
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = false;
             success = FlashAdapter_finish();
             break;
 
-        case detectedBinary_FIRMWARE_RAM:
+        case signatureType_FIRMWARE_RAM:
             boot_info.jump_address = RAM_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = false;
             break;
 
-        case detectedBinary_BOOTLOADER_FLASH:
+        case signatureType_BOOTLOADER_FLASH:
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = false;
             break;
 
-        case detectedBinary_BOOTLOADER_RAM:
+        case signatureType_BOOTLOADER_RAM:
             boot_info.jump_address = RAM_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = true;
             break;
 
-        case detectedBinary_UNKNOWN:
+        case signatureType_UNKNOWN:
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = false;
             success = FlashAdapter_finish();

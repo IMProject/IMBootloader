@@ -40,19 +40,22 @@
 #define SIGNATURE_SIZE 64 //!< Signature size is 64 bytes
 
 typedef struct signature {
-    uint64_t magic_key;    //!< First 8 bytes for the magic key
-    uint64_t unused[7];    //!< The rest of the 56 bytes are reserved for future use
+    uint64_t magic_key;         //!< First 8 bytes for the magic key
+    uint64_t type       : 8;    //!< Type of binary file
+    uint64_t encrypted  : 1;    //!< Indicate if file is encrypted (file only, not communication)
+    uint64_t reserved_1 : 55;   //!< The rest of bits are reserved for future use
+    uint64_t reserved_2[6];     //!< The rest of the 48 bytes are reserved for future use
 } signature_S;
 
 //! Enumeration for different signatures
-typedef enum detectedBinary_ENUM {
-    detectedBinary_FIRMWARE_FLASH,   //!< New firmware for FLASH
-    detectedBinary_FIRMWARE_RAM,     //!< Firmware for RAM
-    detectedBinary_BOOTLOADER_FLASH, //!< New bootloader for FLASH
-    detectedBinary_BOOTLOADER_RAM,   //!< Bootloader for RAM
-    detectedBinary_UNKNOWN,          //!< Not existing or unknown signature
-} detectedBinary_E;
+typedef enum signatureType_ENUM {
+    signatureType_FIRMWARE_FLASH    = 0x00, //!< New firmware for FLASH
+    signatureType_FIRMWARE_RAM      = 0x01, //!< Firmware for RAM
+    signatureType_BOOTLOADER_FLASH  = 0x02, //!< New bootloader for FLASH
+    signatureType_BOOTLOADER_RAM    = 0x03, //!< Bootloader for RAM
+    signatureType_UNKNOWN           = 0xFF, //!< Not existing or unknown signature
+} signatureType_E __attribute__ ((__packed__));
 
-detectedBinary_E Signature_verification(const signature_S* signature);
+signatureType_E Signature_verification(const signature_S* signature);
 
 #endif /* BOOTLOADER_INC_SIGNATURE_H_ */

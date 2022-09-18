@@ -43,11 +43,11 @@
 typedef struct bootInfo {
     uint32_t jump_address;                  //!< Address for BL to jump
     bool skip_bl_loop;                      //!< Flag to skip BL loop
-    detectedBinary_E previus_binary;        //!< Previous detected binary
+    signatureType_E previus_binary;         //!< Previous detected binary
 } bootInfo_S;
 #pragma pack(pop)
 
-bool BinaryUpdate_handleDetectedBinary(detectedBinary_E detected_binary);
+bool BinaryUpdate_handleDetectedBinary(signatureType_E detected_binary);
 void BinaryUpdate_handleBootInfo(void);
 uint32_t BinaryUpdate_getJumpAddress(void);
 void BinaryUpdate_resetJumpAddress(void);
