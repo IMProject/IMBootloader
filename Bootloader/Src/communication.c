@@ -243,7 +243,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
         case communicationState_CHECK_SIGNATURE: {
             signature_S signature;
             (void*)memcpy((void*)&signature, (void*)buf, SIGNATURE_SIZE);
-            detectedBinary_E binary_detected = Signature_verification(&signature);
+            signatureType_E binary_detected = Signature_verification(&signature);
             success = BinaryUpdate_handleDetectedBinary(binary_detected);
             s_update_state = communicationState_CMD_ACTION_SELECT;
 

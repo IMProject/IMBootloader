@@ -34,32 +34,45 @@
 #include <string.h>
 #include "signature.h"
 
-static const uint64_t fw_flash_signature_magic_key = 0xDEC0DE5528101987;    //!< First 8 signature bytes of firmware for flash
-static const uint64_t fw_ram_signature_magic_key = 0xDEC0DE5523041858;      //!< First 8 signature bytes of firmware for ram
-static const uint64_t bl_flash_signature_magic_key = 0xDEC0DE5510071856;    //!< First 8 signature bytes of bootloader for flash
-static const uint64_t bl_ram_signature_magic_key = 0xDEC0DE5513061831;      //!< First 8 signature bytes of bootloader for ram
+static const uint64_t signature_magic_key = 0xDEC0DE5528101987;    //!< First 8 signature bytes of firmware for flash
 
-__attribute__ ((section(".bl_flash_signature"))) signature_S bl_flash_signature = {.magic_key = bl_flash_signature_magic_key};
-__attribute__ ((section(".bl_ram_signature"))) signature_S bl_ram_signature = {.magic_key = bl_ram_signature_magic_key};
+__attribute__ ((section(".bl_flash_signature"))) signature_S bl_flash_signature = {
+    .magic_key = signature_magic_key,
+    .type = signatureType_BOOTLOADER_FLASH
+};
 
-detectedBinary_E
+__attribute__ ((section(".bl_ram_signature"))) signature_S bl_ram_signature = {
+    .magic_key = signature_magic_key,
+    .type = signatureType_BOOTLOADER_RAM
+};
+
+signatureType_E
 Signature_verification(const signature_S* signature) {
 
-    detectedBinary_E detected_binary;
+    signatureType_E detected_binary;
 
-    if (0 == memcmp(&(signature->magic_key), &fw_flash_signature_magic_key, sizeof(fw_flash_signature_magic_key))) {
-        detected_binary = detectedBinary_FIRMWARE_FLASH;
+    if (0 == memcmp(&(signature->magic_key), &signature_magic_key, sizeof(signature_magic_key))) {
 
-    } else if (0 == memcmp(&(signature->magic_key), &fw_ram_signature_magic_key, sizeof(fw_ram_signature_magic_key))) {
-        detected_binary = detectedBinary_FIRMWARE_RAM;
+        switch (signature->type) {
+            case signatureType_FIRMWARE_FLASH:
+                detected_binary = signatureType_FIRMWARE_FLASH;
+                break;
+            case signatureType_FIRMWARE_RAM:
+                detected_binary = signatureType_FIRMWARE_RAM;
+                break;
+            case signatureType_BOOTLOADER_FLASH:
+                detected_binary = signatureType_BOOTLOADER_FLASH;
+                break;
+            case signatureType_BOOTLOADER_RAM:
+                detected_binary = signatureType_BOOTLOADER_RAM;
+                break;
+            default:
+                detected_binary = signatureType_UNKNOWN;
+                break;
+        }
 
-    } else if (0 == memcmp(&(signature->magic_key), &bl_flash_signature_magic_key, sizeof(bl_flash_signature_magic_key))) {
-        detected_binary = detectedBinary_BOOTLOADER_FLASH;
-
-    } else if (0 == memcmp(&(signature->magic_key), &bl_ram_signature_magic_key, sizeof(bl_ram_signature_magic_key))) {
-        detected_binary = detectedBinary_BOOTLOADER_RAM;
     } else {
-        detected_binary = detectedBinary_UNKNOWN;
+        detected_binary = signatureType_UNKNOWN;
     }
 
     return detected_binary;
