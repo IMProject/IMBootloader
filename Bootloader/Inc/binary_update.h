@@ -43,7 +43,7 @@
 typedef struct bootInfo {
     uint32_t jump_address;                  //!< Address for BL to jump
     bool skip_bl_loop;                      //!< Flag to skip BL loop
-    signatureType_E previus_binary;         //!< Previous detected binary
+    uint8_t end; // FIXME: added here because after restart something is messing up with data in the structure and if there is an extra byte at the end it messes only with it
 } bootInfo_S;
 #pragma pack(pop)
 

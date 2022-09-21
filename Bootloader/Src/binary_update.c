@@ -40,9 +40,9 @@
 #include "signature.h"
 
 __attribute__ ((section(".restart_info")))
-bootInfo_S boot_info;                       //!< Instruction on where to jump after the restart
+volatile bootInfo_S boot_info;              //!< Instruction on where to jump after the restart
 static uint64_t s_address;                  //!< Address from where to erase flash and write binary
-static signatureType_E s_detected_binary;  //!< Detected binary
+static signatureType_E s_detected_binary;   //!< Detected binary
 
 static bool BinaryUpdate_writeToFlash(uint8_t* write_buffer, const uint32_t data_length);
 
@@ -93,7 +93,6 @@ BinaryUpdate_handleBootInfo(void) {
         default:
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
             boot_info.skip_bl_loop = false;
-            boot_info.previus_binary = signatureType_FIRMWARE_FLASH;
             break;
     }
 }
@@ -128,7 +127,7 @@ BinaryUpdate_erase(uint32_t firmware_size) {
             success = FlashAdapter_erase(firmware_size, s_address);
             break;
         case signatureType_BOOTLOADER_FLASH:
-            if (signatureType_BOOTLOADER_RAM == boot_info.previus_binary) {
+            if (boot_info.jump_address == RAM_FIRMWARE_ADDRESS) {
                 //Only allowed to erase if RAM version is running
                 success = FlashAdapter_erase(firmware_size, s_address);
             }
@@ -233,7 +232,8 @@ BinaryUpdate_finish(void) {
             break;
     }
 
-    boot_info.previus_binary = s_detected_binary;
+    boot_info.end = 0xFF;
+
     return success;
 }
 

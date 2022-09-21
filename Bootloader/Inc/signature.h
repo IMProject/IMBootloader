@@ -54,7 +54,7 @@ typedef enum signatureType_ENUM {
     signatureType_BOOTLOADER_FLASH  = 0x02, //!< New bootloader for FLASH
     signatureType_BOOTLOADER_RAM    = 0x03, //!< Bootloader for RAM
     signatureType_UNKNOWN           = 0xFF, //!< Not existing or unknown signature
-} signatureType_E __attribute__ ((__packed__));
+} signatureType_E;
 
 signatureType_E Signature_verification(const signature_S* signature);
 
