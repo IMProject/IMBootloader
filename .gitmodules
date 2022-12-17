@@ -4,3 +4,6 @@
 [submodule "Bootloader/Utility"]
 	path = Bootloader/Utility
 	url = git@github.com:IMProject/IMUtility.git
+[submodule "Bootloader/Library"]
+	path = Bootloader/Library
+	url = https://github.com/IMProject/Library
