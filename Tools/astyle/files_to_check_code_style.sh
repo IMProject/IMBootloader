@@ -8,5 +8,5 @@ if [ $# -gt 0 ]; then
 fi
 
 exec find Bootloader \
-    -path Bootloader/Utility/Tests/Unity -prune -o \
+    -path Bootloader/Utility -prune -o \
 	-type f \( -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) | grep $PATTERN
