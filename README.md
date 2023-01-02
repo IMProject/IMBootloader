@@ -8,16 +8,20 @@ IMBootloader is a universal bootloader for embedded devices created by [IMProjec
 Idea is to save developers time for writing bootloader and flasher applications.
 This bootloader works together with the platform agnostic flasher app [IMFlasher](https://github.com/IMProject/IMFlasher) created in QT and WEB page [https://imtech.hr](https://imtech.hr) where a manufacturer can store firmware and updated bootloader.
 
-##### Firmware example
+#### Support and Developers Channel
+
+There's a dedicated Discord server here: https://discord.gg/kxwY8SkAjh
+
+#### Firmware example
 Each MCU has its own [IMLedBlink](https://github.com/IMProject/IMLedBlink) example. It is a good starting point for developing an firmware or to get an idea of how to jump from the firmware to IMBootloader.
 
-##### Currently supported MCUs
+#### Currently supported MCUs
 
 * STM32L4xx
 * STM32H7xx
 * STM32F7xx
 
-##### Currently supported boards
+#### Currently supported boards
 
 | Board                                                                      |MCU       |
 | -------------------------------------------------------------------------- |:--------:|
