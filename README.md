@@ -5,11 +5,11 @@ MCU - microcontroller
 #### About
 IMBootloader is a universal bootloader for embedded devices created by the [IMProject](https://github.com/IMProject) Development Team .
 
-The idea behind this project is to save developers time by eliminating the need to write separate bootloader and flasher applications. IMBootloader works in tandem with the platform-agnostic flasher app, [IMFlasher](https://github.com/IMProject/IMFlasher) , which is created using QT. Additionally, manufacturers can store firmware and updated bootloader on the webpage https://imtech.hr.
+The idea behind this project is to save developers time by eliminating the need to write separate bootloader and flasher applications. IMBootloader works in tandem with the platform-agnostic flasher app, [IMFlasher](https://github.com/IMProject/IMFlasher) , which is created using QT. Additionally, manufacturers can store firmware and updated bootloader on the webpage [improject.imtech.hr](https://improject.imtech.hr).
 
 #### Support and Developers Channel
 
-A dedicated Discord server is available at https://discord.gg/kxwY8SkAjh
+A dedicated Discord server is available at [https://discord.gg/kxwY8SkAjh](https://discord.gg/kxwY8SkAjh)
 
 #### Firmware example
 Each MCU has its own example of [IMLedBlink](https://github.com/IMProject/IMLedBlink). This example provides a good starting point for firmware development or understanding how to transition from firmware to IMBootloader.
@@ -35,7 +35,7 @@ To use this feature, create a RAM variant of IMBootloader (e.g., `make matek_H7_
 
 ![self-update](https://user-images.githubusercontent.com/10188706/194720114-d39ddc2a-a962-4396-94ca-5645fa6a8c5d.gif)
 
-### Integration with [imtech.hr](https://imtech.hr)
+### Integration with [improject.imtech.hr](https://improject.imtech.hr)
 
 #### Manufacturer id
 
