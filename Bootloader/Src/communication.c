@@ -40,7 +40,7 @@
 #include "binary_update.h"
 #include "communication.h"
 #include "signature.h"
-#include "crc32.h"
+#include "crc32_bzip2.h"
 #include "utils.h"
 #include "security.h"
 #include "software_info.h"
@@ -64,7 +64,6 @@
 #define RX_BUFFER_SIZE  (2048U)         //!< Size for buffering rx data
 #define CRC_SIZE        (4U)            //!< CRC size in bytes (CRC32)
 #define CRC_INIT_VALUE  (0xFFFFFFFFU)   //!< CRC init value
-#define XOR_CRC_VALUE   (0xFFFFFFFFU)   //!< XOR CRC value
 #define TX_BUFFER_SIZE  (1000U)         //!< TX buffer maximum size
 
 //! Enumeration for bootloader state machine
@@ -90,7 +89,7 @@ static bool s_is_flashed = false;       //!< Flash for main loop indicating end 
 
 static uint32_t s_packet_size = PACKET_SIZE;
 static uint8_t s_hashed_board_key[HASHED_BOARD_ID_SIZE];
-static uint32_t s_crc_calculated = CRC_INIT_VALUE;
+static uint32_t s_crc_calculated;
 
 void
 Communication_init(void) {
@@ -163,7 +162,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
 #else
                 (void*)memcpy(tx_buffer, s_hashed_board_key, HASHED_BOARD_ID_SIZE);
 #endif
-                uint32_t crc = CalculateCRC32(tx_buffer, HASHED_BOARD_ID_SIZE, s_crc_calculated, XOR_CRC_VALUE, false, false, true);
+                uint32_t crc = Crc32_bzip2(tx_buffer, HASHED_BOARD_ID_SIZE, true, NULL_PTR);
                 Utils_Serialize32BE(&tx_buffer[HASHED_BOARD_ID_SIZE], crc);
                 success = Communication_sendMessage(tx_buffer, HASHED_BOARD_ID_SIZE + CRC_SIZE);
 
@@ -257,9 +256,9 @@ Communication_handler(uint8_t* buf, uint32_t length) {
         }
         case communicationState_RECEIVE_FIRMWARE_SIZE:
 
-            firmware_size = Utils_StringToInt(buf, length);
+            success = Utils_StringToUint32((const char* )buf, length, &firmware_size);
 
-            if (firmware_size <= FIRMWARE_FLASH_SIZE_LIMIT) {
+            if (success && (firmware_size <= FIRMWARE_FLASH_SIZE_LIMIT)) {
                 s_is_flashing = true;
                 s_update_state = communicationState_ERASE;
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
@@ -278,6 +277,7 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             if (success) {
                 buffer_size_counter = 0;
                 s_update_state = communicationState_DOWNLOADING_AND_FLASHING;
+                s_crc_calculated = CRC_INIT_VALUE;
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
                 s_is_flashing = false;
@@ -296,7 +296,10 @@ Communication_handler(uint8_t* buf, uint32_t length) {
             package_index = buffer_size_counter % s_packet_size;
 
             if ((0u == package_index) && (firmware_size != buffer_size_counter)) {
-                success = BinaryUpdate_write(&(rx_buffer[0]), s_packet_size, &s_crc_calculated);
+
+                s_crc_calculated = Crc32_bzip2(&(rx_buffer[0]), s_packet_size, false, &s_crc_calculated);
+                success = BinaryUpdate_write(&(rx_buffer[0]), s_packet_size);
+
                 if (success) {
                     success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
                 } else {
@@ -310,7 +313,8 @@ Communication_handler(uint8_t* buf, uint32_t length) {
                 if (flash_length == 0u) {
                     flash_length = s_packet_size;
                 }
-                success = BinaryUpdate_write(&(rx_buffer[0]), flash_length, &s_crc_calculated);
+                s_crc_calculated = Crc32_bzip2(&(rx_buffer[0]), flash_length, true, &s_crc_calculated);
+                success = BinaryUpdate_write(&(rx_buffer[0]), flash_length);
                 if (success) {
                     s_update_state = communicationState_CRC;
                     success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
@@ -327,9 +331,8 @@ Communication_handler(uint8_t* buf, uint32_t length) {
 
         case communicationState_CRC:
 
-            crc_received = Utils_StringToInt(buf, length);
-            s_crc_calculated ^= XOR_CRC_VALUE;
-            if (crc_received == s_crc_calculated) {
+            success = Utils_StringToUint32((const char*)buf, length, &crc_received);
+            if (success && (crc_received == s_crc_calculated)) {
                 s_is_flashed  = true;
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
             } else {
@@ -411,7 +414,7 @@ Communication_sendStringWithCrc(uint8_t* string, size_t size) {
         size_t last_char = strlen((char*)string);
 
         if (size >= last_char) {
-            uint32_t crc = CalculateCRC32(&string[0], last_char, CRC_INIT_VALUE, XOR_CRC_VALUE, false, false, true);
+            uint32_t crc = Crc32_bzip2(&string[0], last_char, true, NULL_PTR);
             Utils_Serialize32BE(&string[last_char], crc);
             success = Communication_sendMessage(string, last_char + sizeof(crc));
         }
