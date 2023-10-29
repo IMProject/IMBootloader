@@ -41,7 +41,8 @@ Bootloader/STM32/Src/usbd_conf.c \
 Bootloader/STM32/Src/usbd_desc.c \
 Bootloader/STM32/Src/usbd_cdc_if.c \
 Bootloader/Utility/Src/base64.c \
-Bootloader/Utility/Src/crc32.c \
+Bootloader/Utility/Src/crc/crc32_base.c \
+Bootloader/Utility/Src/crc/crc32_variants/crc32_bzip2.c \
 Bootloader/Utility/Src/json.c \
 Bootloader/Utility/Src/utils.c \
 Monocypher/src/monocypher.c \
@@ -56,6 +57,8 @@ export COMMON_INCS = \
 -IBootloader/Library/Inc \
 -IBootloader/STM32/Inc \
 -IBootloader/Utility/Inc \
+-IBootloader/Utility/Inc/crc/ \
+-IBootloader/Utility/Inc/crc/crc32_variants/ \
 -IMonocypher/src \
 -IDrivers/CMSIS/Include \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \

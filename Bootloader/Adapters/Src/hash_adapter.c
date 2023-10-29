@@ -72,7 +72,7 @@ HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id_str, size_t b64_
 
     uint8_t hashed_board_id[HASHED_BOARD_ID_SIZE];
     HashAdapter_getHashedBoardId(hashed_board_id);
-    int32_t ret = Base64_encode(hashed_board_id, HASHED_BOARD_ID_SIZE, (char*)b64_hashed_board_id_str, b64_hashed_board_id_str_size);
+    int32_t ret = Base64_encode((const char*)hashed_board_id, HASHED_BOARD_ID_SIZE, (char*)b64_hashed_board_id_str, b64_hashed_board_id_str_size);
 
     if (0 == ret) {
         success = true;

@@ -32,7 +32,6 @@
  *
  ****************************************************************************/
 
-#include "crc32.h"
 #include "utils.h"
 #include "binary_update.h"
 #include "flash_adapter.h"
@@ -149,7 +148,7 @@ BinaryUpdate_erase(uint32_t firmware_size) {
 }
 
 bool
-BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length, uint32_t* crc) {
+BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length) {
 
     bool success = false;
 
@@ -179,10 +178,6 @@ BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length, uint32_t
 
     } else {
         success = BinaryUpdate_writeToFlash(write_buffer, packet_length);
-    }
-
-    if (success) {
-        *crc = CalculateCRC32(write_buffer, packet_length, *crc, 0U, false, false, false);
     }
 
     return success;
