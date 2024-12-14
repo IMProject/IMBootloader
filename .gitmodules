@@ -7,3 +7,6 @@
 [submodule "Bootloader/Library"]
 	path = Bootloader/Library
 	url = https://github.com/IMProject/Library
+[submodule "Tests/Unity"]
+	path = Tests/Unity
+	url = git@github.com:ThrowTheSwitch/Unity.git
