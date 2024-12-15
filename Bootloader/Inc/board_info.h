@@ -65,8 +65,10 @@
 #define PRODUCT_TYPE    (const char*)("Product_type_name-board_name")   // Maximum allowed size is 100 characters (101 bytes)
 #endif
 
+#ifndef UNIT_TEST
 static_assert(strlen((const char*)MANUFACTURER_ID_BASE64_STR) == (MANUFACTURER_ID_SIZE_BASE64_STR - 1U), "BASE64_MANUFACTURER_ID is wrong size");
 static_assert(strlen((const char*)PRODUCT_TYPE) <= (PRODUCT_TYPE_MAX_SIZE - 1U), "PRODUCT_TYPE is wrong size");
+#endif
 
 bool BoardInfo_getDataJson(uint8_t* buffer, size_t size);
 bool BoardInfo_getBase64ManufacturerId(uint8_t* b64_manufacturer_id);

@@ -1,0 +1,10 @@
+:cmock:
+  :mock_prefix: "mock_"
+  :when_no_prototypes: :warn
+  :enforce_strict_ordering: FALSE
+  :plugins:
+    - :ignore
+    - :ignore_arg
+    - :callback
+    - :array
+    - :return_thru_ptr

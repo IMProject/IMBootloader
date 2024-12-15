@@ -147,6 +147,9 @@ pixhawk4:
 
 pixhawk4_ram:
 	${MAKE} stm32f7xx_ram BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
+	
+test_cmock test_all test_clean:
+	${MAKE} -C Tests $@
 
 #
 # Microcontroller (MCU) specific targets.

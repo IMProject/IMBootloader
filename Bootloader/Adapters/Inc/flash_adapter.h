@@ -68,6 +68,12 @@
 #define RAM_FIRMWARE_ADDRESS        (0x20020000UL)          //!< RAM address where firmware will be written
 #define MAGIC_KEY_ADDRESS_FLASH     (0x08020200UL)          //!< Flash address in internal flash for communication between bootloader and firmware
 #define MAGIC_KEY_ADDRESS_RAM       (0x20070000UL)          //!< Flash address in ram for communication between bootloader and firmware
+#else // UnitTest
+#define FLASH_FIRMWARE_ADDRESS      (0x08020000UL)          //!< Flash address where firmware will be written
+#define FLASH_BOOTLOADER_ADDRESS    (0x08000000UL)          //!< Flash address where bootloader will be written
+#define RAM_FIRMWARE_ADDRESS        (0x20020000UL)          //!< RAM address where firmware will be written
+#define MAGIC_KEY_ADDRESS_FLASH     (0x08020200UL)          //!< Flash address in internal flash for communication between bootloader and firmware
+#define MAGIC_KEY_ADDRESS_RAM       (0x20070000UL)          //!< Flash address in ram for communication between bootloader and firmware
 #endif
 
 #define MAGIC_KEY_VALUE         (0x28101987A5B5C5D5UL)      //!< Hex value if written in flash bootloader will jump to firmware

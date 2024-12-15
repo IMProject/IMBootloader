@@ -58,7 +58,9 @@ typedef enum securityAlgorithm_ENUM {
 #define PRESHARED_KEY_SIZE_BASE64_STR     45U //!< Size for preshared key string in base64 format including null-terminator
 #define PRESHARED_KEY_BASE64_STR          (const char*)("cHJlc2hhcmVkX2tleV9pbl8zMl9ieXRlc19mb3JtYXQ=")
 
+#ifndef UNIT_TEST
 static_assert(strlen((const char*)PRESHARED_KEY_BASE64_STR) == (PRESHARED_KEY_SIZE_BASE64_STR - 1U), "PRESHARED_KEY_BASE64_STR is wrong size");
+#endif
 
 bool Security_setServerSecurityDataJson(char* buffer, uint16_t buffer_size);
 bool Security_getClientSecurityDataJson(char* buffer, uint16_t buffer_size);
