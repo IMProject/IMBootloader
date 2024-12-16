@@ -172,3 +172,28 @@ stm32f7xx: $(MAKEFILE_LIST)
 
 stm32f7xx_ram: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx_RAM.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
+	
+#######################################
+# Code coverage
+#######################################
+GCOV_EXTENSIONS=*.gc*
+GCOVR_PATH=Tests/gcovr-report
+LCOV_PATH=Tests/lcov-report
+
+lcov-report: test_all
+	mkdir -p $(LCOV_PATH)
+	lcov --capture --directory . --output-file $(LCOV_PATH)/coverage.info
+	lcov --remove $(LCOV_PATH)/coverage.info '*/Tests/*' --output-file $(LCOV_PATH)/coverage.info
+	genhtml $(LCOV_PATH)/coverage.info --output-directory $(LCOV_PATH)
+
+gcovr-report: test_all
+	mkdir -p $(GCOVR_PATH)
+	gcovr --exclude 'Tests' --root . --html --html-details --output $(GCOVR_PATH)/coverage.html
+
+#######################################
+# Dependancies
+#######################################
+deps:
+	sudo apt-get install lcov
+	pip3 install gcovr
+	

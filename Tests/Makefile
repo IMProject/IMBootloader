@@ -94,30 +94,6 @@ SYMBOLS += -DUNITY_INCLUDE_DOUBLE
 SYMBOLS += -DUNITY_DOUBLE_PRECISION=1e-12
 
 #######################################
-# Code coverage
-#######################################
-GCOV_EXTENSIONS=*.gc*
-GCOVR_FOLDER=gcovr-report
-LCOV_FOLDER=lcov-report
-
-lcov-report: all
-	mkdir $(LCOV_FOLDER)
-	lcov --capture --directory . --output-file $(LCOV_FOLDER)/coverage.info
-	lcov --remove $(LCOV_FOLDER)/coverage.info '*/Tests/*' --output-file $(LCOV_FOLDER)/coverage.info
-	genhtml $(LCOV_FOLDER)/coverage.info --output-directory $(LCOV_FOLDER)
-
-gcovr-report: all
-	mkdir $(GCOVR_FOLDER)
-	gcovr -e "Tests" --root . --html --html-details --output $(GCOVR_FOLDER)/coverage.html
-
-#######################################
-# Dependancies
-#######################################
-deps:
-	sudo apt-get install lcov
-	pip3 install gcovr
-
-#######################################
 # Unit test
 #######################################
 
