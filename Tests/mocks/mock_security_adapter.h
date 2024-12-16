@@ -42,6 +42,8 @@ void SecurityAdapter_init_Stub(CMOCK_SecurityAdapter_init_CALLBACK Callback);
 void SecurityAdapter_getRandomData_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define SecurityAdapter_getRandomData_StopIgnore() SecurityAdapter_getRandomData_CMockStopIgnore()
 void SecurityAdapter_getRandomData_CMockStopIgnore(void);
+#define SecurityAdapter_getRandomData_ExpectAnyArgsAndReturn(cmock_retval) SecurityAdapter_getRandomData_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void SecurityAdapter_getRandomData_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define SecurityAdapter_getRandomData_ExpectAndReturn(data, size, cmock_retval) SecurityAdapter_getRandomData_CMockExpectAndReturn(__LINE__, data, size, cmock_retval)
 void SecurityAdapter_getRandomData_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* data, uint32_t size, bool cmock_to_return);
 typedef bool (* CMOCK_SecurityAdapter_getRandomData_CALLBACK)(uint8_t* data, uint32_t size, int cmock_num_calls);

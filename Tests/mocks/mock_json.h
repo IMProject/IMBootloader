@@ -32,6 +32,8 @@ void mock_json_Verify(void);
 void Json_startString_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_startString_StopIgnore() Json_startString_CMockStopIgnore()
 void Json_startString_CMockStopIgnore(void);
+#define Json_startString_ExpectAnyArgsAndReturn(cmock_retval) Json_startString_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Json_startString_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_startString_ExpectAndReturn(buffer, buffer_size, cmock_retval) Json_startString_CMockExpectAndReturn(__LINE__, buffer, buffer_size, cmock_retval)
 void Json_startString_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, size_t buffer_size, bool cmock_to_return);
 typedef bool (* CMOCK_Json_startString_CALLBACK)(char* buffer, size_t buffer_size, int cmock_num_calls);
@@ -50,6 +52,8 @@ void Json_startString_CMockIgnoreArg_buffer_size(UNITY_LINE_TYPE cmock_line);
 void Json_addData_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_addData_StopIgnore() Json_addData_CMockStopIgnore()
 void Json_addData_CMockStopIgnore(void);
+#define Json_addData_ExpectAnyArgsAndReturn(cmock_retval) Json_addData_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Json_addData_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_addData_ExpectAndReturn(buffer, buffer_size, key, value, cmock_retval) Json_addData_CMockExpectAndReturn(__LINE__, buffer, buffer_size, key, value, cmock_retval)
 void Json_addData_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, size_t buffer_size, const char* key, const char* value, bool cmock_to_return);
 typedef bool (* CMOCK_Json_addData_CALLBACK)(char* buffer, size_t buffer_size, const char* key, const char* value, int cmock_num_calls);
@@ -72,6 +76,8 @@ void Json_addData_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Json_endString_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_endString_StopIgnore() Json_endString_CMockStopIgnore()
 void Json_endString_CMockStopIgnore(void);
+#define Json_endString_ExpectAnyArgsAndReturn(cmock_retval) Json_endString_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Json_endString_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_endString_ExpectAndReturn(buffer, buffer_size, cmock_retval) Json_endString_CMockExpectAndReturn(__LINE__, buffer, buffer_size, cmock_retval)
 void Json_endString_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, size_t buffer_size, bool cmock_to_return);
 typedef bool (* CMOCK_Json_endString_CALLBACK)(char* buffer, size_t buffer_size, int cmock_num_calls);
@@ -90,6 +96,8 @@ void Json_endString_CMockIgnoreArg_buffer_size(UNITY_LINE_TYPE cmock_line);
 void Json_findByKey_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_findByKey_StopIgnore() Json_findByKey_CMockStopIgnore()
 void Json_findByKey_CMockStopIgnore(void);
+#define Json_findByKey_ExpectAnyArgsAndReturn(cmock_retval) Json_findByKey_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Json_findByKey_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Json_findByKey_ExpectAndReturn(buffer, buffer_size, key, value, max_value_size, cmock_retval) Json_findByKey_CMockExpectAndReturn(__LINE__, buffer, buffer_size, key, value, max_value_size, cmock_retval)
 void Json_findByKey_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const char* buffer, size_t buffer_size, const char* key, char* value, size_t max_value_size, bool cmock_to_return);
 typedef bool (* CMOCK_Json_findByKey_CALLBACK)(const char* buffer, size_t buffer_size, const char* key, char* value, size_t max_value_size, int cmock_num_calls);

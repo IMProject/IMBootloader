@@ -10,6 +10,7 @@ static const char* CMockString_Error_Handler = "Error_Handler";
 typedef struct _CMOCK_Error_Handler_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_Error_Handler_CALL_INSTANCE;
 
@@ -101,6 +102,7 @@ void Error_Handler_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.Error_Handler_CallInstance = CMock_Guts_MemChain(Mock.Error_Handler_CallInstance, cmock_guts_index);
   Mock.Error_Handler_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void Error_Handler_AddCallback(CMOCK_Error_Handler_CALLBACK Callback)

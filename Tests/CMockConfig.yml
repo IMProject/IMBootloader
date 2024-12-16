@@ -3,6 +3,7 @@
   :when_no_prototypes: :warn
   :enforce_strict_ordering: FALSE
   :plugins:
+    - :expect_any_args
     - :ignore
     - :ignore_arg
     - :callback

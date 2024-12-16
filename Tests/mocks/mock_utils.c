@@ -45,6 +45,7 @@ static const char* CMockString_value = "value";
 typedef struct _CMOCK_Utils_BitReflect_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint32_t ReturnVal;
   uint32_t Expected_data;
   uint8_t Expected_n_bits;
@@ -56,6 +57,7 @@ typedef struct _CMOCK_Utils_BitReflect_CALL_INSTANCE
 typedef struct _CMOCK_Utils_StringToUint32_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   const char* Expected_str;
   uint8_t Expected_str_length;
@@ -73,6 +75,7 @@ typedef struct _CMOCK_Utils_StringToUint32_CALL_INSTANCE
 typedef struct _CMOCK_Utils_SwapElements_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_first;
   byte_t* Expected_second;
   uint32_t Expected_size;
@@ -93,6 +96,7 @@ typedef struct _CMOCK_Utils_SwapElements_CALL_INSTANCE
 typedef struct _CMOCK_Utils_QuickUint32Pow10_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t Expected_exponent;
   uint32_t* Expected_result;
@@ -108,6 +112,7 @@ typedef struct _CMOCK_Utils_QuickUint32Pow10_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Serialize8_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   uint8_t Expected_value;
   int Expected_buf_Depth;
@@ -122,6 +127,7 @@ typedef struct _CMOCK_Utils_Serialize8_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Deserialize8_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint8_t ReturnVal;
   const byte_t* Expected_buf;
   int Expected_buf_Depth;
@@ -132,6 +138,7 @@ typedef struct _CMOCK_Utils_Deserialize8_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Serialize16BE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   uint16_t Expected_value;
   int Expected_buf_Depth;
@@ -146,6 +153,7 @@ typedef struct _CMOCK_Utils_Serialize16BE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Serialize24BE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   uint32_t Expected_value;
   int Expected_buf_Depth;
@@ -160,6 +168,7 @@ typedef struct _CMOCK_Utils_Serialize24BE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Serialize32BE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   uint32_t Expected_value;
   int Expected_buf_Depth;
@@ -174,6 +183,7 @@ typedef struct _CMOCK_Utils_Serialize32BE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_SerializeBlobBE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   const byte_t* Expected_src;
   uint32_t Expected_size;
@@ -191,6 +201,7 @@ typedef struct _CMOCK_Utils_SerializeBlobBE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Deserialize16BE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint16_t ReturnVal;
   const byte_t* Expected_buf;
   int Expected_buf_Depth;
@@ -201,6 +212,7 @@ typedef struct _CMOCK_Utils_Deserialize16BE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Deserialize24BE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint32_t ReturnVal;
   const byte_t* Expected_buf;
   int Expected_buf_Depth;
@@ -211,6 +223,7 @@ typedef struct _CMOCK_Utils_Deserialize24BE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Deserialize32BE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint32_t ReturnVal;
   const byte_t* Expected_buf;
   int Expected_buf_Depth;
@@ -221,6 +234,7 @@ typedef struct _CMOCK_Utils_Deserialize32BE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_DeserializeBlobBE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   const byte_t* Expected_buf;
   byte_t* Expected_dst;
   uint32_t Expected_size;
@@ -238,6 +252,7 @@ typedef struct _CMOCK_Utils_DeserializeBlobBE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Serialize16LE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   uint16_t Expected_value;
   int Expected_buf_Depth;
@@ -252,6 +267,7 @@ typedef struct _CMOCK_Utils_Serialize16LE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Serialize24LE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   uint32_t Expected_value;
   int Expected_buf_Depth;
@@ -266,6 +282,7 @@ typedef struct _CMOCK_Utils_Serialize24LE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Serialize32LE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   uint32_t Expected_value;
   int Expected_buf_Depth;
@@ -280,6 +297,7 @@ typedef struct _CMOCK_Utils_Serialize32LE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_SerializeBlobLE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   byte_t* Expected_buf;
   const byte_t* Expected_src;
   uint32_t Expected_size;
@@ -297,6 +315,7 @@ typedef struct _CMOCK_Utils_SerializeBlobLE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Deserialize16LE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint16_t ReturnVal;
   const byte_t* Expected_buf;
   int Expected_buf_Depth;
@@ -307,6 +326,7 @@ typedef struct _CMOCK_Utils_Deserialize16LE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Deserialize24LE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint32_t ReturnVal;
   const byte_t* Expected_buf;
   int Expected_buf_Depth;
@@ -317,6 +337,7 @@ typedef struct _CMOCK_Utils_Deserialize24LE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_Deserialize32LE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint32_t ReturnVal;
   const byte_t* Expected_buf;
   int Expected_buf_Depth;
@@ -327,6 +348,7 @@ typedef struct _CMOCK_Utils_Deserialize32LE_CALL_INSTANCE
 typedef struct _CMOCK_Utils_DeserializeBlobLE_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   const byte_t* Expected_buf;
   byte_t* Expected_dst;
   uint32_t Expected_size;
@@ -794,6 +816,8 @@ uint32_t Utils_BitReflect(uint32_t data, uint8_t n_bits)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_data)
   {
     UNITY_SET_DETAILS(CMockString_Utils_BitReflect,CMockString_data);
@@ -803,6 +827,7 @@ uint32_t Utils_BitReflect(uint32_t data, uint8_t n_bits)
   {
     UNITY_SET_DETAILS(CMockString_Utils_BitReflect,CMockString_n_bits);
     UNITY_TEST_ASSERT_EQUAL_HEX8(cmock_call_instance->Expected_n_bits, n_bits, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_BitReflect_CallbackFunctionPointer != NULL)
   {
@@ -830,6 +855,7 @@ void Utils_BitReflect_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t 
   Mock.Utils_BitReflect_CallInstance = CMock_Guts_MemChain(Mock.Utils_BitReflect_CallInstance, cmock_guts_index);
   Mock.Utils_BitReflect_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_BitReflect_IgnoreBool = (char)1;
 }
@@ -841,6 +867,20 @@ void Utils_BitReflect_CMockStopIgnore(void)
   Mock.Utils_BitReflect_IgnoreBool = (char)0;
 }
 
+void Utils_BitReflect_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_BitReflect_CALL_INSTANCE));
+  CMOCK_Utils_BitReflect_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_BitReflect_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_BitReflect_CallInstance = CMock_Guts_MemChain(Mock.Utils_BitReflect_CallInstance, cmock_guts_index);
+  Mock.Utils_BitReflect_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_BitReflect_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t data, uint8_t n_bits, uint32_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_BitReflect_CALL_INSTANCE));
@@ -850,6 +890,7 @@ void Utils_BitReflect_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t 
   Mock.Utils_BitReflect_CallInstance = CMock_Guts_MemChain(Mock.Utils_BitReflect_CallInstance, cmock_guts_index);
   Mock.Utils_BitReflect_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_BitReflect(cmock_call_instance, data, n_bits);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -906,6 +947,8 @@ bool Utils_StringToUint32(const char* str, uint8_t str_length, uint32_t* integer
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_str)
   {
     UNITY_SET_DETAILS(CMockString_Utils_StringToUint32,CMockString_str);
@@ -923,6 +966,7 @@ bool Utils_StringToUint32(const char* str, uint8_t str_length, uint32_t* integer
       { UNITY_TEST_ASSERT_NULL(integer, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_HEX32_ARRAY(cmock_call_instance->Expected_integer, integer, cmock_call_instance->Expected_integer_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_StringToUint32_CallbackFunctionPointer != NULL)
   {
@@ -960,6 +1004,7 @@ void Utils_StringToUint32_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool 
   Mock.Utils_StringToUint32_CallInstance = CMock_Guts_MemChain(Mock.Utils_StringToUint32_CallInstance, cmock_guts_index);
   Mock.Utils_StringToUint32_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_StringToUint32_IgnoreBool = (char)1;
 }
@@ -971,6 +1016,20 @@ void Utils_StringToUint32_CMockStopIgnore(void)
   Mock.Utils_StringToUint32_IgnoreBool = (char)0;
 }
 
+void Utils_StringToUint32_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_StringToUint32_CALL_INSTANCE));
+  CMOCK_Utils_StringToUint32_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_StringToUint32_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_StringToUint32_CallInstance = CMock_Guts_MemChain(Mock.Utils_StringToUint32_CallInstance, cmock_guts_index);
+  Mock.Utils_StringToUint32_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_StringToUint32_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const char* str, uint8_t str_length, uint32_t* integer, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_StringToUint32_CALL_INSTANCE));
@@ -980,6 +1039,7 @@ void Utils_StringToUint32_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const
   Mock.Utils_StringToUint32_CallInstance = CMock_Guts_MemChain(Mock.Utils_StringToUint32_CallInstance, cmock_guts_index);
   Mock.Utils_StringToUint32_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_StringToUint32(cmock_call_instance, str, str_length, integer, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1007,6 +1067,7 @@ void Utils_StringToUint32_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_li
   Mock.Utils_StringToUint32_CallInstance = CMock_Guts_MemChain(Mock.Utils_StringToUint32_CallInstance, cmock_guts_index);
   Mock.Utils_StringToUint32_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_StringToUint32(cmock_call_instance, str, str_length, integer, integer_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1062,6 +1123,8 @@ void Utils_SwapElements(byte_t* first, byte_t* second, uint32_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_first)
   {
     UNITY_SET_DETAILS(CMockString_Utils_SwapElements,CMockString_first);
@@ -1082,6 +1145,7 @@ void Utils_SwapElements(byte_t* first, byte_t* second, uint32_t size)
   {
     UNITY_SET_DETAILS(CMockString_Utils_SwapElements,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_SwapElements_CallbackFunctionPointer != NULL)
   {
@@ -1127,6 +1191,19 @@ void Utils_SwapElements_CMockStopIgnore(void)
   Mock.Utils_SwapElements_IgnoreBool = (char)0;
 }
 
+void Utils_SwapElements_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_SwapElements_CALL_INSTANCE));
+  CMOCK_Utils_SwapElements_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_SwapElements_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_SwapElements_CallInstance = CMock_Guts_MemChain(Mock.Utils_SwapElements_CallInstance, cmock_guts_index);
+  Mock.Utils_SwapElements_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_SwapElements_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* first, byte_t* second, uint32_t size)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_SwapElements_CALL_INSTANCE));
@@ -1136,6 +1213,7 @@ void Utils_SwapElements_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* first, b
   Mock.Utils_SwapElements_CallInstance = CMock_Guts_MemChain(Mock.Utils_SwapElements_CallInstance, cmock_guts_index);
   Mock.Utils_SwapElements_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_SwapElements(cmock_call_instance, first, 1, second, 1, size);
 }
 
@@ -1162,6 +1240,7 @@ void Utils_SwapElements_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t*
   Mock.Utils_SwapElements_CallInstance = CMock_Guts_MemChain(Mock.Utils_SwapElements_CallInstance, cmock_guts_index);
   Mock.Utils_SwapElements_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_SwapElements(cmock_call_instance, first, first_Depth, second, second_Depth, size);
 }
 
@@ -1228,6 +1307,8 @@ bool Utils_QuickUint32Pow10(uint8_t exponent, uint32_t* result)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_exponent)
   {
     UNITY_SET_DETAILS(CMockString_Utils_QuickUint32Pow10,CMockString_exponent);
@@ -1240,6 +1321,7 @@ bool Utils_QuickUint32Pow10(uint8_t exponent, uint32_t* result)
       { UNITY_TEST_ASSERT_NULL(result, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_HEX32_ARRAY(cmock_call_instance->Expected_result, result, cmock_call_instance->Expected_result_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_QuickUint32Pow10_CallbackFunctionPointer != NULL)
   {
@@ -1275,6 +1357,7 @@ void Utils_QuickUint32Pow10_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, boo
   Mock.Utils_QuickUint32Pow10_CallInstance = CMock_Guts_MemChain(Mock.Utils_QuickUint32Pow10_CallInstance, cmock_guts_index);
   Mock.Utils_QuickUint32Pow10_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_QuickUint32Pow10_IgnoreBool = (char)1;
 }
@@ -1286,6 +1369,20 @@ void Utils_QuickUint32Pow10_CMockStopIgnore(void)
   Mock.Utils_QuickUint32Pow10_IgnoreBool = (char)0;
 }
 
+void Utils_QuickUint32Pow10_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_QuickUint32Pow10_CALL_INSTANCE));
+  CMOCK_Utils_QuickUint32Pow10_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_QuickUint32Pow10_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_QuickUint32Pow10_CallInstance = CMock_Guts_MemChain(Mock.Utils_QuickUint32Pow10_CallInstance, cmock_guts_index);
+  Mock.Utils_QuickUint32Pow10_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_QuickUint32Pow10_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t exponent, uint32_t* result, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_QuickUint32Pow10_CALL_INSTANCE));
@@ -1295,6 +1392,7 @@ void Utils_QuickUint32Pow10_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uin
   Mock.Utils_QuickUint32Pow10_CallInstance = CMock_Guts_MemChain(Mock.Utils_QuickUint32Pow10_CallInstance, cmock_guts_index);
   Mock.Utils_QuickUint32Pow10_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_QuickUint32Pow10(cmock_call_instance, exponent, result, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1322,6 +1420,7 @@ void Utils_QuickUint32Pow10_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_
   Mock.Utils_QuickUint32Pow10_CallInstance = CMock_Guts_MemChain(Mock.Utils_QuickUint32Pow10_CallInstance, cmock_guts_index);
   Mock.Utils_QuickUint32Pow10_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_QuickUint32Pow10(cmock_call_instance, exponent, result, result_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1370,6 +1469,8 @@ void Utils_Serialize8(byte_t* buf, uint8_t value)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize8,CMockString_buf);
@@ -1382,6 +1483,7 @@ void Utils_Serialize8(byte_t* buf, uint8_t value)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize8,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_HEX8(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_Serialize8_CallbackFunctionPointer != NULL)
   {
@@ -1417,6 +1519,19 @@ void Utils_Serialize8_CMockStopIgnore(void)
   Mock.Utils_Serialize8_IgnoreBool = (char)0;
 }
 
+void Utils_Serialize8_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize8_CALL_INSTANCE));
+  CMOCK_Utils_Serialize8_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Serialize8_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Serialize8_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize8_CallInstance, cmock_guts_index);
+  Mock.Utils_Serialize8_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Serialize8_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint8_t value)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize8_CALL_INSTANCE));
@@ -1426,6 +1541,7 @@ void Utils_Serialize8_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint8
   Mock.Utils_Serialize8_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize8_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize8_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize8(cmock_call_instance, buf, 1, value);
 }
 
@@ -1452,6 +1568,7 @@ void Utils_Serialize8_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t* b
   Mock.Utils_Serialize8_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize8_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize8_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize8(cmock_call_instance, buf, buf_Depth, value);
 }
 
@@ -1502,6 +1619,8 @@ uint8_t Utils_Deserialize8(const byte_t* buf)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Deserialize8,CMockString_buf);
@@ -1509,6 +1628,7 @@ uint8_t Utils_Deserialize8(const byte_t* buf)
       { UNITY_TEST_ASSERT_NULL(buf, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_buf), (void*)(buf), sizeof(const byte_t), cmock_call_instance->Expected_buf_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_Deserialize8_CallbackFunctionPointer != NULL)
   {
@@ -1535,6 +1655,7 @@ void Utils_Deserialize8_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t
   Mock.Utils_Deserialize8_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize8_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize8_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_Deserialize8_IgnoreBool = (char)1;
 }
@@ -1546,6 +1667,20 @@ void Utils_Deserialize8_CMockStopIgnore(void)
   Mock.Utils_Deserialize8_IgnoreBool = (char)0;
 }
 
+void Utils_Deserialize8_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize8_CALL_INSTANCE));
+  CMOCK_Utils_Deserialize8_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Deserialize8_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Deserialize8_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize8_CallInstance, cmock_guts_index);
+  Mock.Utils_Deserialize8_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Deserialize8_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint8_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize8_CALL_INSTANCE));
@@ -1555,6 +1690,7 @@ void Utils_Deserialize8_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const b
   Mock.Utils_Deserialize8_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize8_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize8_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize8(cmock_call_instance, buf, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1582,6 +1718,7 @@ void Utils_Deserialize8_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line
   Mock.Utils_Deserialize8_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize8_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize8_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize8(cmock_call_instance, buf, buf_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1614,6 +1751,8 @@ void Utils_Serialize16BE(byte_t* buf, uint16_t value)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize16BE,CMockString_buf);
@@ -1626,6 +1765,7 @@ void Utils_Serialize16BE(byte_t* buf, uint16_t value)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize16BE,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_Serialize16BE_CallbackFunctionPointer != NULL)
   {
@@ -1661,6 +1801,19 @@ void Utils_Serialize16BE_CMockStopIgnore(void)
   Mock.Utils_Serialize16BE_IgnoreBool = (char)0;
 }
 
+void Utils_Serialize16BE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize16BE_CALL_INSTANCE));
+  CMOCK_Utils_Serialize16BE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Serialize16BE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Serialize16BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize16BE_CallInstance, cmock_guts_index);
+  Mock.Utils_Serialize16BE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Serialize16BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint16_t value)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize16BE_CALL_INSTANCE));
@@ -1670,6 +1823,7 @@ void Utils_Serialize16BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, ui
   Mock.Utils_Serialize16BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize16BE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize16BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize16BE(cmock_call_instance, buf, 1, value);
 }
 
@@ -1696,6 +1850,7 @@ void Utils_Serialize16BE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t
   Mock.Utils_Serialize16BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize16BE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize16BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize16BE(cmock_call_instance, buf, buf_Depth, value);
 }
 
@@ -1743,6 +1898,8 @@ void Utils_Serialize24BE(byte_t* buf, uint32_t value)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize24BE,CMockString_buf);
@@ -1755,6 +1912,7 @@ void Utils_Serialize24BE(byte_t* buf, uint32_t value)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize24BE,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_Serialize24BE_CallbackFunctionPointer != NULL)
   {
@@ -1790,6 +1948,19 @@ void Utils_Serialize24BE_CMockStopIgnore(void)
   Mock.Utils_Serialize24BE_IgnoreBool = (char)0;
 }
 
+void Utils_Serialize24BE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize24BE_CALL_INSTANCE));
+  CMOCK_Utils_Serialize24BE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Serialize24BE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Serialize24BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize24BE_CallInstance, cmock_guts_index);
+  Mock.Utils_Serialize24BE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Serialize24BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize24BE_CALL_INSTANCE));
@@ -1799,6 +1970,7 @@ void Utils_Serialize24BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, ui
   Mock.Utils_Serialize24BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize24BE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize24BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize24BE(cmock_call_instance, buf, 1, value);
 }
 
@@ -1825,6 +1997,7 @@ void Utils_Serialize24BE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t
   Mock.Utils_Serialize24BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize24BE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize24BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize24BE(cmock_call_instance, buf, buf_Depth, value);
 }
 
@@ -1872,6 +2045,8 @@ void Utils_Serialize32BE(byte_t* buf, uint32_t value)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize32BE,CMockString_buf);
@@ -1884,6 +2059,7 @@ void Utils_Serialize32BE(byte_t* buf, uint32_t value)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize32BE,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_Serialize32BE_CallbackFunctionPointer != NULL)
   {
@@ -1919,6 +2095,19 @@ void Utils_Serialize32BE_CMockStopIgnore(void)
   Mock.Utils_Serialize32BE_IgnoreBool = (char)0;
 }
 
+void Utils_Serialize32BE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize32BE_CALL_INSTANCE));
+  CMOCK_Utils_Serialize32BE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Serialize32BE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Serialize32BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize32BE_CallInstance, cmock_guts_index);
+  Mock.Utils_Serialize32BE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Serialize32BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize32BE_CALL_INSTANCE));
@@ -1928,6 +2117,7 @@ void Utils_Serialize32BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, ui
   Mock.Utils_Serialize32BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize32BE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize32BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize32BE(cmock_call_instance, buf, 1, value);
 }
 
@@ -1954,6 +2144,7 @@ void Utils_Serialize32BE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t
   Mock.Utils_Serialize32BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize32BE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize32BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize32BE(cmock_call_instance, buf, buf_Depth, value);
 }
 
@@ -2001,6 +2192,8 @@ void Utils_SerializeBlobBE(byte_t* buf, const byte_t* src, uint32_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_SerializeBlobBE,CMockString_buf);
@@ -2021,6 +2214,7 @@ void Utils_SerializeBlobBE(byte_t* buf, const byte_t* src, uint32_t size)
   {
     UNITY_SET_DETAILS(CMockString_Utils_SerializeBlobBE,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_SerializeBlobBE_CallbackFunctionPointer != NULL)
   {
@@ -2059,6 +2253,19 @@ void Utils_SerializeBlobBE_CMockStopIgnore(void)
   Mock.Utils_SerializeBlobBE_IgnoreBool = (char)0;
 }
 
+void Utils_SerializeBlobBE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_SerializeBlobBE_CALL_INSTANCE));
+  CMOCK_Utils_SerializeBlobBE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_SerializeBlobBE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_SerializeBlobBE_CallInstance = CMock_Guts_MemChain(Mock.Utils_SerializeBlobBE_CallInstance, cmock_guts_index);
+  Mock.Utils_SerializeBlobBE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_SerializeBlobBE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, const byte_t* src, uint32_t size)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_SerializeBlobBE_CALL_INSTANCE));
@@ -2068,6 +2275,7 @@ void Utils_SerializeBlobBE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, 
   Mock.Utils_SerializeBlobBE_CallInstance = CMock_Guts_MemChain(Mock.Utils_SerializeBlobBE_CallInstance, cmock_guts_index);
   Mock.Utils_SerializeBlobBE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_SerializeBlobBE(cmock_call_instance, buf, 1, src, 1, size);
 }
 
@@ -2094,6 +2302,7 @@ void Utils_SerializeBlobBE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte
   Mock.Utils_SerializeBlobBE_CallInstance = CMock_Guts_MemChain(Mock.Utils_SerializeBlobBE_CallInstance, cmock_guts_index);
   Mock.Utils_SerializeBlobBE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_SerializeBlobBE(cmock_call_instance, buf, buf_Depth, src, src_Depth, size);
 }
 
@@ -2151,6 +2360,8 @@ uint16_t Utils_Deserialize16BE(const byte_t* buf)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Deserialize16BE,CMockString_buf);
@@ -2158,6 +2369,7 @@ uint16_t Utils_Deserialize16BE(const byte_t* buf)
       { UNITY_TEST_ASSERT_NULL(buf, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_buf), (void*)(buf), sizeof(const byte_t), cmock_call_instance->Expected_buf_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_Deserialize16BE_CallbackFunctionPointer != NULL)
   {
@@ -2184,6 +2396,7 @@ void Utils_Deserialize16BE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.Utils_Deserialize16BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize16BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_Deserialize16BE_IgnoreBool = (char)1;
 }
@@ -2195,6 +2408,20 @@ void Utils_Deserialize16BE_CMockStopIgnore(void)
   Mock.Utils_Deserialize16BE_IgnoreBool = (char)0;
 }
 
+void Utils_Deserialize16BE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize16BE_CALL_INSTANCE));
+  CMOCK_Utils_Deserialize16BE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Deserialize16BE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Deserialize16BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16BE_CallInstance, cmock_guts_index);
+  Mock.Utils_Deserialize16BE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Deserialize16BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint16_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize16BE_CALL_INSTANCE));
@@ -2204,6 +2431,7 @@ void Utils_Deserialize16BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, cons
   Mock.Utils_Deserialize16BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize16BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize16BE(cmock_call_instance, buf, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -2231,6 +2459,7 @@ void Utils_Deserialize16BE_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.Utils_Deserialize16BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize16BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize16BE(cmock_call_instance, buf, buf_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -2266,6 +2495,8 @@ uint32_t Utils_Deserialize24BE(const byte_t* buf)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Deserialize24BE,CMockString_buf);
@@ -2273,6 +2504,7 @@ uint32_t Utils_Deserialize24BE(const byte_t* buf)
       { UNITY_TEST_ASSERT_NULL(buf, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_buf), (void*)(buf), sizeof(const byte_t), cmock_call_instance->Expected_buf_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_Deserialize24BE_CallbackFunctionPointer != NULL)
   {
@@ -2299,6 +2531,7 @@ void Utils_Deserialize24BE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.Utils_Deserialize24BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize24BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_Deserialize24BE_IgnoreBool = (char)1;
 }
@@ -2310,6 +2543,20 @@ void Utils_Deserialize24BE_CMockStopIgnore(void)
   Mock.Utils_Deserialize24BE_IgnoreBool = (char)0;
 }
 
+void Utils_Deserialize24BE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize24BE_CALL_INSTANCE));
+  CMOCK_Utils_Deserialize24BE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Deserialize24BE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Deserialize24BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24BE_CallInstance, cmock_guts_index);
+  Mock.Utils_Deserialize24BE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Deserialize24BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize24BE_CALL_INSTANCE));
@@ -2319,6 +2566,7 @@ void Utils_Deserialize24BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, cons
   Mock.Utils_Deserialize24BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize24BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize24BE(cmock_call_instance, buf, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -2346,6 +2594,7 @@ void Utils_Deserialize24BE_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.Utils_Deserialize24BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize24BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize24BE(cmock_call_instance, buf, buf_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -2381,6 +2630,8 @@ uint32_t Utils_Deserialize32BE(const byte_t* buf)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Deserialize32BE,CMockString_buf);
@@ -2388,6 +2639,7 @@ uint32_t Utils_Deserialize32BE(const byte_t* buf)
       { UNITY_TEST_ASSERT_NULL(buf, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_buf), (void*)(buf), sizeof(const byte_t), cmock_call_instance->Expected_buf_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_Deserialize32BE_CallbackFunctionPointer != NULL)
   {
@@ -2414,6 +2666,7 @@ void Utils_Deserialize32BE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.Utils_Deserialize32BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize32BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_Deserialize32BE_IgnoreBool = (char)1;
 }
@@ -2425,6 +2678,20 @@ void Utils_Deserialize32BE_CMockStopIgnore(void)
   Mock.Utils_Deserialize32BE_IgnoreBool = (char)0;
 }
 
+void Utils_Deserialize32BE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize32BE_CALL_INSTANCE));
+  CMOCK_Utils_Deserialize32BE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Deserialize32BE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Deserialize32BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32BE_CallInstance, cmock_guts_index);
+  Mock.Utils_Deserialize32BE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Deserialize32BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize32BE_CALL_INSTANCE));
@@ -2434,6 +2701,7 @@ void Utils_Deserialize32BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, cons
   Mock.Utils_Deserialize32BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize32BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize32BE(cmock_call_instance, buf, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -2461,6 +2729,7 @@ void Utils_Deserialize32BE_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.Utils_Deserialize32BE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32BE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize32BE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize32BE(cmock_call_instance, buf, buf_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -2493,6 +2762,8 @@ void Utils_DeserializeBlobBE(const byte_t* buf, byte_t* dst, uint32_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_DeserializeBlobBE,CMockString_buf);
@@ -2513,6 +2784,7 @@ void Utils_DeserializeBlobBE(const byte_t* buf, byte_t* dst, uint32_t size)
   {
     UNITY_SET_DETAILS(CMockString_Utils_DeserializeBlobBE,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_DeserializeBlobBE_CallbackFunctionPointer != NULL)
   {
@@ -2551,6 +2823,19 @@ void Utils_DeserializeBlobBE_CMockStopIgnore(void)
   Mock.Utils_DeserializeBlobBE_IgnoreBool = (char)0;
 }
 
+void Utils_DeserializeBlobBE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_DeserializeBlobBE_CALL_INSTANCE));
+  CMOCK_Utils_DeserializeBlobBE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_DeserializeBlobBE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_DeserializeBlobBE_CallInstance = CMock_Guts_MemChain(Mock.Utils_DeserializeBlobBE_CallInstance, cmock_guts_index);
+  Mock.Utils_DeserializeBlobBE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_DeserializeBlobBE_CMockExpect(UNITY_LINE_TYPE cmock_line, const byte_t* buf, byte_t* dst, uint32_t size)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_DeserializeBlobBE_CALL_INSTANCE));
@@ -2560,6 +2845,7 @@ void Utils_DeserializeBlobBE_CMockExpect(UNITY_LINE_TYPE cmock_line, const byte_
   Mock.Utils_DeserializeBlobBE_CallInstance = CMock_Guts_MemChain(Mock.Utils_DeserializeBlobBE_CallInstance, cmock_guts_index);
   Mock.Utils_DeserializeBlobBE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_DeserializeBlobBE(cmock_call_instance, buf, 1, dst, 1, size);
 }
 
@@ -2586,6 +2872,7 @@ void Utils_DeserializeBlobBE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, co
   Mock.Utils_DeserializeBlobBE_CallInstance = CMock_Guts_MemChain(Mock.Utils_DeserializeBlobBE_CallInstance, cmock_guts_index);
   Mock.Utils_DeserializeBlobBE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_DeserializeBlobBE(cmock_call_instance, buf, buf_Depth, dst, dst_Depth, size);
 }
 
@@ -2640,6 +2927,8 @@ void Utils_Serialize16LE(byte_t* buf, uint16_t value)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize16LE,CMockString_buf);
@@ -2652,6 +2941,7 @@ void Utils_Serialize16LE(byte_t* buf, uint16_t value)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize16LE,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_Serialize16LE_CallbackFunctionPointer != NULL)
   {
@@ -2687,6 +2977,19 @@ void Utils_Serialize16LE_CMockStopIgnore(void)
   Mock.Utils_Serialize16LE_IgnoreBool = (char)0;
 }
 
+void Utils_Serialize16LE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize16LE_CALL_INSTANCE));
+  CMOCK_Utils_Serialize16LE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Serialize16LE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Serialize16LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize16LE_CallInstance, cmock_guts_index);
+  Mock.Utils_Serialize16LE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Serialize16LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint16_t value)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize16LE_CALL_INSTANCE));
@@ -2696,6 +2999,7 @@ void Utils_Serialize16LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, ui
   Mock.Utils_Serialize16LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize16LE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize16LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize16LE(cmock_call_instance, buf, 1, value);
 }
 
@@ -2722,6 +3026,7 @@ void Utils_Serialize16LE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t
   Mock.Utils_Serialize16LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize16LE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize16LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize16LE(cmock_call_instance, buf, buf_Depth, value);
 }
 
@@ -2769,6 +3074,8 @@ void Utils_Serialize24LE(byte_t* buf, uint32_t value)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize24LE,CMockString_buf);
@@ -2781,6 +3088,7 @@ void Utils_Serialize24LE(byte_t* buf, uint32_t value)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize24LE,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_Serialize24LE_CallbackFunctionPointer != NULL)
   {
@@ -2816,6 +3124,19 @@ void Utils_Serialize24LE_CMockStopIgnore(void)
   Mock.Utils_Serialize24LE_IgnoreBool = (char)0;
 }
 
+void Utils_Serialize24LE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize24LE_CALL_INSTANCE));
+  CMOCK_Utils_Serialize24LE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Serialize24LE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Serialize24LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize24LE_CallInstance, cmock_guts_index);
+  Mock.Utils_Serialize24LE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Serialize24LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize24LE_CALL_INSTANCE));
@@ -2825,6 +3146,7 @@ void Utils_Serialize24LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, ui
   Mock.Utils_Serialize24LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize24LE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize24LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize24LE(cmock_call_instance, buf, 1, value);
 }
 
@@ -2851,6 +3173,7 @@ void Utils_Serialize24LE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t
   Mock.Utils_Serialize24LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize24LE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize24LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize24LE(cmock_call_instance, buf, buf_Depth, value);
 }
 
@@ -2898,6 +3221,8 @@ void Utils_Serialize32LE(byte_t* buf, uint32_t value)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize32LE,CMockString_buf);
@@ -2910,6 +3235,7 @@ void Utils_Serialize32LE(byte_t* buf, uint32_t value)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Serialize32LE,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_Serialize32LE_CallbackFunctionPointer != NULL)
   {
@@ -2945,6 +3271,19 @@ void Utils_Serialize32LE_CMockStopIgnore(void)
   Mock.Utils_Serialize32LE_IgnoreBool = (char)0;
 }
 
+void Utils_Serialize32LE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize32LE_CALL_INSTANCE));
+  CMOCK_Utils_Serialize32LE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Serialize32LE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Serialize32LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize32LE_CallInstance, cmock_guts_index);
+  Mock.Utils_Serialize32LE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Serialize32LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Serialize32LE_CALL_INSTANCE));
@@ -2954,6 +3293,7 @@ void Utils_Serialize32LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, ui
   Mock.Utils_Serialize32LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize32LE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize32LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize32LE(cmock_call_instance, buf, 1, value);
 }
 
@@ -2980,6 +3320,7 @@ void Utils_Serialize32LE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte_t
   Mock.Utils_Serialize32LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Serialize32LE_CallInstance, cmock_guts_index);
   Mock.Utils_Serialize32LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Serialize32LE(cmock_call_instance, buf, buf_Depth, value);
 }
 
@@ -3027,6 +3368,8 @@ void Utils_SerializeBlobLE(byte_t* buf, const byte_t* src, uint32_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_SerializeBlobLE,CMockString_buf);
@@ -3047,6 +3390,7 @@ void Utils_SerializeBlobLE(byte_t* buf, const byte_t* src, uint32_t size)
   {
     UNITY_SET_DETAILS(CMockString_Utils_SerializeBlobLE,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_SerializeBlobLE_CallbackFunctionPointer != NULL)
   {
@@ -3085,6 +3429,19 @@ void Utils_SerializeBlobLE_CMockStopIgnore(void)
   Mock.Utils_SerializeBlobLE_IgnoreBool = (char)0;
 }
 
+void Utils_SerializeBlobLE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_SerializeBlobLE_CALL_INSTANCE));
+  CMOCK_Utils_SerializeBlobLE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_SerializeBlobLE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_SerializeBlobLE_CallInstance = CMock_Guts_MemChain(Mock.Utils_SerializeBlobLE_CallInstance, cmock_guts_index);
+  Mock.Utils_SerializeBlobLE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_SerializeBlobLE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, const byte_t* src, uint32_t size)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_SerializeBlobLE_CALL_INSTANCE));
@@ -3094,6 +3451,7 @@ void Utils_SerializeBlobLE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, 
   Mock.Utils_SerializeBlobLE_CallInstance = CMock_Guts_MemChain(Mock.Utils_SerializeBlobLE_CallInstance, cmock_guts_index);
   Mock.Utils_SerializeBlobLE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_SerializeBlobLE(cmock_call_instance, buf, 1, src, 1, size);
 }
 
@@ -3120,6 +3478,7 @@ void Utils_SerializeBlobLE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, byte
   Mock.Utils_SerializeBlobLE_CallInstance = CMock_Guts_MemChain(Mock.Utils_SerializeBlobLE_CallInstance, cmock_guts_index);
   Mock.Utils_SerializeBlobLE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_SerializeBlobLE(cmock_call_instance, buf, buf_Depth, src, src_Depth, size);
 }
 
@@ -3177,6 +3536,8 @@ uint16_t Utils_Deserialize16LE(const byte_t* buf)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Deserialize16LE,CMockString_buf);
@@ -3184,6 +3545,7 @@ uint16_t Utils_Deserialize16LE(const byte_t* buf)
       { UNITY_TEST_ASSERT_NULL(buf, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_buf), (void*)(buf), sizeof(const byte_t), cmock_call_instance->Expected_buf_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_Deserialize16LE_CallbackFunctionPointer != NULL)
   {
@@ -3210,6 +3572,7 @@ void Utils_Deserialize16LE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.Utils_Deserialize16LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize16LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_Deserialize16LE_IgnoreBool = (char)1;
 }
@@ -3221,6 +3584,20 @@ void Utils_Deserialize16LE_CMockStopIgnore(void)
   Mock.Utils_Deserialize16LE_IgnoreBool = (char)0;
 }
 
+void Utils_Deserialize16LE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize16LE_CALL_INSTANCE));
+  CMOCK_Utils_Deserialize16LE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Deserialize16LE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Deserialize16LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16LE_CallInstance, cmock_guts_index);
+  Mock.Utils_Deserialize16LE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Deserialize16LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint16_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize16LE_CALL_INSTANCE));
@@ -3230,6 +3607,7 @@ void Utils_Deserialize16LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, cons
   Mock.Utils_Deserialize16LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize16LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize16LE(cmock_call_instance, buf, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -3257,6 +3635,7 @@ void Utils_Deserialize16LE_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.Utils_Deserialize16LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize16LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize16LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize16LE(cmock_call_instance, buf, buf_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -3292,6 +3671,8 @@ uint32_t Utils_Deserialize24LE(const byte_t* buf)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Deserialize24LE,CMockString_buf);
@@ -3299,6 +3680,7 @@ uint32_t Utils_Deserialize24LE(const byte_t* buf)
       { UNITY_TEST_ASSERT_NULL(buf, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_buf), (void*)(buf), sizeof(const byte_t), cmock_call_instance->Expected_buf_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_Deserialize24LE_CallbackFunctionPointer != NULL)
   {
@@ -3325,6 +3707,7 @@ void Utils_Deserialize24LE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.Utils_Deserialize24LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize24LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_Deserialize24LE_IgnoreBool = (char)1;
 }
@@ -3336,6 +3719,20 @@ void Utils_Deserialize24LE_CMockStopIgnore(void)
   Mock.Utils_Deserialize24LE_IgnoreBool = (char)0;
 }
 
+void Utils_Deserialize24LE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize24LE_CALL_INSTANCE));
+  CMOCK_Utils_Deserialize24LE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Deserialize24LE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Deserialize24LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24LE_CallInstance, cmock_guts_index);
+  Mock.Utils_Deserialize24LE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Deserialize24LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize24LE_CALL_INSTANCE));
@@ -3345,6 +3742,7 @@ void Utils_Deserialize24LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, cons
   Mock.Utils_Deserialize24LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize24LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize24LE(cmock_call_instance, buf, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -3372,6 +3770,7 @@ void Utils_Deserialize24LE_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.Utils_Deserialize24LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize24LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize24LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize24LE(cmock_call_instance, buf, buf_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -3407,6 +3806,8 @@ uint32_t Utils_Deserialize32LE(const byte_t* buf)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_Deserialize32LE,CMockString_buf);
@@ -3414,6 +3815,7 @@ uint32_t Utils_Deserialize32LE(const byte_t* buf)
       { UNITY_TEST_ASSERT_NULL(buf, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_buf), (void*)(buf), sizeof(const byte_t), cmock_call_instance->Expected_buf_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Utils_Deserialize32LE_CallbackFunctionPointer != NULL)
   {
@@ -3440,6 +3842,7 @@ void Utils_Deserialize32LE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.Utils_Deserialize32LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize32LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Utils_Deserialize32LE_IgnoreBool = (char)1;
 }
@@ -3451,6 +3854,20 @@ void Utils_Deserialize32LE_CMockStopIgnore(void)
   Mock.Utils_Deserialize32LE_IgnoreBool = (char)0;
 }
 
+void Utils_Deserialize32LE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize32LE_CALL_INSTANCE));
+  CMOCK_Utils_Deserialize32LE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_Deserialize32LE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_Deserialize32LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32LE_CallInstance, cmock_guts_index);
+  Mock.Utils_Deserialize32LE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_Deserialize32LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_Deserialize32LE_CALL_INSTANCE));
@@ -3460,6 +3877,7 @@ void Utils_Deserialize32LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, cons
   Mock.Utils_Deserialize32LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize32LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize32LE(cmock_call_instance, buf, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -3487,6 +3905,7 @@ void Utils_Deserialize32LE_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.Utils_Deserialize32LE_CallInstance = CMock_Guts_MemChain(Mock.Utils_Deserialize32LE_CallInstance, cmock_guts_index);
   Mock.Utils_Deserialize32LE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_Deserialize32LE(cmock_call_instance, buf, buf_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -3519,6 +3938,8 @@ void Utils_DeserializeBlobLE(const byte_t* buf, byte_t* dst, uint32_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Utils_DeserializeBlobLE,CMockString_buf);
@@ -3539,6 +3960,7 @@ void Utils_DeserializeBlobLE(const byte_t* buf, byte_t* dst, uint32_t size)
   {
     UNITY_SET_DETAILS(CMockString_Utils_DeserializeBlobLE,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Utils_DeserializeBlobLE_CallbackFunctionPointer != NULL)
   {
@@ -3577,6 +3999,19 @@ void Utils_DeserializeBlobLE_CMockStopIgnore(void)
   Mock.Utils_DeserializeBlobLE_IgnoreBool = (char)0;
 }
 
+void Utils_DeserializeBlobLE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_DeserializeBlobLE_CALL_INSTANCE));
+  CMOCK_Utils_DeserializeBlobLE_CALL_INSTANCE* cmock_call_instance = (CMOCK_Utils_DeserializeBlobLE_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Utils_DeserializeBlobLE_CallInstance = CMock_Guts_MemChain(Mock.Utils_DeserializeBlobLE_CallInstance, cmock_guts_index);
+  Mock.Utils_DeserializeBlobLE_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Utils_DeserializeBlobLE_CMockExpect(UNITY_LINE_TYPE cmock_line, const byte_t* buf, byte_t* dst, uint32_t size)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Utils_DeserializeBlobLE_CALL_INSTANCE));
@@ -3586,6 +4021,7 @@ void Utils_DeserializeBlobLE_CMockExpect(UNITY_LINE_TYPE cmock_line, const byte_
   Mock.Utils_DeserializeBlobLE_CallInstance = CMock_Guts_MemChain(Mock.Utils_DeserializeBlobLE_CallInstance, cmock_guts_index);
   Mock.Utils_DeserializeBlobLE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_DeserializeBlobLE(cmock_call_instance, buf, 1, dst, 1, size);
 }
 
@@ -3612,6 +4048,7 @@ void Utils_DeserializeBlobLE_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, co
   Mock.Utils_DeserializeBlobLE_CallInstance = CMock_Guts_MemChain(Mock.Utils_DeserializeBlobLE_CallInstance, cmock_guts_index);
   Mock.Utils_DeserializeBlobLE_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Utils_DeserializeBlobLE(cmock_call_instance, buf, buf_Depth, dst, dst_Depth, size);
 }
 

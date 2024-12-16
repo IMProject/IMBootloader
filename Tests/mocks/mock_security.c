@@ -21,6 +21,7 @@ static const char* CMockString_plain_data = "plain_data";
 typedef struct _CMOCK_Security_setServerSecurityDataJson_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   char* Expected_buffer;
   uint16_t Expected_buffer_size;
@@ -35,6 +36,7 @@ typedef struct _CMOCK_Security_setServerSecurityDataJson_CALL_INSTANCE
 typedef struct _CMOCK_Security_getClientSecurityDataJson_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   char* Expected_buffer;
   uint16_t Expected_buffer_size;
@@ -49,6 +51,7 @@ typedef struct _CMOCK_Security_getClientSecurityDataJson_CALL_INSTANCE
 typedef struct _CMOCK_Security_isSecured_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
 
 } CMOCK_Security_isSecured_CALL_INSTANCE;
@@ -56,6 +59,7 @@ typedef struct _CMOCK_Security_isSecured_CALL_INSTANCE
 typedef struct _CMOCK_Security_decrypt_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   const uint8_t* Expected_mac;
   const uint8_t* Expected_nonce;
@@ -80,6 +84,7 @@ typedef struct _CMOCK_Security_decrypt_CALL_INSTANCE
 typedef struct _CMOCK_Security_wipeKeys_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_Security_wipeKeys_CALL_INSTANCE;
 
@@ -224,6 +229,8 @@ bool Security_setServerSecurityDataJson(char* buffer, uint16_t buffer_size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_Security_setServerSecurityDataJson,CMockString_buffer);
@@ -233,6 +240,7 @@ bool Security_setServerSecurityDataJson(char* buffer, uint16_t buffer_size)
   {
     UNITY_SET_DETAILS(CMockString_Security_setServerSecurityDataJson,CMockString_buffer_size);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_buffer_size, buffer_size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Security_setServerSecurityDataJson_CallbackFunctionPointer != NULL)
   {
@@ -267,6 +275,7 @@ void Security_setServerSecurityDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmo
   Mock.Security_setServerSecurityDataJson_CallInstance = CMock_Guts_MemChain(Mock.Security_setServerSecurityDataJson_CallInstance, cmock_guts_index);
   Mock.Security_setServerSecurityDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Security_setServerSecurityDataJson_IgnoreBool = (char)1;
 }
@@ -278,6 +287,20 @@ void Security_setServerSecurityDataJson_CMockStopIgnore(void)
   Mock.Security_setServerSecurityDataJson_IgnoreBool = (char)0;
 }
 
+void Security_setServerSecurityDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Security_setServerSecurityDataJson_CALL_INSTANCE));
+  CMOCK_Security_setServerSecurityDataJson_CALL_INSTANCE* cmock_call_instance = (CMOCK_Security_setServerSecurityDataJson_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Security_setServerSecurityDataJson_CallInstance = CMock_Guts_MemChain(Mock.Security_setServerSecurityDataJson_CallInstance, cmock_guts_index);
+  Mock.Security_setServerSecurityDataJson_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Security_setServerSecurityDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, uint16_t buffer_size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Security_setServerSecurityDataJson_CALL_INSTANCE));
@@ -287,6 +310,7 @@ void Security_setServerSecurityDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmo
   Mock.Security_setServerSecurityDataJson_CallInstance = CMock_Guts_MemChain(Mock.Security_setServerSecurityDataJson_CallInstance, cmock_guts_index);
   Mock.Security_setServerSecurityDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Security_setServerSecurityDataJson(cmock_call_instance, buffer, buffer_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -352,6 +376,8 @@ bool Security_getClientSecurityDataJson(char* buffer, uint16_t buffer_size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_Security_getClientSecurityDataJson,CMockString_buffer);
@@ -361,6 +387,7 @@ bool Security_getClientSecurityDataJson(char* buffer, uint16_t buffer_size)
   {
     UNITY_SET_DETAILS(CMockString_Security_getClientSecurityDataJson,CMockString_buffer_size);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_buffer_size, buffer_size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Security_getClientSecurityDataJson_CallbackFunctionPointer != NULL)
   {
@@ -395,6 +422,7 @@ void Security_getClientSecurityDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmo
   Mock.Security_getClientSecurityDataJson_CallInstance = CMock_Guts_MemChain(Mock.Security_getClientSecurityDataJson_CallInstance, cmock_guts_index);
   Mock.Security_getClientSecurityDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Security_getClientSecurityDataJson_IgnoreBool = (char)1;
 }
@@ -406,6 +434,20 @@ void Security_getClientSecurityDataJson_CMockStopIgnore(void)
   Mock.Security_getClientSecurityDataJson_IgnoreBool = (char)0;
 }
 
+void Security_getClientSecurityDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Security_getClientSecurityDataJson_CALL_INSTANCE));
+  CMOCK_Security_getClientSecurityDataJson_CALL_INSTANCE* cmock_call_instance = (CMOCK_Security_getClientSecurityDataJson_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Security_getClientSecurityDataJson_CallInstance = CMock_Guts_MemChain(Mock.Security_getClientSecurityDataJson_CallInstance, cmock_guts_index);
+  Mock.Security_getClientSecurityDataJson_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Security_getClientSecurityDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, uint16_t buffer_size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Security_getClientSecurityDataJson_CALL_INSTANCE));
@@ -415,6 +457,7 @@ void Security_getClientSecurityDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmo
   Mock.Security_getClientSecurityDataJson_CallInstance = CMock_Guts_MemChain(Mock.Security_getClientSecurityDataJson_CallInstance, cmock_guts_index);
   Mock.Security_getClientSecurityDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Security_getClientSecurityDataJson(cmock_call_instance, buffer, buffer_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -497,6 +540,7 @@ void Security_isSecured_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cm
   Mock.Security_isSecured_CallInstance = CMock_Guts_MemChain(Mock.Security_isSecured_CallInstance, cmock_guts_index);
   Mock.Security_isSecured_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Security_isSecured_IgnoreBool = (char)1;
 }
@@ -517,6 +561,7 @@ void Security_isSecured_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool cm
   Mock.Security_isSecured_CallInstance = CMock_Guts_MemChain(Mock.Security_isSecured_CallInstance, cmock_guts_index);
   Mock.Security_isSecured_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
 
@@ -558,6 +603,8 @@ bool Security_decrypt(const uint8_t* mac, const uint8_t* nonce, const uint8_t* c
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_mac)
   {
     UNITY_SET_DETAILS(CMockString_Security_decrypt,CMockString_mac);
@@ -594,6 +641,7 @@ bool Security_decrypt(const uint8_t* mac, const uint8_t* nonce, const uint8_t* c
   {
     UNITY_SET_DETAILS(CMockString_Security_decrypt,CMockString_data_length);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_data_length, data_length, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Security_decrypt_CallbackFunctionPointer != NULL)
   {
@@ -638,6 +686,7 @@ void Security_decrypt_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmoc
   Mock.Security_decrypt_CallInstance = CMock_Guts_MemChain(Mock.Security_decrypt_CallInstance, cmock_guts_index);
   Mock.Security_decrypt_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Security_decrypt_IgnoreBool = (char)1;
 }
@@ -649,6 +698,20 @@ void Security_decrypt_CMockStopIgnore(void)
   Mock.Security_decrypt_IgnoreBool = (char)0;
 }
 
+void Security_decrypt_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Security_decrypt_CALL_INSTANCE));
+  CMOCK_Security_decrypt_CALL_INSTANCE* cmock_call_instance = (CMOCK_Security_decrypt_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Security_decrypt_CallInstance = CMock_Guts_MemChain(Mock.Security_decrypt_CallInstance, cmock_guts_index);
+  Mock.Security_decrypt_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Security_decrypt_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const uint8_t* mac, const uint8_t* nonce, const uint8_t* cipher_data, uint8_t* plain_data, const uint16_t data_length, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Security_decrypt_CALL_INSTANCE));
@@ -658,6 +721,7 @@ void Security_decrypt_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const uin
   Mock.Security_decrypt_CallInstance = CMock_Guts_MemChain(Mock.Security_decrypt_CallInstance, cmock_guts_index);
   Mock.Security_decrypt_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Security_decrypt(cmock_call_instance, mac, 1, nonce, 1, cipher_data, 1, plain_data, 1, data_length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -685,6 +749,7 @@ void Security_decrypt_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, 
   Mock.Security_decrypt_CallInstance = CMock_Guts_MemChain(Mock.Security_decrypt_CallInstance, cmock_guts_index);
   Mock.Security_decrypt_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Security_decrypt(cmock_call_instance, mac, mac_Depth, nonce, nonce_Depth, cipher_data, cipher_data_Depth, plain_data, plain_data_Depth, data_length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -780,6 +845,7 @@ void Security_wipeKeys_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.Security_wipeKeys_CallInstance = CMock_Guts_MemChain(Mock.Security_wipeKeys_CallInstance, cmock_guts_index);
   Mock.Security_wipeKeys_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void Security_wipeKeys_AddCallback(CMOCK_Security_wipeKeys_CALLBACK Callback)

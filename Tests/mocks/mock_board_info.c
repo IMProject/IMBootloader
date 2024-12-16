@@ -14,6 +14,7 @@ static const char* CMockString_size = "size";
 typedef struct _CMOCK_BoardInfo_getDataJson_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_buffer;
   size_t Expected_size;
@@ -29,6 +30,7 @@ typedef struct _CMOCK_BoardInfo_getDataJson_CALL_INSTANCE
 typedef struct _CMOCK_BoardInfo_getBase64ManufacturerId_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_b64_manufacturer_id;
   int Expected_b64_manufacturer_id_Depth;
@@ -124,6 +126,8 @@ bool BoardInfo_getDataJson(uint8_t* buffer, size_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_BoardInfo_getDataJson,CMockString_buffer);
@@ -136,6 +140,7 @@ bool BoardInfo_getDataJson(uint8_t* buffer, size_t size)
   {
     UNITY_SET_DETAILS(CMockString_BoardInfo_getDataJson,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(&cmock_call_instance->Expected_size), (void*)(&size), sizeof(size_t), cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.BoardInfo_getDataJson_CallbackFunctionPointer != NULL)
   {
@@ -172,6 +177,7 @@ void BoardInfo_getDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool
   Mock.BoardInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getDataJson_CallInstance, cmock_guts_index);
   Mock.BoardInfo_getDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BoardInfo_getDataJson_IgnoreBool = (char)1;
 }
@@ -183,6 +189,20 @@ void BoardInfo_getDataJson_CMockStopIgnore(void)
   Mock.BoardInfo_getDataJson_IgnoreBool = (char)0;
 }
 
+void BoardInfo_getDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BoardInfo_getDataJson_CALL_INSTANCE));
+  CMOCK_BoardInfo_getDataJson_CALL_INSTANCE* cmock_call_instance = (CMOCK_BoardInfo_getDataJson_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.BoardInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getDataJson_CallInstance, cmock_guts_index);
+  Mock.BoardInfo_getDataJson_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void BoardInfo_getDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, size_t size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BoardInfo_getDataJson_CALL_INSTANCE));
@@ -192,6 +212,7 @@ void BoardInfo_getDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.BoardInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getDataJson_CallInstance, cmock_guts_index);
   Mock.BoardInfo_getDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BoardInfo_getDataJson(cmock_call_instance, buffer, size, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -219,6 +240,7 @@ void BoardInfo_getDataJson_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.BoardInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getDataJson_CallInstance, cmock_guts_index);
   Mock.BoardInfo_getDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BoardInfo_getDataJson(cmock_call_instance, buffer, buffer_Depth, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -270,6 +292,8 @@ bool BoardInfo_getBase64ManufacturerId(uint8_t* b64_manufacturer_id)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_b64_manufacturer_id)
   {
     UNITY_SET_DETAILS(CMockString_BoardInfo_getBase64ManufacturerId,CMockString_b64_manufacturer_id);
@@ -277,6 +301,7 @@ bool BoardInfo_getBase64ManufacturerId(uint8_t* b64_manufacturer_id)
       { UNITY_TEST_ASSERT_NULL(b64_manufacturer_id, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_b64_manufacturer_id, b64_manufacturer_id, cmock_call_instance->Expected_b64_manufacturer_id_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.BoardInfo_getBase64ManufacturerId_CallbackFunctionPointer != NULL)
   {
@@ -310,6 +335,7 @@ void BoardInfo_getBase64ManufacturerId_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmoc
   Mock.BoardInfo_getBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getBase64ManufacturerId_CallInstance, cmock_guts_index);
   Mock.BoardInfo_getBase64ManufacturerId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BoardInfo_getBase64ManufacturerId_IgnoreBool = (char)1;
 }
@@ -321,6 +347,20 @@ void BoardInfo_getBase64ManufacturerId_CMockStopIgnore(void)
   Mock.BoardInfo_getBase64ManufacturerId_IgnoreBool = (char)0;
 }
 
+void BoardInfo_getBase64ManufacturerId_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BoardInfo_getBase64ManufacturerId_CALL_INSTANCE));
+  CMOCK_BoardInfo_getBase64ManufacturerId_CALL_INSTANCE* cmock_call_instance = (CMOCK_BoardInfo_getBase64ManufacturerId_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.BoardInfo_getBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getBase64ManufacturerId_CallInstance, cmock_guts_index);
+  Mock.BoardInfo_getBase64ManufacturerId_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void BoardInfo_getBase64ManufacturerId_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* b64_manufacturer_id, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BoardInfo_getBase64ManufacturerId_CALL_INSTANCE));
@@ -330,6 +370,7 @@ void BoardInfo_getBase64ManufacturerId_CMockExpectAndReturn(UNITY_LINE_TYPE cmoc
   Mock.BoardInfo_getBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getBase64ManufacturerId_CallInstance, cmock_guts_index);
   Mock.BoardInfo_getBase64ManufacturerId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BoardInfo_getBase64ManufacturerId(cmock_call_instance, b64_manufacturer_id, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -357,6 +398,7 @@ void BoardInfo_getBase64ManufacturerId_CMockExpectWithArrayAndReturn(UNITY_LINE_
   Mock.BoardInfo_getBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_getBase64ManufacturerId_CallInstance, cmock_guts_index);
   Mock.BoardInfo_getBase64ManufacturerId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BoardInfo_getBase64ManufacturerId(cmock_call_instance, b64_manufacturer_id, b64_manufacturer_id_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

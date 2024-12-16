@@ -22,6 +22,7 @@ static const char* CMockString_write_buffer = "write_buffer";
 typedef struct _CMOCK_BinaryUpdate_handleDetectedBinary_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   signatureType_E Expected_detected_binary;
   char IgnoreArg_detected_binary;
@@ -31,12 +32,14 @@ typedef struct _CMOCK_BinaryUpdate_handleDetectedBinary_CALL_INSTANCE
 typedef struct _CMOCK_BinaryUpdate_handleBootInfo_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_BinaryUpdate_handleBootInfo_CALL_INSTANCE;
 
 typedef struct _CMOCK_BinaryUpdate_getJumpAddress_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint32_t ReturnVal;
 
 } CMOCK_BinaryUpdate_getJumpAddress_CALL_INSTANCE;
@@ -44,12 +47,14 @@ typedef struct _CMOCK_BinaryUpdate_getJumpAddress_CALL_INSTANCE
 typedef struct _CMOCK_BinaryUpdate_resetJumpAddress_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_BinaryUpdate_resetJumpAddress_CALL_INSTANCE;
 
 typedef struct _CMOCK_BinaryUpdate_checkSkipLoopFlag_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
 
 } CMOCK_BinaryUpdate_checkSkipLoopFlag_CALL_INSTANCE;
@@ -57,12 +62,14 @@ typedef struct _CMOCK_BinaryUpdate_checkSkipLoopFlag_CALL_INSTANCE
 typedef struct _CMOCK_BinaryUpdate_disableLoopFlag_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_BinaryUpdate_disableLoopFlag_CALL_INSTANCE;
 
 typedef struct _CMOCK_BinaryUpdate_erase_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint32_t Expected_firmware_size;
   char IgnoreArg_firmware_size;
@@ -72,6 +79,7 @@ typedef struct _CMOCK_BinaryUpdate_erase_CALL_INSTANCE
 typedef struct _CMOCK_BinaryUpdate_write_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_write_buffer;
   uint32_t Expected_packet_length;
@@ -87,6 +95,7 @@ typedef struct _CMOCK_BinaryUpdate_write_CALL_INSTANCE
 typedef struct _CMOCK_BinaryUpdate_finish_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
 
 } CMOCK_BinaryUpdate_finish_CALL_INSTANCE;
@@ -306,10 +315,13 @@ bool BinaryUpdate_handleDetectedBinary(signatureType_E detected_binary)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_detected_binary)
   {
     UNITY_SET_DETAILS(CMockString_BinaryUpdate_handleDetectedBinary,CMockString_detected_binary);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(&cmock_call_instance->Expected_detected_binary), (void*)(&detected_binary), sizeof(signatureType_E), cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.BinaryUpdate_handleDetectedBinary_CallbackFunctionPointer != NULL)
   {
@@ -336,6 +348,7 @@ void BinaryUpdate_handleDetectedBinary_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmoc
   Mock.BinaryUpdate_handleDetectedBinary_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_handleDetectedBinary_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_handleDetectedBinary_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BinaryUpdate_handleDetectedBinary_IgnoreBool = (char)1;
 }
@@ -347,6 +360,20 @@ void BinaryUpdate_handleDetectedBinary_CMockStopIgnore(void)
   Mock.BinaryUpdate_handleDetectedBinary_IgnoreBool = (char)0;
 }
 
+void BinaryUpdate_handleDetectedBinary_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BinaryUpdate_handleDetectedBinary_CALL_INSTANCE));
+  CMOCK_BinaryUpdate_handleDetectedBinary_CALL_INSTANCE* cmock_call_instance = (CMOCK_BinaryUpdate_handleDetectedBinary_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.BinaryUpdate_handleDetectedBinary_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_handleDetectedBinary_CallInstance, cmock_guts_index);
+  Mock.BinaryUpdate_handleDetectedBinary_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void BinaryUpdate_handleDetectedBinary_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, signatureType_E detected_binary, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BinaryUpdate_handleDetectedBinary_CALL_INSTANCE));
@@ -356,6 +383,7 @@ void BinaryUpdate_handleDetectedBinary_CMockExpectAndReturn(UNITY_LINE_TYPE cmoc
   Mock.BinaryUpdate_handleDetectedBinary_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_handleDetectedBinary_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_handleDetectedBinary_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BinaryUpdate_handleDetectedBinary(cmock_call_instance, detected_binary);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -428,6 +456,7 @@ void BinaryUpdate_handleBootInfo_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.BinaryUpdate_handleBootInfo_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_handleBootInfo_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_handleBootInfo_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void BinaryUpdate_handleBootInfo_AddCallback(CMOCK_BinaryUpdate_handleBootInfo_CALLBACK Callback)
@@ -485,6 +514,7 @@ void BinaryUpdate_getJumpAddress_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line
   Mock.BinaryUpdate_getJumpAddress_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_getJumpAddress_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_getJumpAddress_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BinaryUpdate_getJumpAddress_IgnoreBool = (char)1;
 }
@@ -505,6 +535,7 @@ void BinaryUpdate_getJumpAddress_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line
   Mock.BinaryUpdate_getJumpAddress_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_getJumpAddress_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_getJumpAddress_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
 
@@ -569,6 +600,7 @@ void BinaryUpdate_resetJumpAddress_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.BinaryUpdate_resetJumpAddress_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_resetJumpAddress_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_resetJumpAddress_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void BinaryUpdate_resetJumpAddress_AddCallback(CMOCK_BinaryUpdate_resetJumpAddress_CALLBACK Callback)
@@ -626,6 +658,7 @@ void BinaryUpdate_checkSkipLoopFlag_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.BinaryUpdate_checkSkipLoopFlag_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_checkSkipLoopFlag_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_checkSkipLoopFlag_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BinaryUpdate_checkSkipLoopFlag_IgnoreBool = (char)1;
 }
@@ -646,6 +679,7 @@ void BinaryUpdate_checkSkipLoopFlag_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.BinaryUpdate_checkSkipLoopFlag_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_checkSkipLoopFlag_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_checkSkipLoopFlag_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
 
@@ -710,6 +744,7 @@ void BinaryUpdate_disableLoopFlag_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.BinaryUpdate_disableLoopFlag_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_disableLoopFlag_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_disableLoopFlag_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void BinaryUpdate_disableLoopFlag_AddCallback(CMOCK_BinaryUpdate_disableLoopFlag_CALLBACK Callback)
@@ -750,10 +785,13 @@ bool BinaryUpdate_erase(uint32_t firmware_size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_firmware_size)
   {
     UNITY_SET_DETAILS(CMockString_BinaryUpdate_erase,CMockString_firmware_size);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_firmware_size, firmware_size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.BinaryUpdate_erase_CallbackFunctionPointer != NULL)
   {
@@ -779,6 +817,7 @@ void BinaryUpdate_erase_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cm
   Mock.BinaryUpdate_erase_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_erase_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_erase_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BinaryUpdate_erase_IgnoreBool = (char)1;
 }
@@ -790,6 +829,20 @@ void BinaryUpdate_erase_CMockStopIgnore(void)
   Mock.BinaryUpdate_erase_IgnoreBool = (char)0;
 }
 
+void BinaryUpdate_erase_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BinaryUpdate_erase_CALL_INSTANCE));
+  CMOCK_BinaryUpdate_erase_CALL_INSTANCE* cmock_call_instance = (CMOCK_BinaryUpdate_erase_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.BinaryUpdate_erase_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_erase_CallInstance, cmock_guts_index);
+  Mock.BinaryUpdate_erase_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void BinaryUpdate_erase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t firmware_size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BinaryUpdate_erase_CALL_INSTANCE));
@@ -799,6 +852,7 @@ void BinaryUpdate_erase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_
   Mock.BinaryUpdate_erase_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_erase_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_erase_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BinaryUpdate_erase(cmock_call_instance, firmware_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -848,6 +902,8 @@ bool BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_write_buffer)
   {
     UNITY_SET_DETAILS(CMockString_BinaryUpdate_write,CMockString_write_buffer);
@@ -860,6 +916,7 @@ bool BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length)
   {
     UNITY_SET_DETAILS(CMockString_BinaryUpdate_write,CMockString_packet_length);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_packet_length, packet_length, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.BinaryUpdate_write_CallbackFunctionPointer != NULL)
   {
@@ -895,6 +952,7 @@ void BinaryUpdate_write_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cm
   Mock.BinaryUpdate_write_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_write_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_write_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BinaryUpdate_write_IgnoreBool = (char)1;
 }
@@ -906,6 +964,20 @@ void BinaryUpdate_write_CMockStopIgnore(void)
   Mock.BinaryUpdate_write_IgnoreBool = (char)0;
 }
 
+void BinaryUpdate_write_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BinaryUpdate_write_CALL_INSTANCE));
+  CMOCK_BinaryUpdate_write_CALL_INSTANCE* cmock_call_instance = (CMOCK_BinaryUpdate_write_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.BinaryUpdate_write_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_write_CallInstance, cmock_guts_index);
+  Mock.BinaryUpdate_write_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void BinaryUpdate_write_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* write_buffer, const uint32_t packet_length, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BinaryUpdate_write_CALL_INSTANCE));
@@ -915,6 +987,7 @@ void BinaryUpdate_write_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t
   Mock.BinaryUpdate_write_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_write_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_write_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BinaryUpdate_write(cmock_call_instance, write_buffer, 1, packet_length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -942,6 +1015,7 @@ void BinaryUpdate_write_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line
   Mock.BinaryUpdate_write_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_write_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_write_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BinaryUpdate_write(cmock_call_instance, write_buffer, write_buffer_Depth, packet_length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1010,6 +1084,7 @@ void BinaryUpdate_finish_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool c
   Mock.BinaryUpdate_finish_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_finish_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_finish_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BinaryUpdate_finish_IgnoreBool = (char)1;
 }
@@ -1030,6 +1105,7 @@ void BinaryUpdate_finish_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool c
   Mock.BinaryUpdate_finish_CallInstance = CMock_Guts_MemChain(Mock.BinaryUpdate_finish_CallInstance, cmock_guts_index);
   Mock.BinaryUpdate_finish_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
 

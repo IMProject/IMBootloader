@@ -11,6 +11,7 @@ static const char* CMockString_signature = "signature";
 typedef struct _CMOCK_Signature_verification_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   signatureType_E ReturnVal;
   const signature_S* Expected_signature;
   int Expected_signature_Depth;
@@ -85,6 +86,8 @@ signatureType_E Signature_verification(const signature_S* signature)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_signature)
   {
     UNITY_SET_DETAILS(CMockString_Signature_verification,CMockString_signature);
@@ -92,6 +95,7 @@ signatureType_E Signature_verification(const signature_S* signature)
       { UNITY_TEST_ASSERT_NULL(signature, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_signature), (void*)(signature), sizeof(const signature_S), cmock_call_instance->Expected_signature_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.Signature_verification_CallbackFunctionPointer != NULL)
   {
@@ -118,6 +122,7 @@ void Signature_verification_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, sig
   Mock.Signature_verification_CallInstance = CMock_Guts_MemChain(Mock.Signature_verification_CallInstance, cmock_guts_index);
   Mock.Signature_verification_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Signature_verification_IgnoreBool = (char)1;
 }
@@ -129,6 +134,20 @@ void Signature_verification_CMockStopIgnore(void)
   Mock.Signature_verification_IgnoreBool = (char)0;
 }
 
+void Signature_verification_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, signatureType_E cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Signature_verification_CALL_INSTANCE));
+  CMOCK_Signature_verification_CALL_INSTANCE* cmock_call_instance = (CMOCK_Signature_verification_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Signature_verification_CallInstance = CMock_Guts_MemChain(Mock.Signature_verification_CallInstance, cmock_guts_index);
+  Mock.Signature_verification_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Signature_verification_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const signature_S* signature, signatureType_E cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Signature_verification_CALL_INSTANCE));
@@ -138,6 +157,7 @@ void Signature_verification_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, con
   Mock.Signature_verification_CallInstance = CMock_Guts_MemChain(Mock.Signature_verification_CallInstance, cmock_guts_index);
   Mock.Signature_verification_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Signature_verification(cmock_call_instance, signature, 1);
   memcpy((void*)(&cmock_call_instance->ReturnVal), (void*)(&cmock_to_return),
          sizeof(signatureType_E[sizeof(cmock_to_return) == sizeof(signatureType_E) ? 1 : -1])); /* add signatureType_E to :treat_as_array if this causes an error */
@@ -166,6 +186,7 @@ void Signature_verification_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_
   Mock.Signature_verification_CallInstance = CMock_Guts_MemChain(Mock.Signature_verification_CallInstance, cmock_guts_index);
   Mock.Signature_verification_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Signature_verification(cmock_call_instance, signature, signature_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

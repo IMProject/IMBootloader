@@ -13,24 +13,28 @@ static const char* CMockString_GpioAdapter_led1Toggle = "GpioAdapter_led1Toggle"
 typedef struct _CMOCK_GpioAdapter_init_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_GpioAdapter_init_CALL_INSTANCE;
 
 typedef struct _CMOCK_GpioAdapter_led1Toggle_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_GpioAdapter_led1Toggle_CALL_INSTANCE;
 
 typedef struct _CMOCK_GpioAdapter_led1On_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_GpioAdapter_led1On_CALL_INSTANCE;
 
 typedef struct _CMOCK_GpioAdapter_led1Off_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_GpioAdapter_led1Off_CALL_INSTANCE;
 
@@ -176,6 +180,7 @@ void GpioAdapter_init_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.GpioAdapter_init_CallInstance = CMock_Guts_MemChain(Mock.GpioAdapter_init_CallInstance, cmock_guts_index);
   Mock.GpioAdapter_init_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void GpioAdapter_init_AddCallback(CMOCK_GpioAdapter_init_CALLBACK Callback)
@@ -239,6 +244,7 @@ void GpioAdapter_led1Toggle_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.GpioAdapter_led1Toggle_CallInstance = CMock_Guts_MemChain(Mock.GpioAdapter_led1Toggle_CallInstance, cmock_guts_index);
   Mock.GpioAdapter_led1Toggle_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void GpioAdapter_led1Toggle_AddCallback(CMOCK_GpioAdapter_led1Toggle_CALLBACK Callback)
@@ -302,6 +308,7 @@ void GpioAdapter_led1On_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.GpioAdapter_led1On_CallInstance = CMock_Guts_MemChain(Mock.GpioAdapter_led1On_CallInstance, cmock_guts_index);
   Mock.GpioAdapter_led1On_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void GpioAdapter_led1On_AddCallback(CMOCK_GpioAdapter_led1On_CALLBACK Callback)
@@ -365,6 +372,7 @@ void GpioAdapter_led1Off_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.GpioAdapter_led1Off_CallInstance = CMock_Guts_MemChain(Mock.GpioAdapter_led1Off_CallInstance, cmock_guts_index);
   Mock.GpioAdapter_led1Off_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void GpioAdapter_led1Off_AddCallback(CMOCK_GpioAdapter_led1Off_CALLBACK Callback)

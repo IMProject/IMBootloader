@@ -13,12 +13,14 @@ static const char* CMockString_size = "size";
 typedef struct _CMOCK_SecurityAdapter_init_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_SecurityAdapter_init_CALL_INSTANCE;
 
 typedef struct _CMOCK_SecurityAdapter_getRandomData_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_data;
   uint32_t Expected_size;
@@ -138,6 +140,7 @@ void SecurityAdapter_init_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.SecurityAdapter_init_CallInstance = CMock_Guts_MemChain(Mock.SecurityAdapter_init_CallInstance, cmock_guts_index);
   Mock.SecurityAdapter_init_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void SecurityAdapter_init_AddCallback(CMOCK_SecurityAdapter_init_CALLBACK Callback)
@@ -178,6 +181,8 @@ bool SecurityAdapter_getRandomData(uint8_t* data, uint32_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_data)
   {
     UNITY_SET_DETAILS(CMockString_SecurityAdapter_getRandomData,CMockString_data);
@@ -190,6 +195,7 @@ bool SecurityAdapter_getRandomData(uint8_t* data, uint32_t size)
   {
     UNITY_SET_DETAILS(CMockString_SecurityAdapter_getRandomData,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.SecurityAdapter_getRandomData_CallbackFunctionPointer != NULL)
   {
@@ -225,6 +231,7 @@ void SecurityAdapter_getRandomData_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_li
   Mock.SecurityAdapter_getRandomData_CallInstance = CMock_Guts_MemChain(Mock.SecurityAdapter_getRandomData_CallInstance, cmock_guts_index);
   Mock.SecurityAdapter_getRandomData_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.SecurityAdapter_getRandomData_IgnoreBool = (char)1;
 }
@@ -236,6 +243,20 @@ void SecurityAdapter_getRandomData_CMockStopIgnore(void)
   Mock.SecurityAdapter_getRandomData_IgnoreBool = (char)0;
 }
 
+void SecurityAdapter_getRandomData_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_SecurityAdapter_getRandomData_CALL_INSTANCE));
+  CMOCK_SecurityAdapter_getRandomData_CALL_INSTANCE* cmock_call_instance = (CMOCK_SecurityAdapter_getRandomData_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.SecurityAdapter_getRandomData_CallInstance = CMock_Guts_MemChain(Mock.SecurityAdapter_getRandomData_CallInstance, cmock_guts_index);
+  Mock.SecurityAdapter_getRandomData_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void SecurityAdapter_getRandomData_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* data, uint32_t size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_SecurityAdapter_getRandomData_CALL_INSTANCE));
@@ -245,6 +266,7 @@ void SecurityAdapter_getRandomData_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_li
   Mock.SecurityAdapter_getRandomData_CallInstance = CMock_Guts_MemChain(Mock.SecurityAdapter_getRandomData_CallInstance, cmock_guts_index);
   Mock.SecurityAdapter_getRandomData_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_SecurityAdapter_getRandomData(cmock_call_instance, data, 1, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -272,6 +294,7 @@ void SecurityAdapter_getRandomData_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE
   Mock.SecurityAdapter_getRandomData_CallInstance = CMock_Guts_MemChain(Mock.SecurityAdapter_getRandomData_CallInstance, cmock_guts_index);
   Mock.SecurityAdapter_getRandomData_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_SecurityAdapter_getRandomData(cmock_call_instance, data, data_Depth, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

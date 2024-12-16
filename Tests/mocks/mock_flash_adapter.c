@@ -26,6 +26,7 @@ static const char* CMockString_protect_address_start = "protect_address_start";
 typedef struct _CMOCK_FlashAdapter_erase_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint32_t Expected_firmware_size;
   uint32_t Expected_flash_address;
@@ -37,6 +38,7 @@ typedef struct _CMOCK_FlashAdapter_erase_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_blockErase_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint32_t Expected_address;
   char IgnoreArg_address;
@@ -46,6 +48,7 @@ typedef struct _CMOCK_FlashAdapter_blockErase_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_program_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint32_t Expected_address;
   uint8_t* Expected_buffer;
@@ -63,6 +66,7 @@ typedef struct _CMOCK_FlashAdapter_program_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_readBytes_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint32_t Expected_address;
   uint8_t* Expected_buffer;
@@ -80,6 +84,7 @@ typedef struct _CMOCK_FlashAdapter_readBytes_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_finish_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
 
 } CMOCK_FlashAdapter_finish_CALL_INSTANCE;
@@ -87,6 +92,7 @@ typedef struct _CMOCK_FlashAdapter_finish_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_isFlashRDPProtected_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
 
 } CMOCK_FlashAdapter_isFlashRDPProtected_CALL_INSTANCE;
@@ -94,6 +100,7 @@ typedef struct _CMOCK_FlashAdapter_isFlashRDPProtected_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_isFlashPCROPProtected_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
 
 } CMOCK_FlashAdapter_isFlashPCROPProtected_CALL_INSTANCE;
@@ -101,6 +108,7 @@ typedef struct _CMOCK_FlashAdapter_isFlashPCROPProtected_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_setReadProtection_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   bool Expected_enable;
   char IgnoreArg_enable;
@@ -110,6 +118,7 @@ typedef struct _CMOCK_FlashAdapter_setReadProtection_CALL_INSTANCE
 typedef struct _CMOCK_FlashAdapter_setPCROP_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   bool Expected_enable;
   uint32_t Expected_protect_address_start;
@@ -338,6 +347,8 @@ bool FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_firmware_size)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_erase,CMockString_firmware_size);
@@ -347,6 +358,7 @@ bool FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_erase,CMockString_flash_address);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_flash_address, flash_address, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.FlashAdapter_erase_CallbackFunctionPointer != NULL)
   {
@@ -374,6 +386,7 @@ void FlashAdapter_erase_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cm
   Mock.FlashAdapter_erase_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_erase_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_erase_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_erase_IgnoreBool = (char)1;
 }
@@ -385,6 +398,20 @@ void FlashAdapter_erase_CMockStopIgnore(void)
   Mock.FlashAdapter_erase_IgnoreBool = (char)0;
 }
 
+void FlashAdapter_erase_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_erase_CALL_INSTANCE));
+  CMOCK_FlashAdapter_erase_CALL_INSTANCE* cmock_call_instance = (CMOCK_FlashAdapter_erase_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.FlashAdapter_erase_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_erase_CallInstance, cmock_guts_index);
+  Mock.FlashAdapter_erase_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void FlashAdapter_erase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t firmware_size, uint32_t flash_address, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_erase_CALL_INSTANCE));
@@ -394,6 +421,7 @@ void FlashAdapter_erase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_
   Mock.FlashAdapter_erase_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_erase_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_erase_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_erase(cmock_call_instance, firmware_size, flash_address);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -450,10 +478,13 @@ bool FlashAdapter_blockErase(uint32_t address)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_address)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_blockErase,CMockString_address);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_address, address, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.FlashAdapter_blockErase_CallbackFunctionPointer != NULL)
   {
@@ -479,6 +510,7 @@ void FlashAdapter_blockErase_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bo
   Mock.FlashAdapter_blockErase_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_blockErase_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_blockErase_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_blockErase_IgnoreBool = (char)1;
 }
@@ -490,6 +522,20 @@ void FlashAdapter_blockErase_CMockStopIgnore(void)
   Mock.FlashAdapter_blockErase_IgnoreBool = (char)0;
 }
 
+void FlashAdapter_blockErase_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_blockErase_CALL_INSTANCE));
+  CMOCK_FlashAdapter_blockErase_CALL_INSTANCE* cmock_call_instance = (CMOCK_FlashAdapter_blockErase_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.FlashAdapter_blockErase_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_blockErase_CallInstance, cmock_guts_index);
+  Mock.FlashAdapter_blockErase_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void FlashAdapter_blockErase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t address, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_blockErase_CALL_INSTANCE));
@@ -499,6 +545,7 @@ void FlashAdapter_blockErase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, ui
   Mock.FlashAdapter_blockErase_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_blockErase_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_blockErase_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_blockErase(cmock_call_instance, address);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -548,6 +595,8 @@ bool FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_address)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_program,CMockString_address);
@@ -565,6 +614,7 @@ bool FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_program,CMockString_length);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_length, length, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.FlashAdapter_program_CallbackFunctionPointer != NULL)
   {
@@ -602,6 +652,7 @@ void FlashAdapter_program_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool 
   Mock.FlashAdapter_program_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_program_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_program_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_program_IgnoreBool = (char)1;
 }
@@ -613,6 +664,20 @@ void FlashAdapter_program_CMockStopIgnore(void)
   Mock.FlashAdapter_program_IgnoreBool = (char)0;
 }
 
+void FlashAdapter_program_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_program_CALL_INSTANCE));
+  CMOCK_FlashAdapter_program_CALL_INSTANCE* cmock_call_instance = (CMOCK_FlashAdapter_program_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.FlashAdapter_program_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_program_CallInstance, cmock_guts_index);
+  Mock.FlashAdapter_program_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void FlashAdapter_program_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t address, uint8_t* buffer, uint32_t length, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_program_CALL_INSTANCE));
@@ -622,6 +687,7 @@ void FlashAdapter_program_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint3
   Mock.FlashAdapter_program_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_program_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_program_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_program(cmock_call_instance, address, buffer, 1, length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -649,6 +715,7 @@ void FlashAdapter_program_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_li
   Mock.FlashAdapter_program_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_program_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_program_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_program(cmock_call_instance, address, buffer, buffer_Depth, length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -707,6 +774,8 @@ bool FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_address)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_readBytes,CMockString_address);
@@ -724,6 +793,7 @@ bool FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_readBytes,CMockString_length);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_length, length, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.FlashAdapter_readBytes_CallbackFunctionPointer != NULL)
   {
@@ -761,6 +831,7 @@ void FlashAdapter_readBytes_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, boo
   Mock.FlashAdapter_readBytes_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_readBytes_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_readBytes_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_readBytes_IgnoreBool = (char)1;
 }
@@ -772,6 +843,20 @@ void FlashAdapter_readBytes_CMockStopIgnore(void)
   Mock.FlashAdapter_readBytes_IgnoreBool = (char)0;
 }
 
+void FlashAdapter_readBytes_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_readBytes_CALL_INSTANCE));
+  CMOCK_FlashAdapter_readBytes_CALL_INSTANCE* cmock_call_instance = (CMOCK_FlashAdapter_readBytes_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.FlashAdapter_readBytes_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_readBytes_CallInstance, cmock_guts_index);
+  Mock.FlashAdapter_readBytes_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void FlashAdapter_readBytes_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t address, uint8_t* buffer, uint32_t length, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_readBytes_CALL_INSTANCE));
@@ -781,6 +866,7 @@ void FlashAdapter_readBytes_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uin
   Mock.FlashAdapter_readBytes_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_readBytes_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_readBytes_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_readBytes(cmock_call_instance, address, buffer, 1, length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -808,6 +894,7 @@ void FlashAdapter_readBytes_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_
   Mock.FlashAdapter_readBytes_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_readBytes_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_readBytes_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_readBytes(cmock_call_instance, address, buffer, buffer_Depth, length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -883,6 +970,7 @@ void FlashAdapter_finish_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool c
   Mock.FlashAdapter_finish_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_finish_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_finish_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_finish_IgnoreBool = (char)1;
 }
@@ -903,6 +991,7 @@ void FlashAdapter_finish_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool c
   Mock.FlashAdapter_finish_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_finish_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_finish_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
 
@@ -961,6 +1050,7 @@ void FlashAdapter_isFlashRDPProtected_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock
   Mock.FlashAdapter_isFlashRDPProtected_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_isFlashRDPProtected_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_isFlashRDPProtected_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_isFlashRDPProtected_IgnoreBool = (char)1;
 }
@@ -981,6 +1071,7 @@ void FlashAdapter_isFlashRDPProtected_CMockExpectAndReturn(UNITY_LINE_TYPE cmock
   Mock.FlashAdapter_isFlashRDPProtected_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_isFlashRDPProtected_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_isFlashRDPProtected_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
 
@@ -1039,6 +1130,7 @@ void FlashAdapter_isFlashPCROPProtected_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmo
   Mock.FlashAdapter_isFlashPCROPProtected_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_isFlashPCROPProtected_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_isFlashPCROPProtected_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_isFlashPCROPProtected_IgnoreBool = (char)1;
 }
@@ -1059,6 +1151,7 @@ void FlashAdapter_isFlashPCROPProtected_CMockExpectAndReturn(UNITY_LINE_TYPE cmo
   Mock.FlashAdapter_isFlashPCROPProtected_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_isFlashPCROPProtected_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_isFlashPCROPProtected_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
 
@@ -1100,10 +1193,13 @@ bool FlashAdapter_setReadProtection(bool enable)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_enable)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_setReadProtection,CMockString_enable);
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_enable, enable, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.FlashAdapter_setReadProtection_CallbackFunctionPointer != NULL)
   {
@@ -1129,6 +1225,7 @@ void FlashAdapter_setReadProtection_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.FlashAdapter_setReadProtection_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_setReadProtection_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_setReadProtection_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_setReadProtection_IgnoreBool = (char)1;
 }
@@ -1140,6 +1237,20 @@ void FlashAdapter_setReadProtection_CMockStopIgnore(void)
   Mock.FlashAdapter_setReadProtection_IgnoreBool = (char)0;
 }
 
+void FlashAdapter_setReadProtection_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_setReadProtection_CALL_INSTANCE));
+  CMOCK_FlashAdapter_setReadProtection_CALL_INSTANCE* cmock_call_instance = (CMOCK_FlashAdapter_setReadProtection_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.FlashAdapter_setReadProtection_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_setReadProtection_CallInstance, cmock_guts_index);
+  Mock.FlashAdapter_setReadProtection_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void FlashAdapter_setReadProtection_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool enable, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_setReadProtection_CALL_INSTANCE));
@@ -1149,6 +1260,7 @@ void FlashAdapter_setReadProtection_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.FlashAdapter_setReadProtection_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_setReadProtection_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_setReadProtection_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_setReadProtection(cmock_call_instance, enable);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -1198,6 +1310,8 @@ bool FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_enable)
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_setPCROP,CMockString_enable);
@@ -1212,6 +1326,7 @@ bool FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t
   {
     UNITY_SET_DETAILS(CMockString_FlashAdapter_setPCROP,CMockString_protect_address_end);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_protect_address_end, protect_address_end, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.FlashAdapter_setPCROP_CallbackFunctionPointer != NULL)
   {
@@ -1241,6 +1356,7 @@ void FlashAdapter_setPCROP_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool
   Mock.FlashAdapter_setPCROP_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_setPCROP_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_setPCROP_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.FlashAdapter_setPCROP_IgnoreBool = (char)1;
 }
@@ -1252,6 +1368,20 @@ void FlashAdapter_setPCROP_CMockStopIgnore(void)
   Mock.FlashAdapter_setPCROP_IgnoreBool = (char)0;
 }
 
+void FlashAdapter_setPCROP_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_setPCROP_CALL_INSTANCE));
+  CMOCK_FlashAdapter_setPCROP_CALL_INSTANCE* cmock_call_instance = (CMOCK_FlashAdapter_setPCROP_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.FlashAdapter_setPCROP_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_setPCROP_CallInstance, cmock_guts_index);
+  Mock.FlashAdapter_setPCROP_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void FlashAdapter_setPCROP_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool enable, uint32_t protect_address_start, uint32_t protect_address_end, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_FlashAdapter_setPCROP_CALL_INSTANCE));
@@ -1261,6 +1391,7 @@ void FlashAdapter_setPCROP_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool
   Mock.FlashAdapter_setPCROP_CallInstance = CMock_Guts_MemChain(Mock.FlashAdapter_setPCROP_CallInstance, cmock_guts_index);
   Mock.FlashAdapter_setPCROP_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_FlashAdapter_setPCROP(cmock_call_instance, enable, protect_address_start, protect_address_end);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

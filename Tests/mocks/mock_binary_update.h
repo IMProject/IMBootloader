@@ -32,6 +32,8 @@ void mock_binary_update_Verify(void);
 void BinaryUpdate_handleDetectedBinary_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BinaryUpdate_handleDetectedBinary_StopIgnore() BinaryUpdate_handleDetectedBinary_CMockStopIgnore()
 void BinaryUpdate_handleDetectedBinary_CMockStopIgnore(void);
+#define BinaryUpdate_handleDetectedBinary_ExpectAnyArgsAndReturn(cmock_retval) BinaryUpdate_handleDetectedBinary_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void BinaryUpdate_handleDetectedBinary_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BinaryUpdate_handleDetectedBinary_ExpectAndReturn(detected_binary, cmock_retval) BinaryUpdate_handleDetectedBinary_CMockExpectAndReturn(__LINE__, detected_binary, cmock_retval)
 void BinaryUpdate_handleDetectedBinary_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, signatureType_E detected_binary, bool cmock_to_return);
 typedef bool (* CMOCK_BinaryUpdate_handleDetectedBinary_CALLBACK)(signatureType_E detected_binary, int cmock_num_calls);
@@ -94,6 +96,8 @@ void BinaryUpdate_disableLoopFlag_Stub(CMOCK_BinaryUpdate_disableLoopFlag_CALLBA
 void BinaryUpdate_erase_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BinaryUpdate_erase_StopIgnore() BinaryUpdate_erase_CMockStopIgnore()
 void BinaryUpdate_erase_CMockStopIgnore(void);
+#define BinaryUpdate_erase_ExpectAnyArgsAndReturn(cmock_retval) BinaryUpdate_erase_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void BinaryUpdate_erase_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BinaryUpdate_erase_ExpectAndReturn(firmware_size, cmock_retval) BinaryUpdate_erase_CMockExpectAndReturn(__LINE__, firmware_size, cmock_retval)
 void BinaryUpdate_erase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t firmware_size, bool cmock_to_return);
 typedef bool (* CMOCK_BinaryUpdate_erase_CALLBACK)(uint32_t firmware_size, int cmock_num_calls);
@@ -106,6 +110,8 @@ void BinaryUpdate_erase_CMockIgnoreArg_firmware_size(UNITY_LINE_TYPE cmock_line)
 void BinaryUpdate_write_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BinaryUpdate_write_StopIgnore() BinaryUpdate_write_CMockStopIgnore()
 void BinaryUpdate_write_CMockStopIgnore(void);
+#define BinaryUpdate_write_ExpectAnyArgsAndReturn(cmock_retval) BinaryUpdate_write_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void BinaryUpdate_write_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BinaryUpdate_write_ExpectAndReturn(write_buffer, packet_length, cmock_retval) BinaryUpdate_write_CMockExpectAndReturn(__LINE__, write_buffer, packet_length, cmock_retval)
 void BinaryUpdate_write_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* write_buffer, const uint32_t packet_length, bool cmock_to_return);
 typedef bool (* CMOCK_BinaryUpdate_write_CALLBACK)(uint8_t* write_buffer, const uint32_t packet_length, int cmock_num_calls);

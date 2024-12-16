@@ -32,6 +32,8 @@ void mock_board_info_Verify(void);
 void BoardInfo_getDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BoardInfo_getDataJson_StopIgnore() BoardInfo_getDataJson_CMockStopIgnore()
 void BoardInfo_getDataJson_CMockStopIgnore(void);
+#define BoardInfo_getDataJson_ExpectAnyArgsAndReturn(cmock_retval) BoardInfo_getDataJson_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void BoardInfo_getDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BoardInfo_getDataJson_ExpectAndReturn(buffer, size, cmock_retval) BoardInfo_getDataJson_CMockExpectAndReturn(__LINE__, buffer, size, cmock_retval)
 void BoardInfo_getDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, size_t size, bool cmock_to_return);
 typedef bool (* CMOCK_BoardInfo_getDataJson_CALLBACK)(uint8_t* buffer, size_t size, int cmock_num_calls);
@@ -52,6 +54,8 @@ void BoardInfo_getDataJson_CMockIgnoreArg_size(UNITY_LINE_TYPE cmock_line);
 void BoardInfo_getBase64ManufacturerId_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BoardInfo_getBase64ManufacturerId_StopIgnore() BoardInfo_getBase64ManufacturerId_CMockStopIgnore()
 void BoardInfo_getBase64ManufacturerId_CMockStopIgnore(void);
+#define BoardInfo_getBase64ManufacturerId_ExpectAnyArgsAndReturn(cmock_retval) BoardInfo_getBase64ManufacturerId_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void BoardInfo_getBase64ManufacturerId_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define BoardInfo_getBase64ManufacturerId_ExpectAndReturn(b64_manufacturer_id, cmock_retval) BoardInfo_getBase64ManufacturerId_CMockExpectAndReturn(__LINE__, b64_manufacturer_id, cmock_retval)
 void BoardInfo_getBase64ManufacturerId_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* b64_manufacturer_id, bool cmock_to_return);
 typedef bool (* CMOCK_BoardInfo_getBase64ManufacturerId_CALLBACK)(uint8_t* b64_manufacturer_id, int cmock_num_calls);

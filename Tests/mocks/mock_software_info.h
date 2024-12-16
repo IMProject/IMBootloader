@@ -32,6 +32,8 @@ void mock_software_info_Verify(void);
 void SwInfo_getDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define SwInfo_getDataJson_StopIgnore() SwInfo_getDataJson_CMockStopIgnore()
 void SwInfo_getDataJson_CMockStopIgnore(void);
+#define SwInfo_getDataJson_ExpectAnyArgsAndReturn(cmock_retval) SwInfo_getDataJson_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void SwInfo_getDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define SwInfo_getDataJson_ExpectAndReturn(buffer, size, cmock_retval) SwInfo_getDataJson_CMockExpectAndReturn(__LINE__, buffer, size, cmock_retval)
 void SwInfo_getDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, uint16_t size, bool cmock_to_return);
 typedef bool (* CMOCK_SwInfo_getDataJson_CALLBACK)(uint8_t* buffer, uint16_t size, int cmock_num_calls);
@@ -52,6 +54,8 @@ void SwInfo_getDataJson_CMockIgnoreArg_size(UNITY_LINE_TYPE cmock_line);
 void SwInfo_getVersion_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define SwInfo_getVersion_StopIgnore() SwInfo_getVersion_CMockStopIgnore()
 void SwInfo_getVersion_CMockStopIgnore(void);
+#define SwInfo_getVersion_ExpectAnyArgsAndReturn(cmock_retval) SwInfo_getVersion_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void SwInfo_getVersion_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define SwInfo_getVersion_ExpectAndReturn(buffer, size, cmock_retval) SwInfo_getVersion_CMockExpectAndReturn(__LINE__, buffer, size, cmock_retval)
 void SwInfo_getVersion_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, uint16_t size, bool cmock_to_return);
 typedef bool (* CMOCK_SwInfo_getVersion_CALLBACK)(uint8_t* buffer, uint16_t size, int cmock_num_calls);

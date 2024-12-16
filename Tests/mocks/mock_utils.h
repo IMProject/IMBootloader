@@ -32,6 +32,8 @@ void mock_utils_Verify(void);
 void Utils_BitReflect_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_BitReflect_StopIgnore() Utils_BitReflect_CMockStopIgnore()
 void Utils_BitReflect_CMockStopIgnore(void);
+#define Utils_BitReflect_ExpectAnyArgsAndReturn(cmock_retval) Utils_BitReflect_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_BitReflect_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_BitReflect_ExpectAndReturn(data, n_bits, cmock_retval) Utils_BitReflect_CMockExpectAndReturn(__LINE__, data, n_bits, cmock_retval)
 void Utils_BitReflect_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t data, uint8_t n_bits, uint32_t cmock_to_return);
 typedef uint32_t (* CMOCK_Utils_BitReflect_CALLBACK)(uint32_t data, uint8_t n_bits, int cmock_num_calls);
@@ -46,6 +48,8 @@ void Utils_BitReflect_CMockIgnoreArg_n_bits(UNITY_LINE_TYPE cmock_line);
 void Utils_StringToUint32_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Utils_StringToUint32_StopIgnore() Utils_StringToUint32_CMockStopIgnore()
 void Utils_StringToUint32_CMockStopIgnore(void);
+#define Utils_StringToUint32_ExpectAnyArgsAndReturn(cmock_retval) Utils_StringToUint32_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_StringToUint32_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Utils_StringToUint32_ExpectAndReturn(str, str_length, integer, cmock_retval) Utils_StringToUint32_CMockExpectAndReturn(__LINE__, str, str_length, integer, cmock_retval)
 void Utils_StringToUint32_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const char* str, uint8_t str_length, uint32_t* integer, bool cmock_to_return);
 typedef bool (* CMOCK_Utils_StringToUint32_CALLBACK)(const char* str, uint8_t str_length, uint32_t* integer, int cmock_num_calls);
@@ -68,6 +72,8 @@ void Utils_StringToUint32_CMockIgnoreArg_integer(UNITY_LINE_TYPE cmock_line);
 void Utils_SwapElements_CMockIgnore(void);
 #define Utils_SwapElements_StopIgnore() Utils_SwapElements_CMockStopIgnore()
 void Utils_SwapElements_CMockStopIgnore(void);
+#define Utils_SwapElements_ExpectAnyArgs() Utils_SwapElements_CMockExpectAnyArgs(__LINE__)
+void Utils_SwapElements_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_SwapElements_Expect(first, second, size) Utils_SwapElements_CMockExpect(__LINE__, first, second, size)
 void Utils_SwapElements_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* first, byte_t* second, uint32_t size);
 typedef void (* CMOCK_Utils_SwapElements_CALLBACK)(byte_t* first, byte_t* second, uint32_t size, int cmock_num_calls);
@@ -94,6 +100,8 @@ void Utils_SwapElements_CMockIgnoreArg_size(UNITY_LINE_TYPE cmock_line);
 void Utils_QuickUint32Pow10_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Utils_QuickUint32Pow10_StopIgnore() Utils_QuickUint32Pow10_CMockStopIgnore()
 void Utils_QuickUint32Pow10_CMockStopIgnore(void);
+#define Utils_QuickUint32Pow10_ExpectAnyArgsAndReturn(cmock_retval) Utils_QuickUint32Pow10_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_QuickUint32Pow10_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Utils_QuickUint32Pow10_ExpectAndReturn(exponent, result, cmock_retval) Utils_QuickUint32Pow10_CMockExpectAndReturn(__LINE__, exponent, result, cmock_retval)
 void Utils_QuickUint32Pow10_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t exponent, uint32_t* result, bool cmock_to_return);
 typedef bool (* CMOCK_Utils_QuickUint32Pow10_CALLBACK)(uint8_t exponent, uint32_t* result, int cmock_num_calls);
@@ -114,6 +122,8 @@ void Utils_QuickUint32Pow10_CMockIgnoreArg_result(UNITY_LINE_TYPE cmock_line);
 void Utils_Serialize8_CMockIgnore(void);
 #define Utils_Serialize8_StopIgnore() Utils_Serialize8_CMockStopIgnore()
 void Utils_Serialize8_CMockStopIgnore(void);
+#define Utils_Serialize8_ExpectAnyArgs() Utils_Serialize8_CMockExpectAnyArgs(__LINE__)
+void Utils_Serialize8_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_Serialize8_Expect(buf, value) Utils_Serialize8_CMockExpect(__LINE__, buf, value)
 void Utils_Serialize8_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint8_t value);
 typedef void (* CMOCK_Utils_Serialize8_CALLBACK)(byte_t* buf, uint8_t value, int cmock_num_calls);
@@ -134,6 +144,8 @@ void Utils_Serialize8_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Utils_Deserialize8_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
 #define Utils_Deserialize8_StopIgnore() Utils_Deserialize8_CMockStopIgnore()
 void Utils_Deserialize8_CMockStopIgnore(void);
+#define Utils_Deserialize8_ExpectAnyArgsAndReturn(cmock_retval) Utils_Deserialize8_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_Deserialize8_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
 #define Utils_Deserialize8_ExpectAndReturn(buf, cmock_retval) Utils_Deserialize8_CMockExpectAndReturn(__LINE__, buf, cmock_retval)
 void Utils_Deserialize8_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint8_t cmock_to_return);
 typedef uint8_t (* CMOCK_Utils_Deserialize8_CALLBACK)(const byte_t* buf, int cmock_num_calls);
@@ -148,6 +160,8 @@ void Utils_Deserialize8_CMockIgnoreArg_buf(UNITY_LINE_TYPE cmock_line);
 void Utils_Serialize16BE_CMockIgnore(void);
 #define Utils_Serialize16BE_StopIgnore() Utils_Serialize16BE_CMockStopIgnore()
 void Utils_Serialize16BE_CMockStopIgnore(void);
+#define Utils_Serialize16BE_ExpectAnyArgs() Utils_Serialize16BE_CMockExpectAnyArgs(__LINE__)
+void Utils_Serialize16BE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_Serialize16BE_Expect(buf, value) Utils_Serialize16BE_CMockExpect(__LINE__, buf, value)
 void Utils_Serialize16BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint16_t value);
 typedef void (* CMOCK_Utils_Serialize16BE_CALLBACK)(byte_t* buf, uint16_t value, int cmock_num_calls);
@@ -168,6 +182,8 @@ void Utils_Serialize16BE_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Utils_Serialize24BE_CMockIgnore(void);
 #define Utils_Serialize24BE_StopIgnore() Utils_Serialize24BE_CMockStopIgnore()
 void Utils_Serialize24BE_CMockStopIgnore(void);
+#define Utils_Serialize24BE_ExpectAnyArgs() Utils_Serialize24BE_CMockExpectAnyArgs(__LINE__)
+void Utils_Serialize24BE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_Serialize24BE_Expect(buf, value) Utils_Serialize24BE_CMockExpect(__LINE__, buf, value)
 void Utils_Serialize24BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value);
 typedef void (* CMOCK_Utils_Serialize24BE_CALLBACK)(byte_t* buf, uint32_t value, int cmock_num_calls);
@@ -188,6 +204,8 @@ void Utils_Serialize24BE_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Utils_Serialize32BE_CMockIgnore(void);
 #define Utils_Serialize32BE_StopIgnore() Utils_Serialize32BE_CMockStopIgnore()
 void Utils_Serialize32BE_CMockStopIgnore(void);
+#define Utils_Serialize32BE_ExpectAnyArgs() Utils_Serialize32BE_CMockExpectAnyArgs(__LINE__)
+void Utils_Serialize32BE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_Serialize32BE_Expect(buf, value) Utils_Serialize32BE_CMockExpect(__LINE__, buf, value)
 void Utils_Serialize32BE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value);
 typedef void (* CMOCK_Utils_Serialize32BE_CALLBACK)(byte_t* buf, uint32_t value, int cmock_num_calls);
@@ -208,6 +226,8 @@ void Utils_Serialize32BE_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Utils_SerializeBlobBE_CMockIgnore(void);
 #define Utils_SerializeBlobBE_StopIgnore() Utils_SerializeBlobBE_CMockStopIgnore()
 void Utils_SerializeBlobBE_CMockStopIgnore(void);
+#define Utils_SerializeBlobBE_ExpectAnyArgs() Utils_SerializeBlobBE_CMockExpectAnyArgs(__LINE__)
+void Utils_SerializeBlobBE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_SerializeBlobBE_Expect(buf, src, size) Utils_SerializeBlobBE_CMockExpect(__LINE__, buf, src, size)
 void Utils_SerializeBlobBE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, const byte_t* src, uint32_t size);
 typedef void (* CMOCK_Utils_SerializeBlobBE_CALLBACK)(byte_t* buf, const byte_t* src, uint32_t size, int cmock_num_calls);
@@ -230,6 +250,8 @@ void Utils_SerializeBlobBE_CMockIgnoreArg_size(UNITY_LINE_TYPE cmock_line);
 void Utils_Deserialize16BE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
 #define Utils_Deserialize16BE_StopIgnore() Utils_Deserialize16BE_CMockStopIgnore()
 void Utils_Deserialize16BE_CMockStopIgnore(void);
+#define Utils_Deserialize16BE_ExpectAnyArgsAndReturn(cmock_retval) Utils_Deserialize16BE_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_Deserialize16BE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
 #define Utils_Deserialize16BE_ExpectAndReturn(buf, cmock_retval) Utils_Deserialize16BE_CMockExpectAndReturn(__LINE__, buf, cmock_retval)
 void Utils_Deserialize16BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint16_t cmock_to_return);
 typedef uint16_t (* CMOCK_Utils_Deserialize16BE_CALLBACK)(const byte_t* buf, int cmock_num_calls);
@@ -244,6 +266,8 @@ void Utils_Deserialize16BE_CMockIgnoreArg_buf(UNITY_LINE_TYPE cmock_line);
 void Utils_Deserialize24BE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize24BE_StopIgnore() Utils_Deserialize24BE_CMockStopIgnore()
 void Utils_Deserialize24BE_CMockStopIgnore(void);
+#define Utils_Deserialize24BE_ExpectAnyArgsAndReturn(cmock_retval) Utils_Deserialize24BE_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_Deserialize24BE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize24BE_ExpectAndReturn(buf, cmock_retval) Utils_Deserialize24BE_CMockExpectAndReturn(__LINE__, buf, cmock_retval)
 void Utils_Deserialize24BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return);
 typedef uint32_t (* CMOCK_Utils_Deserialize24BE_CALLBACK)(const byte_t* buf, int cmock_num_calls);
@@ -258,6 +282,8 @@ void Utils_Deserialize24BE_CMockIgnoreArg_buf(UNITY_LINE_TYPE cmock_line);
 void Utils_Deserialize32BE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize32BE_StopIgnore() Utils_Deserialize32BE_CMockStopIgnore()
 void Utils_Deserialize32BE_CMockStopIgnore(void);
+#define Utils_Deserialize32BE_ExpectAnyArgsAndReturn(cmock_retval) Utils_Deserialize32BE_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_Deserialize32BE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize32BE_ExpectAndReturn(buf, cmock_retval) Utils_Deserialize32BE_CMockExpectAndReturn(__LINE__, buf, cmock_retval)
 void Utils_Deserialize32BE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return);
 typedef uint32_t (* CMOCK_Utils_Deserialize32BE_CALLBACK)(const byte_t* buf, int cmock_num_calls);
@@ -272,6 +298,8 @@ void Utils_Deserialize32BE_CMockIgnoreArg_buf(UNITY_LINE_TYPE cmock_line);
 void Utils_DeserializeBlobBE_CMockIgnore(void);
 #define Utils_DeserializeBlobBE_StopIgnore() Utils_DeserializeBlobBE_CMockStopIgnore()
 void Utils_DeserializeBlobBE_CMockStopIgnore(void);
+#define Utils_DeserializeBlobBE_ExpectAnyArgs() Utils_DeserializeBlobBE_CMockExpectAnyArgs(__LINE__)
+void Utils_DeserializeBlobBE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_DeserializeBlobBE_Expect(buf, dst, size) Utils_DeserializeBlobBE_CMockExpect(__LINE__, buf, dst, size)
 void Utils_DeserializeBlobBE_CMockExpect(UNITY_LINE_TYPE cmock_line, const byte_t* buf, byte_t* dst, uint32_t size);
 typedef void (* CMOCK_Utils_DeserializeBlobBE_CALLBACK)(const byte_t* buf, byte_t* dst, uint32_t size, int cmock_num_calls);
@@ -294,6 +322,8 @@ void Utils_DeserializeBlobBE_CMockIgnoreArg_size(UNITY_LINE_TYPE cmock_line);
 void Utils_Serialize16LE_CMockIgnore(void);
 #define Utils_Serialize16LE_StopIgnore() Utils_Serialize16LE_CMockStopIgnore()
 void Utils_Serialize16LE_CMockStopIgnore(void);
+#define Utils_Serialize16LE_ExpectAnyArgs() Utils_Serialize16LE_CMockExpectAnyArgs(__LINE__)
+void Utils_Serialize16LE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_Serialize16LE_Expect(buf, value) Utils_Serialize16LE_CMockExpect(__LINE__, buf, value)
 void Utils_Serialize16LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint16_t value);
 typedef void (* CMOCK_Utils_Serialize16LE_CALLBACK)(byte_t* buf, uint16_t value, int cmock_num_calls);
@@ -314,6 +344,8 @@ void Utils_Serialize16LE_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Utils_Serialize24LE_CMockIgnore(void);
 #define Utils_Serialize24LE_StopIgnore() Utils_Serialize24LE_CMockStopIgnore()
 void Utils_Serialize24LE_CMockStopIgnore(void);
+#define Utils_Serialize24LE_ExpectAnyArgs() Utils_Serialize24LE_CMockExpectAnyArgs(__LINE__)
+void Utils_Serialize24LE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_Serialize24LE_Expect(buf, value) Utils_Serialize24LE_CMockExpect(__LINE__, buf, value)
 void Utils_Serialize24LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value);
 typedef void (* CMOCK_Utils_Serialize24LE_CALLBACK)(byte_t* buf, uint32_t value, int cmock_num_calls);
@@ -334,6 +366,8 @@ void Utils_Serialize24LE_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Utils_Serialize32LE_CMockIgnore(void);
 #define Utils_Serialize32LE_StopIgnore() Utils_Serialize32LE_CMockStopIgnore()
 void Utils_Serialize32LE_CMockStopIgnore(void);
+#define Utils_Serialize32LE_ExpectAnyArgs() Utils_Serialize32LE_CMockExpectAnyArgs(__LINE__)
+void Utils_Serialize32LE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_Serialize32LE_Expect(buf, value) Utils_Serialize32LE_CMockExpect(__LINE__, buf, value)
 void Utils_Serialize32LE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, uint32_t value);
 typedef void (* CMOCK_Utils_Serialize32LE_CALLBACK)(byte_t* buf, uint32_t value, int cmock_num_calls);
@@ -354,6 +388,8 @@ void Utils_Serialize32LE_CMockIgnoreArg_value(UNITY_LINE_TYPE cmock_line);
 void Utils_SerializeBlobLE_CMockIgnore(void);
 #define Utils_SerializeBlobLE_StopIgnore() Utils_SerializeBlobLE_CMockStopIgnore()
 void Utils_SerializeBlobLE_CMockStopIgnore(void);
+#define Utils_SerializeBlobLE_ExpectAnyArgs() Utils_SerializeBlobLE_CMockExpectAnyArgs(__LINE__)
+void Utils_SerializeBlobLE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_SerializeBlobLE_Expect(buf, src, size) Utils_SerializeBlobLE_CMockExpect(__LINE__, buf, src, size)
 void Utils_SerializeBlobLE_CMockExpect(UNITY_LINE_TYPE cmock_line, byte_t* buf, const byte_t* src, uint32_t size);
 typedef void (* CMOCK_Utils_SerializeBlobLE_CALLBACK)(byte_t* buf, const byte_t* src, uint32_t size, int cmock_num_calls);
@@ -376,6 +412,8 @@ void Utils_SerializeBlobLE_CMockIgnoreArg_size(UNITY_LINE_TYPE cmock_line);
 void Utils_Deserialize16LE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
 #define Utils_Deserialize16LE_StopIgnore() Utils_Deserialize16LE_CMockStopIgnore()
 void Utils_Deserialize16LE_CMockStopIgnore(void);
+#define Utils_Deserialize16LE_ExpectAnyArgsAndReturn(cmock_retval) Utils_Deserialize16LE_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_Deserialize16LE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
 #define Utils_Deserialize16LE_ExpectAndReturn(buf, cmock_retval) Utils_Deserialize16LE_CMockExpectAndReturn(__LINE__, buf, cmock_retval)
 void Utils_Deserialize16LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint16_t cmock_to_return);
 typedef uint16_t (* CMOCK_Utils_Deserialize16LE_CALLBACK)(const byte_t* buf, int cmock_num_calls);
@@ -390,6 +428,8 @@ void Utils_Deserialize16LE_CMockIgnoreArg_buf(UNITY_LINE_TYPE cmock_line);
 void Utils_Deserialize24LE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize24LE_StopIgnore() Utils_Deserialize24LE_CMockStopIgnore()
 void Utils_Deserialize24LE_CMockStopIgnore(void);
+#define Utils_Deserialize24LE_ExpectAnyArgsAndReturn(cmock_retval) Utils_Deserialize24LE_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_Deserialize24LE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize24LE_ExpectAndReturn(buf, cmock_retval) Utils_Deserialize24LE_CMockExpectAndReturn(__LINE__, buf, cmock_retval)
 void Utils_Deserialize24LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return);
 typedef uint32_t (* CMOCK_Utils_Deserialize24LE_CALLBACK)(const byte_t* buf, int cmock_num_calls);
@@ -404,6 +444,8 @@ void Utils_Deserialize24LE_CMockIgnoreArg_buf(UNITY_LINE_TYPE cmock_line);
 void Utils_Deserialize32LE_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize32LE_StopIgnore() Utils_Deserialize32LE_CMockStopIgnore()
 void Utils_Deserialize32LE_CMockStopIgnore(void);
+#define Utils_Deserialize32LE_ExpectAnyArgsAndReturn(cmock_retval) Utils_Deserialize32LE_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Utils_Deserialize32LE_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define Utils_Deserialize32LE_ExpectAndReturn(buf, cmock_retval) Utils_Deserialize32LE_CMockExpectAndReturn(__LINE__, buf, cmock_retval)
 void Utils_Deserialize32LE_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const byte_t* buf, uint32_t cmock_to_return);
 typedef uint32_t (* CMOCK_Utils_Deserialize32LE_CALLBACK)(const byte_t* buf, int cmock_num_calls);
@@ -418,6 +460,8 @@ void Utils_Deserialize32LE_CMockIgnoreArg_buf(UNITY_LINE_TYPE cmock_line);
 void Utils_DeserializeBlobLE_CMockIgnore(void);
 #define Utils_DeserializeBlobLE_StopIgnore() Utils_DeserializeBlobLE_CMockStopIgnore()
 void Utils_DeserializeBlobLE_CMockStopIgnore(void);
+#define Utils_DeserializeBlobLE_ExpectAnyArgs() Utils_DeserializeBlobLE_CMockExpectAnyArgs(__LINE__)
+void Utils_DeserializeBlobLE_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define Utils_DeserializeBlobLE_Expect(buf, dst, size) Utils_DeserializeBlobLE_CMockExpect(__LINE__, buf, dst, size)
 void Utils_DeserializeBlobLE_CMockExpect(UNITY_LINE_TYPE cmock_line, const byte_t* buf, byte_t* dst, uint32_t size);
 typedef void (* CMOCK_Utils_DeserializeBlobLE_CALLBACK)(const byte_t* buf, byte_t* dst, uint32_t size, int cmock_num_calls);

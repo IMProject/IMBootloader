@@ -13,6 +13,7 @@ static const char* CMockString_size = "size";
 typedef struct _CMOCK_SwInfo_getDataJson_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_buffer;
   uint16_t Expected_size;
@@ -28,6 +29,7 @@ typedef struct _CMOCK_SwInfo_getDataJson_CALL_INSTANCE
 typedef struct _CMOCK_SwInfo_getVersion_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_buffer;
   uint16_t Expected_size;
@@ -125,6 +127,8 @@ bool SwInfo_getDataJson(uint8_t* buffer, uint16_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_SwInfo_getDataJson,CMockString_buffer);
@@ -137,6 +141,7 @@ bool SwInfo_getDataJson(uint8_t* buffer, uint16_t size)
   {
     UNITY_SET_DETAILS(CMockString_SwInfo_getDataJson,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.SwInfo_getDataJson_CallbackFunctionPointer != NULL)
   {
@@ -172,6 +177,7 @@ void SwInfo_getDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cm
   Mock.SwInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getDataJson_CallInstance, cmock_guts_index);
   Mock.SwInfo_getDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.SwInfo_getDataJson_IgnoreBool = (char)1;
 }
@@ -183,6 +189,20 @@ void SwInfo_getDataJson_CMockStopIgnore(void)
   Mock.SwInfo_getDataJson_IgnoreBool = (char)0;
 }
 
+void SwInfo_getDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_SwInfo_getDataJson_CALL_INSTANCE));
+  CMOCK_SwInfo_getDataJson_CALL_INSTANCE* cmock_call_instance = (CMOCK_SwInfo_getDataJson_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.SwInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getDataJson_CallInstance, cmock_guts_index);
+  Mock.SwInfo_getDataJson_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void SwInfo_getDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, uint16_t size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_SwInfo_getDataJson_CALL_INSTANCE));
@@ -192,6 +212,7 @@ void SwInfo_getDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t
   Mock.SwInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getDataJson_CallInstance, cmock_guts_index);
   Mock.SwInfo_getDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_SwInfo_getDataJson(cmock_call_instance, buffer, 1, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -219,6 +240,7 @@ void SwInfo_getDataJson_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line
   Mock.SwInfo_getDataJson_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getDataJson_CallInstance, cmock_guts_index);
   Mock.SwInfo_getDataJson_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_SwInfo_getDataJson(cmock_call_instance, buffer, buffer_Depth, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -270,6 +292,8 @@ bool SwInfo_getVersion(uint8_t* buffer, uint16_t size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_SwInfo_getVersion,CMockString_buffer);
@@ -282,6 +306,7 @@ bool SwInfo_getVersion(uint8_t* buffer, uint16_t size)
   {
     UNITY_SET_DETAILS(CMockString_SwInfo_getVersion,CMockString_size);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_size, size, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.SwInfo_getVersion_CallbackFunctionPointer != NULL)
   {
@@ -317,6 +342,7 @@ void SwInfo_getVersion_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmo
   Mock.SwInfo_getVersion_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getVersion_CallInstance, cmock_guts_index);
   Mock.SwInfo_getVersion_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.SwInfo_getVersion_IgnoreBool = (char)1;
 }
@@ -328,6 +354,20 @@ void SwInfo_getVersion_CMockStopIgnore(void)
   Mock.SwInfo_getVersion_IgnoreBool = (char)0;
 }
 
+void SwInfo_getVersion_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_SwInfo_getVersion_CALL_INSTANCE));
+  CMOCK_SwInfo_getVersion_CALL_INSTANCE* cmock_call_instance = (CMOCK_SwInfo_getVersion_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.SwInfo_getVersion_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getVersion_CallInstance, cmock_guts_index);
+  Mock.SwInfo_getVersion_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void SwInfo_getVersion_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, uint16_t size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_SwInfo_getVersion_CALL_INSTANCE));
@@ -337,6 +377,7 @@ void SwInfo_getVersion_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t*
   Mock.SwInfo_getVersion_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getVersion_CallInstance, cmock_guts_index);
   Mock.SwInfo_getVersion_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_SwInfo_getVersion(cmock_call_instance, buffer, 1, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -364,6 +405,7 @@ void SwInfo_getVersion_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line,
   Mock.SwInfo_getVersion_CallInstance = CMock_Guts_MemChain(Mock.SwInfo_getVersion_CallInstance, cmock_guts_index);
   Mock.SwInfo_getVersion_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_SwInfo_getVersion(cmock_call_instance, buffer, buffer_Depth, size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

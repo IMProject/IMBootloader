@@ -32,6 +32,8 @@ void mock_signature_Verify(void);
 void Signature_verification_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, signatureType_E cmock_to_return);
 #define Signature_verification_StopIgnore() Signature_verification_CMockStopIgnore()
 void Signature_verification_CMockStopIgnore(void);
+#define Signature_verification_ExpectAnyArgsAndReturn(cmock_retval) Signature_verification_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Signature_verification_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, signatureType_E cmock_to_return);
 #define Signature_verification_ExpectAndReturn(signature, cmock_retval) Signature_verification_CMockExpectAndReturn(__LINE__, signature, cmock_retval)
 void Signature_verification_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const signature_S* signature, signatureType_E cmock_to_return);
 typedef signatureType_E (* CMOCK_Signature_verification_CALLBACK)(const signature_S* signature, int cmock_num_calls);

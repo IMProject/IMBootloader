@@ -32,6 +32,8 @@ void mock_flash_adapter_Verify(void);
 void FlashAdapter_erase_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_erase_StopIgnore() FlashAdapter_erase_CMockStopIgnore()
 void FlashAdapter_erase_CMockStopIgnore(void);
+#define FlashAdapter_erase_ExpectAnyArgsAndReturn(cmock_retval) FlashAdapter_erase_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void FlashAdapter_erase_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_erase_ExpectAndReturn(firmware_size, flash_address, cmock_retval) FlashAdapter_erase_CMockExpectAndReturn(__LINE__, firmware_size, flash_address, cmock_retval)
 void FlashAdapter_erase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t firmware_size, uint32_t flash_address, bool cmock_to_return);
 typedef bool (* CMOCK_FlashAdapter_erase_CALLBACK)(uint32_t firmware_size, uint32_t flash_address, int cmock_num_calls);
@@ -46,6 +48,8 @@ void FlashAdapter_erase_CMockIgnoreArg_flash_address(UNITY_LINE_TYPE cmock_line)
 void FlashAdapter_blockErase_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_blockErase_StopIgnore() FlashAdapter_blockErase_CMockStopIgnore()
 void FlashAdapter_blockErase_CMockStopIgnore(void);
+#define FlashAdapter_blockErase_ExpectAnyArgsAndReturn(cmock_retval) FlashAdapter_blockErase_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void FlashAdapter_blockErase_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_blockErase_ExpectAndReturn(address, cmock_retval) FlashAdapter_blockErase_CMockExpectAndReturn(__LINE__, address, cmock_retval)
 void FlashAdapter_blockErase_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t address, bool cmock_to_return);
 typedef bool (* CMOCK_FlashAdapter_blockErase_CALLBACK)(uint32_t address, int cmock_num_calls);
@@ -58,6 +62,8 @@ void FlashAdapter_blockErase_CMockIgnoreArg_address(UNITY_LINE_TYPE cmock_line);
 void FlashAdapter_program_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_program_StopIgnore() FlashAdapter_program_CMockStopIgnore()
 void FlashAdapter_program_CMockStopIgnore(void);
+#define FlashAdapter_program_ExpectAnyArgsAndReturn(cmock_retval) FlashAdapter_program_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void FlashAdapter_program_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_program_ExpectAndReturn(address, buffer, length, cmock_retval) FlashAdapter_program_CMockExpectAndReturn(__LINE__, address, buffer, length, cmock_retval)
 void FlashAdapter_program_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t address, uint8_t* buffer, uint32_t length, bool cmock_to_return);
 typedef bool (* CMOCK_FlashAdapter_program_CALLBACK)(uint32_t address, uint8_t* buffer, uint32_t length, int cmock_num_calls);
@@ -80,6 +86,8 @@ void FlashAdapter_program_CMockIgnoreArg_length(UNITY_LINE_TYPE cmock_line);
 void FlashAdapter_readBytes_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_readBytes_StopIgnore() FlashAdapter_readBytes_CMockStopIgnore()
 void FlashAdapter_readBytes_CMockStopIgnore(void);
+#define FlashAdapter_readBytes_ExpectAnyArgsAndReturn(cmock_retval) FlashAdapter_readBytes_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void FlashAdapter_readBytes_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_readBytes_ExpectAndReturn(address, buffer, length, cmock_retval) FlashAdapter_readBytes_CMockExpectAndReturn(__LINE__, address, buffer, length, cmock_retval)
 void FlashAdapter_readBytes_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t address, uint8_t* buffer, uint32_t length, bool cmock_to_return);
 typedef bool (* CMOCK_FlashAdapter_readBytes_CALLBACK)(uint32_t address, uint8_t* buffer, uint32_t length, int cmock_num_calls);
@@ -132,6 +140,8 @@ void FlashAdapter_isFlashPCROPProtected_Stub(CMOCK_FlashAdapter_isFlashPCROPProt
 void FlashAdapter_setReadProtection_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_setReadProtection_StopIgnore() FlashAdapter_setReadProtection_CMockStopIgnore()
 void FlashAdapter_setReadProtection_CMockStopIgnore(void);
+#define FlashAdapter_setReadProtection_ExpectAnyArgsAndReturn(cmock_retval) FlashAdapter_setReadProtection_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void FlashAdapter_setReadProtection_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_setReadProtection_ExpectAndReturn(enable, cmock_retval) FlashAdapter_setReadProtection_CMockExpectAndReturn(__LINE__, enable, cmock_retval)
 void FlashAdapter_setReadProtection_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool enable, bool cmock_to_return);
 typedef bool (* CMOCK_FlashAdapter_setReadProtection_CALLBACK)(bool enable, int cmock_num_calls);
@@ -144,6 +154,8 @@ void FlashAdapter_setReadProtection_CMockIgnoreArg_enable(UNITY_LINE_TYPE cmock_
 void FlashAdapter_setPCROP_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_setPCROP_StopIgnore() FlashAdapter_setPCROP_CMockStopIgnore()
 void FlashAdapter_setPCROP_CMockStopIgnore(void);
+#define FlashAdapter_setPCROP_ExpectAnyArgsAndReturn(cmock_retval) FlashAdapter_setPCROP_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void FlashAdapter_setPCROP_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define FlashAdapter_setPCROP_ExpectAndReturn(enable, protect_address_start, protect_address_end, cmock_retval) FlashAdapter_setPCROP_CMockExpectAndReturn(__LINE__, enable, protect_address_start, protect_address_end, cmock_retval)
 void FlashAdapter_setPCROP_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, bool enable, uint32_t protect_address_start, uint32_t protect_address_end, bool cmock_to_return);
 typedef bool (* CMOCK_FlashAdapter_setPCROP_CALLBACK)(bool enable, uint32_t protect_address_start, uint32_t protect_address_end, int cmock_num_calls);

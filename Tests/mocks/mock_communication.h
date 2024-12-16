@@ -42,6 +42,8 @@ void Communication_init_Stub(CMOCK_Communication_init_CALLBACK Callback);
 void Communication_handler_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Communication_handler_StopIgnore() Communication_handler_CMockStopIgnore()
 void Communication_handler_CMockStopIgnore(void);
+#define Communication_handler_ExpectAnyArgsAndReturn(cmock_retval) Communication_handler_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Communication_handler_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Communication_handler_ExpectAndReturn(buf, length, cmock_retval) Communication_handler_CMockExpectAndReturn(__LINE__, buf, length, cmock_retval)
 void Communication_handler_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buf, uint32_t length, bool cmock_to_return);
 typedef bool (* CMOCK_Communication_handler_CALLBACK)(uint8_t* buf, uint32_t length, int cmock_num_calls);
@@ -62,6 +64,8 @@ void Communication_handler_CMockIgnoreArg_length(UNITY_LINE_TYPE cmock_line);
 void Communication_mainLoop_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Communication_mainLoop_StopIgnore() Communication_mainLoop_CMockStopIgnore()
 void Communication_mainLoop_CMockStopIgnore(void);
+#define Communication_mainLoop_ExpectAnyArgsAndReturn(cmock_retval) Communication_mainLoop_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Communication_mainLoop_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Communication_mainLoop_ExpectAndReturn(timeout, cmock_retval) Communication_mainLoop_CMockExpectAndReturn(__LINE__, timeout, cmock_retval)
 void Communication_mainLoop_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const uint32_t timeout, bool cmock_to_return);
 typedef bool (* CMOCK_Communication_mainLoop_CALLBACK)(const uint32_t timeout, int cmock_num_calls);

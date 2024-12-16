@@ -16,6 +16,7 @@ static const char* CMockString_manufacturer_id = "manufacturer_id";
 typedef struct _CMOCK_HashAdapter_getHashedBoardId_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   uint8_t* Expected_hashed_board_id;
   int Expected_hashed_board_id_Depth;
   char ReturnThruPtr_hashed_board_id_Used;
@@ -28,6 +29,7 @@ typedef struct _CMOCK_HashAdapter_getHashedBoardId_CALL_INSTANCE
 typedef struct _CMOCK_HashAdapter_getBase64HashedBoardId_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_b64_hashed_board_id_str;
   size_t Expected_b64_hashed_board_id_str_size;
@@ -43,6 +45,7 @@ typedef struct _CMOCK_HashAdapter_getBase64HashedBoardId_CALL_INSTANCE
 typedef struct _CMOCK_BoardInfo_decodeBase64ManufacturerId_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_manufacturer_id;
   int Expected_manufacturer_id_Depth;
@@ -153,6 +156,8 @@ void HashAdapter_getHashedBoardId(uint8_t* hashed_board_id)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_hashed_board_id)
   {
     UNITY_SET_DETAILS(CMockString_HashAdapter_getHashedBoardId,CMockString_hashed_board_id);
@@ -160,6 +165,7 @@ void HashAdapter_getHashedBoardId(uint8_t* hashed_board_id)
       { UNITY_TEST_ASSERT_NULL(hashed_board_id, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_hashed_board_id, hashed_board_id, cmock_call_instance->Expected_hashed_board_id_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.HashAdapter_getHashedBoardId_CallbackFunctionPointer != NULL)
   {
@@ -193,6 +199,19 @@ void HashAdapter_getHashedBoardId_CMockStopIgnore(void)
   Mock.HashAdapter_getHashedBoardId_IgnoreBool = (char)0;
 }
 
+void HashAdapter_getHashedBoardId_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_HashAdapter_getHashedBoardId_CALL_INSTANCE));
+  CMOCK_HashAdapter_getHashedBoardId_CALL_INSTANCE* cmock_call_instance = (CMOCK_HashAdapter_getHashedBoardId_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.HashAdapter_getHashedBoardId_CallInstance = CMock_Guts_MemChain(Mock.HashAdapter_getHashedBoardId_CallInstance, cmock_guts_index);
+  Mock.HashAdapter_getHashedBoardId_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void HashAdapter_getHashedBoardId_CMockExpect(UNITY_LINE_TYPE cmock_line, uint8_t* hashed_board_id)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_HashAdapter_getHashedBoardId_CALL_INSTANCE));
@@ -202,6 +221,7 @@ void HashAdapter_getHashedBoardId_CMockExpect(UNITY_LINE_TYPE cmock_line, uint8_
   Mock.HashAdapter_getHashedBoardId_CallInstance = CMock_Guts_MemChain(Mock.HashAdapter_getHashedBoardId_CallInstance, cmock_guts_index);
   Mock.HashAdapter_getHashedBoardId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_HashAdapter_getHashedBoardId(cmock_call_instance, hashed_board_id, 1);
 }
 
@@ -228,6 +248,7 @@ void HashAdapter_getHashedBoardId_CMockExpectWithArray(UNITY_LINE_TYPE cmock_lin
   Mock.HashAdapter_getHashedBoardId_CallInstance = CMock_Guts_MemChain(Mock.HashAdapter_getHashedBoardId_CallInstance, cmock_guts_index);
   Mock.HashAdapter_getHashedBoardId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_HashAdapter_getHashedBoardId(cmock_call_instance, hashed_board_id, hashed_board_id_Depth);
 }
 
@@ -271,6 +292,8 @@ bool HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id_str, size_t
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_b64_hashed_board_id_str)
   {
     UNITY_SET_DETAILS(CMockString_HashAdapter_getBase64HashedBoardId,CMockString_b64_hashed_board_id_str);
@@ -283,6 +306,7 @@ bool HashAdapter_getBase64HashedBoardId(uint8_t* b64_hashed_board_id_str, size_t
   {
     UNITY_SET_DETAILS(CMockString_HashAdapter_getBase64HashedBoardId,CMockString_b64_hashed_board_id_str_size);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(&cmock_call_instance->Expected_b64_hashed_board_id_str_size), (void*)(&b64_hashed_board_id_str_size), sizeof(size_t), cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.HashAdapter_getBase64HashedBoardId_CallbackFunctionPointer != NULL)
   {
@@ -319,6 +343,7 @@ void HashAdapter_getBase64HashedBoardId_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmo
   Mock.HashAdapter_getBase64HashedBoardId_CallInstance = CMock_Guts_MemChain(Mock.HashAdapter_getBase64HashedBoardId_CallInstance, cmock_guts_index);
   Mock.HashAdapter_getBase64HashedBoardId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.HashAdapter_getBase64HashedBoardId_IgnoreBool = (char)1;
 }
@@ -330,6 +355,20 @@ void HashAdapter_getBase64HashedBoardId_CMockStopIgnore(void)
   Mock.HashAdapter_getBase64HashedBoardId_IgnoreBool = (char)0;
 }
 
+void HashAdapter_getBase64HashedBoardId_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_HashAdapter_getBase64HashedBoardId_CALL_INSTANCE));
+  CMOCK_HashAdapter_getBase64HashedBoardId_CALL_INSTANCE* cmock_call_instance = (CMOCK_HashAdapter_getBase64HashedBoardId_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.HashAdapter_getBase64HashedBoardId_CallInstance = CMock_Guts_MemChain(Mock.HashAdapter_getBase64HashedBoardId_CallInstance, cmock_guts_index);
+  Mock.HashAdapter_getBase64HashedBoardId_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void HashAdapter_getBase64HashedBoardId_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* b64_hashed_board_id_str, size_t b64_hashed_board_id_str_size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_HashAdapter_getBase64HashedBoardId_CALL_INSTANCE));
@@ -339,6 +378,7 @@ void HashAdapter_getBase64HashedBoardId_CMockExpectAndReturn(UNITY_LINE_TYPE cmo
   Mock.HashAdapter_getBase64HashedBoardId_CallInstance = CMock_Guts_MemChain(Mock.HashAdapter_getBase64HashedBoardId_CallInstance, cmock_guts_index);
   Mock.HashAdapter_getBase64HashedBoardId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_HashAdapter_getBase64HashedBoardId(cmock_call_instance, b64_hashed_board_id_str, b64_hashed_board_id_str_size, b64_hashed_board_id_str_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -366,6 +406,7 @@ void HashAdapter_getBase64HashedBoardId_CMockExpectWithArrayAndReturn(UNITY_LINE
   Mock.HashAdapter_getBase64HashedBoardId_CallInstance = CMock_Guts_MemChain(Mock.HashAdapter_getBase64HashedBoardId_CallInstance, cmock_guts_index);
   Mock.HashAdapter_getBase64HashedBoardId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_HashAdapter_getBase64HashedBoardId(cmock_call_instance, b64_hashed_board_id_str, b64_hashed_board_id_str_Depth, b64_hashed_board_id_str_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -417,6 +458,8 @@ bool BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_manufacturer_id)
   {
     UNITY_SET_DETAILS(CMockString_BoardInfo_decodeBase64ManufacturerId,CMockString_manufacturer_id);
@@ -424,6 +467,7 @@ bool BoardInfo_decodeBase64ManufacturerId(uint8_t* manufacturer_id)
       { UNITY_TEST_ASSERT_NULL(manufacturer_id, cmock_line, CMockStringExpNULL); }
     else
       { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_manufacturer_id, manufacturer_id, cmock_call_instance->Expected_manufacturer_id_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   if (Mock.BoardInfo_decodeBase64ManufacturerId_CallbackFunctionPointer != NULL)
   {
@@ -457,6 +501,7 @@ void BoardInfo_decodeBase64ManufacturerId_CMockIgnoreAndReturn(UNITY_LINE_TYPE c
   Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance, cmock_guts_index);
   Mock.BoardInfo_decodeBase64ManufacturerId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.BoardInfo_decodeBase64ManufacturerId_IgnoreBool = (char)1;
 }
@@ -468,6 +513,20 @@ void BoardInfo_decodeBase64ManufacturerId_CMockStopIgnore(void)
   Mock.BoardInfo_decodeBase64ManufacturerId_IgnoreBool = (char)0;
 }
 
+void BoardInfo_decodeBase64ManufacturerId_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BoardInfo_decodeBase64ManufacturerId_CALL_INSTANCE));
+  CMOCK_BoardInfo_decodeBase64ManufacturerId_CALL_INSTANCE* cmock_call_instance = (CMOCK_BoardInfo_decodeBase64ManufacturerId_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance, cmock_guts_index);
+  Mock.BoardInfo_decodeBase64ManufacturerId_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void BoardInfo_decodeBase64ManufacturerId_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* manufacturer_id, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_BoardInfo_decodeBase64ManufacturerId_CALL_INSTANCE));
@@ -477,6 +536,7 @@ void BoardInfo_decodeBase64ManufacturerId_CMockExpectAndReturn(UNITY_LINE_TYPE c
   Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance, cmock_guts_index);
   Mock.BoardInfo_decodeBase64ManufacturerId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BoardInfo_decodeBase64ManufacturerId(cmock_call_instance, manufacturer_id, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -504,6 +564,7 @@ void BoardInfo_decodeBase64ManufacturerId_CMockExpectWithArrayAndReturn(UNITY_LI
   Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance = CMock_Guts_MemChain(Mock.BoardInfo_decodeBase64ManufacturerId_CallInstance, cmock_guts_index);
   Mock.BoardInfo_decodeBase64ManufacturerId_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_BoardInfo_decodeBase64ManufacturerId(cmock_call_instance, manufacturer_id, manufacturer_id_Depth);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

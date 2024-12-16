@@ -18,6 +18,7 @@ static const char* CMockString_value = "value";
 typedef struct _CMOCK_Json_startString_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   char* Expected_buffer;
   size_t Expected_buffer_size;
@@ -32,6 +33,7 @@ typedef struct _CMOCK_Json_startString_CALL_INSTANCE
 typedef struct _CMOCK_Json_addData_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   char* Expected_buffer;
   size_t Expected_buffer_size;
@@ -50,6 +52,7 @@ typedef struct _CMOCK_Json_addData_CALL_INSTANCE
 typedef struct _CMOCK_Json_endString_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   char* Expected_buffer;
   size_t Expected_buffer_size;
@@ -64,6 +67,7 @@ typedef struct _CMOCK_Json_endString_CALL_INSTANCE
 typedef struct _CMOCK_Json_findByKey_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   const char* Expected_buffer;
   size_t Expected_buffer_size;
@@ -204,6 +208,8 @@ bool Json_startString(char* buffer, size_t buffer_size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_Json_startString,CMockString_buffer);
@@ -213,6 +219,7 @@ bool Json_startString(char* buffer, size_t buffer_size)
   {
     UNITY_SET_DETAILS(CMockString_Json_startString,CMockString_buffer_size);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(&cmock_call_instance->Expected_buffer_size), (void*)(&buffer_size), sizeof(size_t), cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Json_startString_CallbackFunctionPointer != NULL)
   {
@@ -248,6 +255,7 @@ void Json_startString_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmoc
   Mock.Json_startString_CallInstance = CMock_Guts_MemChain(Mock.Json_startString_CallInstance, cmock_guts_index);
   Mock.Json_startString_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Json_startString_IgnoreBool = (char)1;
 }
@@ -259,6 +267,20 @@ void Json_startString_CMockStopIgnore(void)
   Mock.Json_startString_IgnoreBool = (char)0;
 }
 
+void Json_startString_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_startString_CALL_INSTANCE));
+  CMOCK_Json_startString_CALL_INSTANCE* cmock_call_instance = (CMOCK_Json_startString_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Json_startString_CallInstance = CMock_Guts_MemChain(Mock.Json_startString_CallInstance, cmock_guts_index);
+  Mock.Json_startString_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Json_startString_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, size_t buffer_size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_startString_CALL_INSTANCE));
@@ -268,6 +290,7 @@ void Json_startString_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buf
   Mock.Json_startString_CallInstance = CMock_Guts_MemChain(Mock.Json_startString_CallInstance, cmock_guts_index);
   Mock.Json_startString_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Json_startString(cmock_call_instance, buffer, buffer_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -333,6 +356,8 @@ bool Json_addData(char* buffer, size_t buffer_size, const char* key, const char*
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_Json_addData,CMockString_buffer);
@@ -352,6 +377,7 @@ bool Json_addData(char* buffer, size_t buffer_size, const char* key, const char*
   {
     UNITY_SET_DETAILS(CMockString_Json_addData,CMockString_value);
     UNITY_TEST_ASSERT_EQUAL_STRING(cmock_call_instance->Expected_value, value, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Json_addData_CallbackFunctionPointer != NULL)
   {
@@ -391,6 +417,7 @@ void Json_addData_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to
   Mock.Json_addData_CallInstance = CMock_Guts_MemChain(Mock.Json_addData_CallInstance, cmock_guts_index);
   Mock.Json_addData_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Json_addData_IgnoreBool = (char)1;
 }
@@ -402,6 +429,20 @@ void Json_addData_CMockStopIgnore(void)
   Mock.Json_addData_IgnoreBool = (char)0;
 }
 
+void Json_addData_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_addData_CALL_INSTANCE));
+  CMOCK_Json_addData_CALL_INSTANCE* cmock_call_instance = (CMOCK_Json_addData_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Json_addData_CallInstance = CMock_Guts_MemChain(Mock.Json_addData_CallInstance, cmock_guts_index);
+  Mock.Json_addData_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Json_addData_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, size_t buffer_size, const char* key, const char* value, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_addData_CALL_INSTANCE));
@@ -411,6 +452,7 @@ void Json_addData_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer,
   Mock.Json_addData_CallInstance = CMock_Guts_MemChain(Mock.Json_addData_CallInstance, cmock_guts_index);
   Mock.Json_addData_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Json_addData(cmock_call_instance, buffer, buffer_size, key, value);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -490,6 +532,8 @@ bool Json_endString(char* buffer, size_t buffer_size)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_Json_endString,CMockString_buffer);
@@ -499,6 +543,7 @@ bool Json_endString(char* buffer, size_t buffer_size)
   {
     UNITY_SET_DETAILS(CMockString_Json_endString,CMockString_buffer_size);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(&cmock_call_instance->Expected_buffer_size), (void*)(&buffer_size), sizeof(size_t), cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Json_endString_CallbackFunctionPointer != NULL)
   {
@@ -534,6 +579,7 @@ void Json_endString_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_
   Mock.Json_endString_CallInstance = CMock_Guts_MemChain(Mock.Json_endString_CallInstance, cmock_guts_index);
   Mock.Json_endString_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Json_endString_IgnoreBool = (char)1;
 }
@@ -545,6 +591,20 @@ void Json_endString_CMockStopIgnore(void)
   Mock.Json_endString_IgnoreBool = (char)0;
 }
 
+void Json_endString_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_endString_CALL_INSTANCE));
+  CMOCK_Json_endString_CALL_INSTANCE* cmock_call_instance = (CMOCK_Json_endString_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Json_endString_CallInstance = CMock_Guts_MemChain(Mock.Json_endString_CallInstance, cmock_guts_index);
+  Mock.Json_endString_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Json_endString_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, size_t buffer_size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_endString_CALL_INSTANCE));
@@ -554,6 +614,7 @@ void Json_endString_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffe
   Mock.Json_endString_CallInstance = CMock_Guts_MemChain(Mock.Json_endString_CallInstance, cmock_guts_index);
   Mock.Json_endString_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Json_endString(cmock_call_instance, buffer, buffer_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -619,6 +680,8 @@ bool Json_findByKey(const char* buffer, size_t buffer_size, const char* key, cha
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_Json_findByKey,CMockString_buffer);
@@ -643,6 +706,7 @@ bool Json_findByKey(const char* buffer, size_t buffer_size, const char* key, cha
   {
     UNITY_SET_DETAILS(CMockString_Json_findByKey,CMockString_max_value_size);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(&cmock_call_instance->Expected_max_value_size), (void*)(&max_value_size), sizeof(size_t), cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Json_findByKey_CallbackFunctionPointer != NULL)
   {
@@ -685,6 +749,7 @@ void Json_findByKey_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_
   Mock.Json_findByKey_CallInstance = CMock_Guts_MemChain(Mock.Json_findByKey_CallInstance, cmock_guts_index);
   Mock.Json_findByKey_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Json_findByKey_IgnoreBool = (char)1;
 }
@@ -696,6 +761,20 @@ void Json_findByKey_CMockStopIgnore(void)
   Mock.Json_findByKey_IgnoreBool = (char)0;
 }
 
+void Json_findByKey_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_findByKey_CALL_INSTANCE));
+  CMOCK_Json_findByKey_CALL_INSTANCE* cmock_call_instance = (CMOCK_Json_findByKey_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Json_findByKey_CallInstance = CMock_Guts_MemChain(Mock.Json_findByKey_CallInstance, cmock_guts_index);
+  Mock.Json_findByKey_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Json_findByKey_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const char* buffer, size_t buffer_size, const char* key, char* value, size_t max_value_size, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Json_findByKey_CALL_INSTANCE));
@@ -705,6 +784,7 @@ void Json_findByKey_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const char*
   Mock.Json_findByKey_CallInstance = CMock_Guts_MemChain(Mock.Json_findByKey_CallInstance, cmock_guts_index);
   Mock.Json_findByKey_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Json_findByKey(cmock_call_instance, buffer, buffer_size, key, value, max_value_size);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

@@ -10,6 +10,7 @@ static const char* CMockString_SystemAdapter_reset = "SystemAdapter_reset";
 typedef struct _CMOCK_SystemAdapter_reset_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_SystemAdapter_reset_CALL_INSTANCE;
 
@@ -101,6 +102,7 @@ void SystemAdapter_reset_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.SystemAdapter_reset_CallInstance = CMock_Guts_MemChain(Mock.SystemAdapter_reset_CallInstance, cmock_guts_index);
   Mock.SystemAdapter_reset_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void SystemAdapter_reset_AddCallback(CMOCK_SystemAdapter_reset_CALLBACK Callback)

@@ -15,12 +15,14 @@ static const char* CMockString_timeout = "timeout";
 typedef struct _CMOCK_Communication_init_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_Communication_init_CALL_INSTANCE;
 
 typedef struct _CMOCK_Communication_handler_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint8_t* Expected_buf;
   uint32_t Expected_length;
@@ -36,6 +38,7 @@ typedef struct _CMOCK_Communication_handler_CALL_INSTANCE
 typedef struct _CMOCK_Communication_mainLoop_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
   bool ReturnVal;
   uint32_t Expected_timeout;
   char IgnoreArg_timeout;
@@ -168,6 +171,7 @@ void Communication_init_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.Communication_init_CallInstance = CMock_Guts_MemChain(Mock.Communication_init_CallInstance, cmock_guts_index);
   Mock.Communication_init_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void Communication_init_AddCallback(CMOCK_Communication_init_CALLBACK Callback)
@@ -208,6 +212,8 @@ bool Communication_handler(uint8_t* buf, uint32_t length)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_buf)
   {
     UNITY_SET_DETAILS(CMockString_Communication_handler,CMockString_buf);
@@ -220,6 +226,7 @@ bool Communication_handler(uint8_t* buf, uint32_t length)
   {
     UNITY_SET_DETAILS(CMockString_Communication_handler,CMockString_length);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_length, length, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Communication_handler_CallbackFunctionPointer != NULL)
   {
@@ -255,6 +262,7 @@ void Communication_handler_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool
   Mock.Communication_handler_CallInstance = CMock_Guts_MemChain(Mock.Communication_handler_CallInstance, cmock_guts_index);
   Mock.Communication_handler_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Communication_handler_IgnoreBool = (char)1;
 }
@@ -266,6 +274,20 @@ void Communication_handler_CMockStopIgnore(void)
   Mock.Communication_handler_IgnoreBool = (char)0;
 }
 
+void Communication_handler_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Communication_handler_CALL_INSTANCE));
+  CMOCK_Communication_handler_CALL_INSTANCE* cmock_call_instance = (CMOCK_Communication_handler_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Communication_handler_CallInstance = CMock_Guts_MemChain(Mock.Communication_handler_CallInstance, cmock_guts_index);
+  Mock.Communication_handler_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Communication_handler_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* buf, uint32_t length, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Communication_handler_CALL_INSTANCE));
@@ -275,6 +297,7 @@ void Communication_handler_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint
   Mock.Communication_handler_CallInstance = CMock_Guts_MemChain(Mock.Communication_handler_CallInstance, cmock_guts_index);
   Mock.Communication_handler_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Communication_handler(cmock_call_instance, buf, 1, length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -302,6 +325,7 @@ void Communication_handler_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_l
   Mock.Communication_handler_CallInstance = CMock_Guts_MemChain(Mock.Communication_handler_CallInstance, cmock_guts_index);
   Mock.Communication_handler_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Communication_handler(cmock_call_instance, buf, buf_Depth, length);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }
@@ -353,10 +377,13 @@ bool Communication_mainLoop(const uint32_t timeout)
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
   cmock_line = cmock_call_instance->LineNumber;
+  if (!cmock_call_instance->ExpectAnyArgsBool)
+  {
   if (!cmock_call_instance->IgnoreArg_timeout)
   {
     UNITY_SET_DETAILS(CMockString_Communication_mainLoop,CMockString_timeout);
     UNITY_TEST_ASSERT_EQUAL_HEX32(cmock_call_instance->Expected_timeout, timeout, cmock_line, CMockStringMismatch);
+  }
   }
   if (Mock.Communication_mainLoop_CallbackFunctionPointer != NULL)
   {
@@ -382,6 +409,7 @@ void Communication_mainLoop_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, boo
   Mock.Communication_mainLoop_CallInstance = CMock_Guts_MemChain(Mock.Communication_mainLoop_CallInstance, cmock_guts_index);
   Mock.Communication_mainLoop_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.Communication_mainLoop_IgnoreBool = (char)1;
 }
@@ -393,6 +421,20 @@ void Communication_mainLoop_CMockStopIgnore(void)
   Mock.Communication_mainLoop_IgnoreBool = (char)0;
 }
 
+void Communication_mainLoop_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Communication_mainLoop_CALL_INSTANCE));
+  CMOCK_Communication_mainLoop_CALL_INSTANCE* cmock_call_instance = (CMOCK_Communication_mainLoop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.Communication_mainLoop_CallInstance = CMock_Guts_MemChain(Mock.Communication_mainLoop_CallInstance, cmock_guts_index);
+  Mock.Communication_mainLoop_IgnoreBool = (char)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->ExpectAnyArgsBool = (char)1;
+}
+
 void Communication_mainLoop_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const uint32_t timeout, bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_Communication_mainLoop_CALL_INSTANCE));
@@ -402,6 +444,7 @@ void Communication_mainLoop_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, con
   Mock.Communication_mainLoop_CallInstance = CMock_Guts_MemChain(Mock.Communication_mainLoop_CallInstance, cmock_guts_index);
   Mock.Communication_mainLoop_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
   CMockExpectParameters_Communication_mainLoop(cmock_call_instance, timeout);
   cmock_call_instance->ReturnVal = cmock_to_return;
 }

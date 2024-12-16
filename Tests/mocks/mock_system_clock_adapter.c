@@ -10,6 +10,7 @@ static const char* CMockString_SystemClock_Config = "SystemClock_Config";
 typedef struct _CMOCK_SystemClock_Config_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  char ExpectAnyArgsBool;
 
 } CMOCK_SystemClock_Config_CALL_INSTANCE;
 
@@ -101,6 +102,7 @@ void SystemClock_Config_CMockExpect(UNITY_LINE_TYPE cmock_line)
   Mock.SystemClock_Config_CallInstance = CMock_Guts_MemChain(Mock.SystemClock_Config_CallInstance, cmock_guts_index);
   Mock.SystemClock_Config_IgnoreBool = (char)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ExpectAnyArgsBool = (char)0;
 }
 
 void SystemClock_Config_AddCallback(CMOCK_SystemClock_Config_CALLBACK Callback)

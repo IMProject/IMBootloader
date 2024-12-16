@@ -32,6 +32,8 @@ void mock_security_Verify(void);
 void Security_setServerSecurityDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Security_setServerSecurityDataJson_StopIgnore() Security_setServerSecurityDataJson_CMockStopIgnore()
 void Security_setServerSecurityDataJson_CMockStopIgnore(void);
+#define Security_setServerSecurityDataJson_ExpectAnyArgsAndReturn(cmock_retval) Security_setServerSecurityDataJson_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Security_setServerSecurityDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Security_setServerSecurityDataJson_ExpectAndReturn(buffer, buffer_size, cmock_retval) Security_setServerSecurityDataJson_CMockExpectAndReturn(__LINE__, buffer, buffer_size, cmock_retval)
 void Security_setServerSecurityDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, uint16_t buffer_size, bool cmock_to_return);
 typedef bool (* CMOCK_Security_setServerSecurityDataJson_CALLBACK)(char* buffer, uint16_t buffer_size, int cmock_num_calls);
@@ -50,6 +52,8 @@ void Security_setServerSecurityDataJson_CMockIgnoreArg_buffer_size(UNITY_LINE_TY
 void Security_getClientSecurityDataJson_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Security_getClientSecurityDataJson_StopIgnore() Security_getClientSecurityDataJson_CMockStopIgnore()
 void Security_getClientSecurityDataJson_CMockStopIgnore(void);
+#define Security_getClientSecurityDataJson_ExpectAnyArgsAndReturn(cmock_retval) Security_getClientSecurityDataJson_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Security_getClientSecurityDataJson_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Security_getClientSecurityDataJson_ExpectAndReturn(buffer, buffer_size, cmock_retval) Security_getClientSecurityDataJson_CMockExpectAndReturn(__LINE__, buffer, buffer_size, cmock_retval)
 void Security_getClientSecurityDataJson_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, char* buffer, uint16_t buffer_size, bool cmock_to_return);
 typedef bool (* CMOCK_Security_getClientSecurityDataJson_CALLBACK)(char* buffer, uint16_t buffer_size, int cmock_num_calls);
@@ -78,6 +82,8 @@ void Security_isSecured_Stub(CMOCK_Security_isSecured_CALLBACK Callback);
 void Security_decrypt_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Security_decrypt_StopIgnore() Security_decrypt_CMockStopIgnore()
 void Security_decrypt_CMockStopIgnore(void);
+#define Security_decrypt_ExpectAnyArgsAndReturn(cmock_retval) Security_decrypt_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void Security_decrypt_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, bool cmock_to_return);
 #define Security_decrypt_ExpectAndReturn(mac, nonce, cipher_data, plain_data, data_length, cmock_retval) Security_decrypt_CMockExpectAndReturn(__LINE__, mac, nonce, cipher_data, plain_data, data_length, cmock_retval)
 void Security_decrypt_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const uint8_t* mac, const uint8_t* nonce, const uint8_t* cipher_data, uint8_t* plain_data, const uint16_t data_length, bool cmock_to_return);
 typedef bool (* CMOCK_Security_decrypt_CALLBACK)(const uint8_t* mac, const uint8_t* nonce, const uint8_t* cipher_data, uint8_t* plain_data, const uint16_t data_length, int cmock_num_calls);
