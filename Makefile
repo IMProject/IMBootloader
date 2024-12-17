@@ -36,6 +36,8 @@ Bootloader/Adapters/Src/security_adapter.c \
 Bootloader/Adapters/Src/system_adapter.c \
 Bootloader/Adapters/Src/system_clock_adapter.c \
 Bootloader/Library/Src/software_info.c \
+Bootloader/STM32/Src/syscalls.c \
+Bootloader/STM32/Src/sysmem.c \
 Bootloader/Utility/Src/base64.c \
 Bootloader/Utility/Src/crc/crc32_base.c \
 Bootloader/Utility/Src/crc/crc32_variants/crc32_bzip2.c \
