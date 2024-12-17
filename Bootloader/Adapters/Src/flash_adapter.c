@@ -76,8 +76,9 @@ FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
     return W25q_readBytes(address, buffer, length);
 }
 
-void
+bool
 FlashAdapter_finish(void) {
+    return true;
 }
 
 #else
