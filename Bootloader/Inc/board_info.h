@@ -57,7 +57,9 @@
 
 #define MANUFACTURER_ID_BASE64_STR (const char*)("Qj9FKEgrTWJRZVRoV21acTR0N3cheiVDKkYpSkBOY1I=") // Size must be equal to 44 characters Base64 format (45 bytes)
 
-#ifdef MATEK_H743_SLIM
+#ifdef NUCLEO_H755ZI
+#define PRODUCT_TYPE    (const char*)("IMProject_demo-nucleo_h755zi")   // Maximum allowed size is 100 characters (101 bytes)
+#elif MATEK_H743_SLIM
 #define PRODUCT_TYPE    (const char*)("IMProject_demo-matek_H7_slim")   // Maximum allowed size is 100 characters (101 bytes)
 #elif defined(PIXHAWK4)
 #define PRODUCT_TYPE    (const char*)("IMProject_demo-pixhawk4")        // Maximum allowed size is 100 characters (101 bytes)
