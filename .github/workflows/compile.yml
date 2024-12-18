@@ -23,6 +23,8 @@ jobs:
           stm32h7xx secure=true,
           stm32h7xx_ram,
           stm32h7xx_ram secure=true,
+          nucleo_h755zi,
+          nucleo_h755zi_ram,
           matek_H7_slim,
           matek_H7_slim secure=true,
           matek_H7_slim_ram,
