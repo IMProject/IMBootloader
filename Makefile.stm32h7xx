@@ -56,13 +56,14 @@ C_DEFS = \
 -DUSE_HAL_DRIVER \
 -DSTM32H7xx
 
-ifeq ($(BOARD), NUCLEO_H755ZI)
+
+ifeq ($(BOARD), MATEK_H743_SLIM)
+  C_DEFS += \
+  -DSTM32H743xx
+else ifeq ($(BOARD), NUCLEO_H755ZI)
   C_DEFS += \
   -DCORE_CM7 \
   -DSTM32H755xx
-else ifeq ($(BOARD), MATEK_H743_SLIM)
-  C_DEFS += \
-  -DSTM32H743xx
 else
   C_DEFS += \
   -DSTM32H750xx

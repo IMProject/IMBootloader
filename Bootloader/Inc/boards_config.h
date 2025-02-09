@@ -35,7 +35,15 @@
 #ifndef BOOTLOADER_INC_BOARDS_CONFIG_H_
 #define BOOTLOADER_INC_BOARDS_CONFIG_H_
 
-#ifdef NUCLEO_H755ZI
+#ifdef MATEK_H743_SLIM
+#define LED1_Pin                GPIO_PIN_4      //!< Pin defined for green LED
+#define LED1_Port               GPIOE
+#define LED2_Pin                GPIO_PIN_3      //!< Pin defined for blue LED
+#define LED2_Port               GPIOE
+#define LED_ON                  GPIO_PIN_RESET
+#define LED_OFF                 GPIO_PIN_SET
+#define PWR_SUPPLY              PWR_LDO_SUPPLY
+#elif NUCLEO_H755ZI
 #define LED1_Pin                GPIO_PIN_0
 #define LED1_Port               GPIOB
 #define LED2_Pin                GPIO_PIN_1
@@ -48,14 +56,6 @@
 #define BL_BUTTON_OFF           GPIO_PIN_RESET
 #define BL_BUTTON_PRESS_TIME    500u                    //!< Time in [ms] needed for button to be pressed to enter in BL
 #define PWR_SUPPLY              PWR_DIRECT_SMPS_SUPPLY
-#elif MATEK_H743_SLIM
-#define LED1_Pin                GPIO_PIN_4      //!< Pin defined for green LED
-#define LED1_Port               GPIOE
-#define LED2_Pin                GPIO_PIN_3      //!< Pin defined for blue LED
-#define LED2_Port               GPIOE
-#define LED_ON                  GPIO_PIN_RESET
-#define LED_OFF                 GPIO_PIN_SET
-#define PWR_SUPPLY              PWR_LDO_SUPPLY
 #elif defined(PIXHAWK4)
 #define LED1_Pin                GPIO_PIN_6      //!< Pin defined for green LED
 #define LED1_Port               GPIOC
