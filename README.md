@@ -24,8 +24,8 @@ Each MCU has its own example of [IMLedBlink](https://github.com/IMProject/IMLedB
 
 | Board                                                                      |MCU       |
 | -------------------------------------------------------------------------- |:--------:|
-| [NUCLEO-H755ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html) |STM32H755ZI |
 | [Mateksys h743-slim](http://www.mateksys.com/?portfolio=h743-slim)         |STM32H7xx |
+| [NUCLEO-H755ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html) |STM32H755ZI |
 | [Pixhawk 4](https://docs.px4.io/master/en/flight_controller/pixhawk4.html) |STM32F7xx |
 
 #### How to add a new MCU?

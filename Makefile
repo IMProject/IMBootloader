@@ -120,9 +120,10 @@ TARGETS	= \
 	stm32h7xx_ram \
 	stm32f7xx \
 	stm32f7xx_ram \
-	nucleo_h755zi \
 	matek_H7_slim \
 	matek_H7_slim_ram \
+	nucleo_h755zi \
+	nucleo_h755zi_ram \
 	pixhawk4 \
 	pixhawk4_ram
 
@@ -137,17 +138,17 @@ clean:
 #
 BOARD =
 
-nucleo_h755zi:
-	${MAKE} stm32h7xx BOARD=NUCLEO_H755ZI BOARD_FILE_NAME=$@
-
-nucleo_h755zi_ram:
-	${MAKE} stm32h7xx_ram BOARD=NUCLEO_H755ZI BOARD_FILE_NAME=$@
-	
 matek_H7_slim:
 	${MAKE} stm32h7xx BOARD=MATEK_H743_SLIM BOARD_FILE_NAME=$@
 
 matek_H7_slim_ram:
 	${MAKE} stm32h7xx_ram BOARD=MATEK_H743_SLIM BOARD_FILE_NAME=$@
+	
+nucleo_h755zi:
+	${MAKE} stm32h7xx BOARD=NUCLEO_H755ZI BOARD_FILE_NAME=$@
+
+nucleo_h755zi_ram:
+	${MAKE} stm32h7xx_ram BOARD=NUCLEO_H755ZI BOARD_FILE_NAME=$@
 
 pixhawk4:
 	${MAKE} stm32f7xx BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
