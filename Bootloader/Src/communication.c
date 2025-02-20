@@ -425,5 +425,11 @@ Communication_sendStringWithCrc(uint8_t* string, size_t size) {
 
 inline static bool
 Communication_sendMessage(uint8_t* data, uint16_t length) {
+
+#ifdef STM32H735xx
+    return (CDC_Transmit_HS(data, length) == (uint8_t)USBD_OK);
+#else
     return (CDC_Transmit_FS(data, length) == (uint8_t)USBD_OK);
+#endif
+
 }

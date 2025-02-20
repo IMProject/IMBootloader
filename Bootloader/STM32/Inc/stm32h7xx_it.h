@@ -56,7 +56,11 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+#ifdef STM32H735xx
+void OTG_HS_IRQHandler(void);
+#else
 void OTG_FS_IRQHandler(void);
+#endif
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

@@ -64,6 +64,10 @@ else ifeq ($(BOARD), NUCLEO_H755ZI)
   C_DEFS += \
   -DCORE_CM7 \
   -DSTM32H755xx
+else ifeq ($(BOARD), STM32H735G_DK)
+  C_DEFS += \
+  -DSTM32H735xx
+  USB=HS # Only supports HS
 else
   C_DEFS += \
   -DSTM32H750xx

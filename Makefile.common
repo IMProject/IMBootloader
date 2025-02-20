@@ -19,6 +19,27 @@ ifeq (RAM, $(findstring RAM, $(LDSCRIPT)))
 	-DVECT_TAB_SRAM 
 endif
 
+# Check if USB is FS or HS
+ifeq ($(USB),FS)
+	C_SOURCES += \
+	Bootloader/STM32/UsbDevice/FS/usb_device.c \
+	Bootloader/STM32/UsbDevice/FS/usbd_conf.c \
+	Bootloader/STM32/UsbDevice/FS/usbd_desc.c \
+	Bootloader/STM32/UsbDevice/FS/usbd_cdc_if.c
+	
+	C_INCLUDES += \
+	-IBootloader/STM32/UsbDevice/FS
+else
+	C_SOURCES += \
+	Bootloader/STM32/UsbDevice/HS/usb_device.c \
+	Bootloader/STM32/UsbDevice/HS/usbd_conf.c \
+	Bootloader/STM32/UsbDevice/HS/usbd_desc.c \
+	Bootloader/STM32/UsbDevice/HS/usbd_cdc_if.c
+	
+	C_INCLUDES += \
+	-IBootloader/STM32/UsbDevice/HS
+endif
+
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
