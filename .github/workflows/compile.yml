@@ -16,13 +16,6 @@ jobs:
       fail-fast: false
       matrix:
         config: [
-          stm32l4xx,
-          stm32f7xx,
-          stm32f7xx_ram,
-          stm32h7xx,
-          stm32h7xx secure=true,
-          stm32h7xx_ram,
-          stm32h7xx_ram secure=true,
           nucleo_h755zi,
           nucleo_h755zi_ram,
           matek_H7_slim,
@@ -30,7 +23,16 @@ jobs:
           matek_H7_slim_ram,
           matek_H7_slim_ram secure=true,
           pixhawk4,
-          pixhawk4_ram
+          pixhawk4_ram,
+          stm32l4xx,
+          stm32f7xx,
+          stm32f7xx_ram,
+          stm32h7xx,
+          stm32h7xx secure=true,
+          stm32h7xx_ram,
+          stm32h7xx_ram secure=true,
+          stm32h735g_dk,
+          stm32h735g_dk_ram
           ]
           
     container:       
