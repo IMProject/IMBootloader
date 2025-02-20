@@ -64,6 +64,14 @@
 #define LED_ON                  GPIO_PIN_RESET
 #define LED_OFF                 GPIO_PIN_SET
 #define PWR_SUPPLY              PWR_LDO_SUPPLY
+#elif defined(STM32H735G_DK)
+#define LED1_Pin                GPIO_PIN_3      //!< Pin defined for green LED
+#define LED1_Port               GPIOC
+#define LED2_Pin                GPIO_PIN_2      //!< Pin defined for red LED
+#define LED2_Port               GPIOC
+#define LED_ON                  GPIO_PIN_RESET
+#define LED_OFF                 GPIO_PIN_SET
+#define PWR_SUPPLY              PWR_DIRECT_SMPS_SUPPLY
 #else
 #define LED1_Pin                GPIO_PIN_13
 #define LED1_Port               GPIOC

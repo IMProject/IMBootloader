@@ -117,6 +117,7 @@ TARGETS	= \
 	stm32f7xx \
 	stm32f7xx_ram \
 	stm32h735g_dk \
+	stm32h735g_dk_ram \
 	matek_H7_slim \
 	matek_H7_slim_ram \
 	nucleo_h755zi \
@@ -156,6 +157,9 @@ pixhawk4_ram:
 	
 stm32h735g_dk:
 	${MAKE} stm32h7xx BOARD=STM32H735G_DK BOARD_FILE_NAME=$@
+	
+stm32h735g_dk_ram:
+	${MAKE} stm32h7xx_ram BOARD=STM32H735G_DK BOARD_FILE_NAME=$@
 	
 test_cmock test_all test_clean:
 	${MAKE} -C Tests $@
