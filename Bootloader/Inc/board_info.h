@@ -63,6 +63,8 @@
 #define PRODUCT_TYPE    (const char*)("IMProject_demo-nucleo_h755zi")   // Maximum allowed size is 100 characters (101 bytes)
 #elif defined(PIXHAWK4)
 #define PRODUCT_TYPE    (const char*)("IMProject_demo-pixhawk4")        // Maximum allowed size is 100 characters (101 bytes)
+#elif defined(STM32H735G_DK)
+#define PRODUCT_TYPE    (const char*)("IMProject_demo-stm32h735g_dk")   // Maximum allowed size is 100 characters (101 bytes)
 #else
 #define PRODUCT_TYPE    (const char*)("Product_type_name-board_name")   // Maximum allowed size is 100 characters (101 bytes)
 #endif

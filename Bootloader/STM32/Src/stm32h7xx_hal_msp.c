@@ -76,6 +76,7 @@ HAL_MspInit(void) {
     /* USER CODE END MspInit 1 */
 }
 
+#ifndef STM32H735xx
 /**
 * @brief QSPI MSP Initialization
 * This function configures the hardware resources used in this example
@@ -169,6 +170,8 @@ HAL_QSPI_MspDeInit(QSPI_HandleTypeDef* hqspi) {
     }
 
 }
+
+#endif
 
 /**
 * @brief RNG MSP Initialization
