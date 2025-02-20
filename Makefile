@@ -36,10 +36,6 @@ Bootloader/Adapters/Src/security_adapter.c \
 Bootloader/Adapters/Src/system_adapter.c \
 Bootloader/Adapters/Src/system_clock_adapter.c \
 Bootloader/Library/Src/software_info.c \
-Bootloader/STM32/Src/usb_device.c \
-Bootloader/STM32/Src/usbd_conf.c \
-Bootloader/STM32/Src/usbd_desc.c \
-Bootloader/STM32/Src/usbd_cdc_if.c \
 Bootloader/Utility/Src/base64.c \
 Bootloader/Utility/Src/crc/crc32_base.c \
 Bootloader/Utility/Src/crc/crc32_variants/crc32_bzip2.c \
@@ -110,7 +106,7 @@ cppcheck:
 misra:
 	$(call colorecho,'Checking MISRA C:2012 with cppcheck')
 	@cppcheck cppcheck $(COMMON_INCS) Bootloader --force --addon=misra.py --inline-suppr --error-exitcode=1 \
-	-i Bootloader/Utility
+	-i Bootloader/Utility -i Bootloader/STM32
 #
 # Bootloaders to build
 #
@@ -120,6 +116,7 @@ TARGETS	= \
 	stm32h7xx_ram \
 	stm32f7xx \
 	stm32f7xx_ram \
+	stm32h735g_dk \
 	matek_H7_slim \
 	matek_H7_slim_ram \
 	nucleo_h755zi \
@@ -136,6 +133,7 @@ clean:
 #
 # Board specific targets.
 #
+export USB = FS
 BOARD =
 
 matek_H7_slim:
@@ -156,13 +154,15 @@ pixhawk4:
 pixhawk4_ram:
 	${MAKE} stm32f7xx_ram BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
 	
+stm32h735g_dk:
+	${MAKE} stm32h7xx BOARD=STM32H735G_DK BOARD_FILE_NAME=$@
+	
 test_cmock test_all test_clean:
 	${MAKE} -C Tests $@
 
 #
 # Microcontroller (MCU) specific targets.
 #
-
 stm32l4xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32l4xx LDSCRIPT=STM32L4xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
 

@@ -82,9 +82,6 @@ MX_USB_DEVICE_Init(void) {
     if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
         Error_Handler();
     }
-    /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
-
-    /* USER CODE END USB_DEVICE_Init_PostTreatment */
 }
 
 /**
