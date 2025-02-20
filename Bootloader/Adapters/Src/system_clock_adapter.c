@@ -136,9 +136,6 @@ SystemClock_Config(void) {
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
         Error_Handler();
     }
-    /** Enable USB Voltage detector
-    */
-    HAL_PWREx_EnableUSBVoltageDetector();
 }
 #elif defined(STM32F7xx)
 void

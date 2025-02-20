@@ -82,6 +82,10 @@ MX_USB_DEVICE_Init(void) {
     if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
         Error_Handler();
     }
+
+#ifdef STM32H7xx
+    HAL_PWREx_EnableUSBVoltageDetector();
+#endif
 }
 
 /**
