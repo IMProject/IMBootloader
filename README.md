@@ -24,9 +24,10 @@ Each MCU has its own example of [IMLedBlink](https://github.com/IMProject/IMLedB
 
 | Board                                                                      |MCU       |
 | -------------------------------------------------------------------------- |:--------:|
-| [Mateksys h743-slim](http://www.mateksys.com/?portfolio=h743-slim)         |STM32H7xx |
+| [Mateksys h743-slim](http://www.mateksys.com/?portfolio=h743-slim)         |STM32H743 |
 | [NUCLEO-H755ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html) |STM32H755ZI |
-| [Pixhawk 4](https://docs.px4.io/master/en/flight_controller/pixhawk4.html) |STM32F7xx |
+| [Pixhawk 4](https://docs.px4.io/main/en/flight_controller/pixhawk4.html) |STM32F7xx |
+| [STM32H735G-DK](https://www.st.com/en/evaluation-tools/stm32h735g-dk.html) |STM32H735IG |
 
 #### How to add a new MCU?
 To add drivers, place them in the **Drivers** folder. Then, inside the **Bootloader/Adapters** folder, integrate the drivers with the IMBootloader code.
