@@ -76,7 +76,8 @@ LDFLAGS = $(MCU) -specs=nano.specs -TLinker/$(LD_NAME)$(LD_SUFFIX) $(LIBDIR) $(L
 LDFLAGS_SIGNATURE = $(MCU) -specs=nano.specs -TLinker/$(LD_NAME)_SIGNATURE$(LD_SUFFIX) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: debug signed
+all:	debug signed
+	arm-none-eabi-gcc -v
 
 debug: $(TARGET_DIR)/$(TARGET).elf $(TARGET_DIR)/$(TARGET).hex $(TARGET_DIR)/$(TARGET).bin
 
