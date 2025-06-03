@@ -38,10 +38,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef EXTERNAL_FLASH
+#ifdef EXTERNAL_FLASH // Selecting where will firmware go
 
-#include "quadspi.h"
-#include "w25q.h"
+//#include "quadspi.h"
+//#include "w25q.h"
+#define W25Q_CHIP_SIZE (20000U)
+#define W25Q_PAGE_SIZE 256U
 #define FIRMWARE_FLASH_SIZE_LIMIT W25Q_CHIP_SIZE
 #define PACKET_SIZE W25Q_PAGE_SIZE //TODO: this time size is 256 and 64 byte package can fit in, Check in the future.
 

@@ -55,7 +55,7 @@ main(void) {
     Communication_init();
     SecurityAdapter_init();
     BinaryUpdate_handleBootInfo();
-    bool enter_bootloader_loop = false;
+    bool enter_bootloader_loop = true;
     pFunction JumpToApplication;
 
 #ifdef SECURED
@@ -73,6 +73,7 @@ main(void) {
     }
 #endif
 
+#if 0
     // Check RAM KEY
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_RAM
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_RAM == MAGIC_KEY_VALUE) {
@@ -90,6 +91,7 @@ main(void) {
         BinaryUpdate_disableLoopFlag();
         enter_bootloader_loop = false;
     }
+#endif
 
 #if defined(BL_BUTTON_Pin) && defined(BL_BUTTON_Port) && defined(BL_BUTTON_ON) && defined(BL_BUTTON_PRESS_TIME)
     // Check bootloader button

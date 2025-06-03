@@ -27,8 +27,14 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#ifdef STM32H7xx
 #include "stm32h7xx.h"
 #include "stm32h7xx_hal.h"
+#elif defined(STM32N657xx)
+#include "stm32n6xx.h"
+#include "stm32n6xx_hal.h"
+#endif
+
 #include "usbd_def.h"
 
 /* USER CODE BEGIN INCLUDE */

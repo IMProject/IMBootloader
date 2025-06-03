@@ -194,7 +194,11 @@ Communication_handler(uint8_t* buf, uint32_t length) {
                 success = Communication_sendMessage(ack_pack, sizeof(ack_pack));
 
             } else if (0 == strcmp((char*)buf, IS_FW_PROTECTED_CMD)) {
+#ifdef INTERNAL_FLASH
                 bool is_flash_protected = FlashAdapter_isFlashRDPProtected();
+#else
+                bool is_flash_protected = false;
+#endif
 
                 if (is_flash_protected) {
                     success = Communication_sendMessage(true_str, sizeof(true_str));
@@ -382,6 +386,7 @@ Communication_mainLoop(const uint32_t timeout) {
         stay_in_loop = false;
     }
 
+#ifdef INTERNAL_FLASH
     if (s_rdp_enable_flag) {
         HAL_Delay(100); // wait for ACK to be send (main loop shall wait)
         stay_in_loop = FlashAdapter_setReadProtection(true);
@@ -392,6 +397,7 @@ Communication_mainLoop(const uint32_t timeout) {
         // BL is deleted after this, it needs to be flashed again
         stay_in_loop = FlashAdapter_setReadProtection(false);
     }
+#endif
 
     return stay_in_loop;
 }
@@ -426,7 +432,7 @@ Communication_sendStringWithCrc(uint8_t* string, size_t size) {
 inline static bool
 Communication_sendMessage(uint8_t* data, uint16_t length) {
 
-#ifdef STM32H735xx
+#if defined(STM32H735xx) || defined(STM32N6xx)
     return (CDC_Transmit_HS(data, length) == (uint8_t)USBD_OK);
 #else
     return (CDC_Transmit_FS(data, length) == (uint8_t)USBD_OK);
