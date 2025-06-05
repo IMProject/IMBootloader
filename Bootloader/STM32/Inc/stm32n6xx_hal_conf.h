@@ -50,7 +50,7 @@ extern "C" {
 /*#define HAL_I2C_MODULE_ENABLED   */
 /*#define HAL_I2S_MODULE_ENABLED   */
 /*#define HAL_I3C_MODULE_ENABLED   */
-#define HAL_ICACHE_MODULE_ENABLED
+/*#define HAL_ICACHE_MODULE_ENABLED */
 /*#define HAL_IRDA_MODULE_ENABLED   */
 /*#define HAL_IWDG_MODULE_ENABLED   */
 /*#define HAL_JPEG_MODULE_ENABLED   */
@@ -66,7 +66,7 @@ extern "C" {
 /*#define HAL_PSSI_MODULE_ENABLED   */
 /*#define HAL_RAMCFG_MODULE_ENABLED   */
 /*#define HAL_RIF_MODULE_ENABLED   */
-/*#define HAL_RNG_MODULE_ENABLED   */
+#define HAL_RNG_MODULE_ENABLED
 /*#define HAL_RTC_MODULE_ENABLED   */
 /*#define HAL_SAI_MODULE_ENABLED   */
 /*#define HAL_SD_MODULE_ENABLED   */

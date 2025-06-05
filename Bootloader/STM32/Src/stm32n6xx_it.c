@@ -62,7 +62,7 @@
 
 /* USER CODE BEGIN EV */
 
-extern PCD_HandleTypeDef hpcd_USB_OTG_HS1;
+extern PCD_HandleTypeDef hpcd_USB_OTG_HS;
 
 /* USER CODE END EV */
 
@@ -204,6 +204,23 @@ SysTick_Handler(void) {
 
     /* USER CODE END SysTick_IRQn 1 */
 }
+
+/**
+* @brief  This function handles USB-On-The-Go HS global interrupt interrupt.
+* @param  None
+* @retval None
+*/
+void
+USB1_OTG_HS_IRQHandler(void) {
+    /* USER CODE BEGIN OTG_HS_IRQHandler 0 */
+
+    /* USER CODE END OTG_HS_IRQHandler 0 */
+    HAL_PCD_IRQHandler(&hpcd_USB_OTG_HS);
+    /* USER CODE BEGIN OTG_HS_IRQHandler 1 */
+
+    /* USER CODE END OTG_HS_IRQHandler 1 */
+}
+
 
 /******************************************************************************/
 /* STM32N6xx Peripheral Interrupt Handlers                                    */
