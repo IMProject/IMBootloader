@@ -53,6 +53,9 @@ extern "C" {
 #elif defined(STM32F7xx)
 #include "stm32f7xx.h"
 #include "stm32f7xx_hal.h"
+#elif defined(STM32N657xx)
+#include "stm32n6xx.h"
+#include "stm32n6xx_hal.h"
 #endif
 
 void Error_Handler(void);

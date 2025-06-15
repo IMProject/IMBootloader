@@ -55,7 +55,7 @@ main(void) {
     Communication_init();
     SecurityAdapter_init();
     BinaryUpdate_handleBootInfo();
-    bool enter_bootloader_loop = false;
+    bool enter_bootloader_loop = true;
     pFunction JumpToApplication;
 
 #ifdef SECURED
@@ -73,17 +73,21 @@ main(void) {
     }
 #endif
 
+#if defined(MAGIC_KEY_ADDRESS_RAM)
     // Check RAM KEY
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_RAM
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_RAM == MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
+#endif
 
+#if defined(MAGIC_KEY_ADDRESS_FLASH)
     // Check FLASH KEY
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_FLASH
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_FLASH != MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
+#endif
 
     // Check for skip flag
     if (BinaryUpdate_checkSkipLoopFlag()) {
