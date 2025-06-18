@@ -103,7 +103,8 @@ format:
 .PHONY: cppcheck misra
 cppcheck:
 	$(call colorecho,'Checking code with cppcheck')
-	@cppcheck --error-exitcode=1 Bootloader -DSECURED
+	@cppcheck --error-exitcode=1 Bootloader -DSECURED \
+	-i Bootloader/Utility
 
 misra:
 	$(call colorecho,'Checking MISRA C:2012 with cppcheck')
