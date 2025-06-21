@@ -45,6 +45,13 @@ MEMORY
 /* Sections */
 SECTIONS
 {
+  .restart_info (NOLOAD) :
+  {
+    . = ALIGN(4);
+    KEEP(*(.restart_info))
+    . = ALIGN(4);
+  } >RAM1
+
   /* The startup code into "FLASH" Rom type memory */
   .isr_vector :
   {
@@ -126,11 +133,6 @@ SECTIONS
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
-
-  .restart_info : ALIGN(4)
-  {
-    KEEP(*(.restart_info))
-  } >RAM1 AT> FLASH
 
   /* Initialized data sections into "RAM" Ram type memory */
   .data :
