@@ -40,10 +40,11 @@
 
 __attribute__ ((section(".restart_info")))
 volatile bootInfo_S boot_info;              //!< Instruction on where to jump after the restart
-static uint64_t s_address;                  //!< Address from where to erase flash and write binary
+static uintptr_t s_address;                 //!< Address from where to erase flash and write binary
 static signatureType_E s_detected_binary;   //!< Detected binary
 
 static bool BinaryUpdate_writeToFlash(uint8_t* write_buffer, const uint32_t data_length);
+static bool BinaryUpdate_writeToRam(uint8_t* write_buffer, const uint32_t data_length);
 
 bool
 BinaryUpdate_handleDetectedBinary(signatureType_E detected_binary) {
@@ -150,12 +151,15 @@ BinaryUpdate_erase(uint32_t firmware_size) {
 bool
 BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length) {
 
-    bool success = false;
+    bool success = true;
+    uint32_t data_length = packet_length;
+    uint8_t* data = write_buffer;
 
     bool is_secured = Security_isSecured();
 
     if (is_secured) {
 
+        success = false;
         uint32_t data_length = packet_length - (MAC_SIZE + NONCE_SIZE);
 
         if (data_length > 0U) {
@@ -172,12 +176,31 @@ BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length) {
             success = Security_decrypt(mac, nonce, encrypted_data, decrypted_data, data_length);
 
             if (success) {
-                success = BinaryUpdate_writeToFlash(decrypted_data, data_length);
+                data = decrypted_data;
             }
         }
 
-    } else {
-        success = BinaryUpdate_writeToFlash(write_buffer, packet_length);
+    }
+
+    if (success) {
+
+        switch (s_detected_binary) {
+
+            case signatureType_FIRMWARE_FLASH:
+            case signatureType_BOOTLOADER_FLASH:
+            case signatureType_UNKNOWN:
+                success = BinaryUpdate_writeToFlash(data, data_length);
+                break;
+
+            case signatureType_FIRMWARE_RAM:
+            case signatureType_BOOTLOADER_RAM:
+                success = BinaryUpdate_writeToRam(data, data_length);
+                break;
+
+            default:
+                success = false;
+                break;
+        }
     }
 
     return success;
@@ -254,6 +277,21 @@ BinaryUpdate_writeToFlash(uint8_t* write_buffer, const uint32_t data_length) {
     }
 
     s_address += data_length;
+
+    return success;
+}
+
+bool
+BinaryUpdate_writeToRam(uint8_t* write_buffer, const uint32_t data_length) {
+
+    bool success = false;
+
+    memcpy ((void*)s_address, write_buffer, data_length);
+
+    if (0 == memcmp ((void*)s_address, write_buffer, data_length)) {
+        success = true;
+        s_address += data_length;
+    }
 
     return success;
 }
