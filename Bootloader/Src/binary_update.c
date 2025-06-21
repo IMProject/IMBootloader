@@ -250,8 +250,6 @@ BinaryUpdate_finish(void) {
             break;
     }
 
-    boot_info.end = 0xFF;
-
     return success;
 }
 
