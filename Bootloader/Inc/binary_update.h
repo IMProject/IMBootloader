@@ -41,9 +41,9 @@
 
 #pragma pack(push, 1)
 typedef struct bootInfo {
-    uint32_t jump_address;                  //!< Address for BL to jump
-    bool skip_bl_loop;                      //!< Flag to skip BL loop
-    uint8_t end; // FIXME: added here because after restart something is messing up with data in the structure and if there is an extra byte at the end it messes only with it
+    uint32_t jump_address;  //!< Address for BL to jump
+    bool skip_bl_loop;      //!< Flag to skip BL loop
+    uint8_t end;            //!< MCUs like the STM32H7 have issues preserving certain data unless an additional byte is written before reset.
 } bootInfo_S;
 #pragma pack(pop)
 

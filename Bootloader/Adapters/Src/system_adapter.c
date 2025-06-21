@@ -35,7 +35,14 @@
 #include "main.h"
 #include "system_adapter.h"
 
+#include "binary_update.h"
+
+extern __attribute__ ((section(".restart_info")))
+volatile bootInfo_S boot_info;
+
 void
 SystemAdapter_reset(void) {
+
+    boot_info.end = 0xFF; // Resolve known issue with STM32H7 MCUs. Memory must be written before reset to ensure data retention.
     HAL_NVIC_SystemReset();
 }
