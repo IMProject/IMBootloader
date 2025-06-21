@@ -51,6 +51,13 @@ SECTIONS
     KEEP(*(.bl_ram_signature))
   } >SIGNATURE
 
+  .restart_info (NOLOAD) :
+  {
+    . = ALIGN(4);
+    KEEP(*(.restart_info))
+    . = ALIGN(4);
+  } >RAM1
+
   /* The startup code into "RAM" Ram type memory */
   .isr_vector :
   {
@@ -131,14 +138,9 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
   } >RAM2
-
+  
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
-
-  .restart_info : ALIGN(4)
-  {
-    KEEP(*(.restart_info))
-  } >RAM1 AT> RAM2
 
   /* Initialized data sections into "RAM" Ram type memory */
   .data :
@@ -167,7 +169,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM1 AT> RAM2
+  } >RAM1
 
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
   ._user_heap_stack :
@@ -178,7 +180,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM1 AT> RAM2
+  } >RAM1
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :

@@ -53,7 +53,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x20020000;    /* end of RAM */
+_estack = ORIGIN(DTCMRAM) + LENGTH(DTCMRAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -62,8 +62,7 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
 DTCMRAM (xrw)    : ORIGIN = 0x20000000, LENGTH = 128K
-SIGNATURE (rx)   : ORIGIN = 0x23FFFFC0, LENGTH = 64 /* Never written to the RAM, it is for binary signature. */
-RAM_D1 (xrw)     : ORIGIN = 0x24000000, LENGTH = 512K
+RAM_D1 (xrw)     : ORIGIN = 0x24000000, LENGTH = 128K
 RAM_D2 (xrw)     : ORIGIN = 0x30000000, LENGTH = 288K
 RAM_D3 (xrw)     : ORIGIN = 0x38000000, LENGTH = 64K
 ITCMRAM (xrw)    : ORIGIN = 0x00000000, LENGTH = 64K
@@ -73,6 +72,13 @@ FLASH (rx)       : ORIGIN = 0x08000000, LENGTH = 128K
 /* Define output sections */
 SECTIONS
 {
+  .restart_info (NOLOAD) :
+  {
+    . = ALIGN(4);
+    KEEP(*(.restart_info))
+    . = ALIGN(4);
+  } >DTCMRAM
+
   /* The startup code goes first into RAM_D1 */
   .isr_vector :
   {
@@ -139,14 +145,16 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >RAM_D1
+  
+  .restart_info (NOLOAD) :
+  {
+    . = ALIGN(4);
+    KEEP(*(.restart_info))
+    . = ALIGN(4);
+  } >DTCMRAM
 
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
-  
-  .restart_info : ALIGN(4)
-  {
-    KEEP(*(.restart_info))
-  } >DTCMRAM AT> RAM_D1
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : 
@@ -156,11 +164,11 @@ SECTIONS
     *(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
 
-    . = ALIGN(4);
+    . = ALIGN(8);
+    . = . + 4;         /* Workaround for AXISRAM preserving data after reset*/
     _edata = .;        /* define a global symbol at data end */
   } >DTCMRAM AT> RAM_D1
 
-  
   /* Uninitialized data section */
   . = ALIGN(4);
   .bss :
@@ -175,7 +183,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >DTCMRAM AT> RAM_D1
+  } >DTCMRAM
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
@@ -186,7 +194,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >DTCMRAM AT> RAM_D1
+  } >DTCMRAM
   
 
   /* Remove information from the standard libraries */

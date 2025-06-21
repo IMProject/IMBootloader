@@ -66,13 +66,19 @@ RAM_D1 (xrw)     : ORIGIN = 0x24000000, LENGTH = 128K
 RAM_D2 (xrw)     : ORIGIN = 0x30000000, LENGTH = 288K
 RAM_D3 (xrw)     : ORIGIN = 0x38000000, LENGTH = 64K
 ITCMRAM (xrw)    : ORIGIN = 0x00000000, LENGTH = 64K
-SIGNATURE (rx)   : ORIGIN = 0x07FFFFC0, LENGTH = 64 /* Never written to the FLASH, it is for binary signature. */
 FLASH (rx)       : ORIGIN = 0x08000000, LENGTH = 128K
 }
 
 /* Define output sections */
 SECTIONS
 {
+  .restart_info (NOLOAD) :
+  {
+    . = ALIGN(4);
+    KEEP(*(.restart_info))
+    . = ALIGN(4);
+  } >DTCMRAM
+
   /* The startup code goes first into FLASH */
   .isr_vector :
   {
@@ -139,14 +145,9 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
-
-  /* used by the startup to initialize data */
-  _sidata = LOADADDR(.data);
   
-  .restart_info : ALIGN(4)
-  {
-    KEEP(*(.restart_info))
-  } >DTCMRAM AT> FLASH
+    /* used by the startup to initialize data */
+  _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : 
@@ -160,7 +161,6 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
   } >DTCMRAM AT> FLASH
 
-  
   /* Uninitialized data section */
   . = ALIGN(4);
   .bss :
