@@ -81,8 +81,10 @@ MX_USB_DEVICE_Init(void) {
         Error_Handler();
     }
 
+#ifdef STM32H7xx
     /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
     HAL_PWREx_EnableUSBVoltageDetector();
+#endif
 
     /* USER CODE END USB_DEVICE_Init_PostTreatment */
 }

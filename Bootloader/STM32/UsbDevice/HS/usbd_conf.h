@@ -31,8 +31,13 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include "main.h"
+#ifdef STM32H7xx
 #include "stm32h7xx.h"
 #include "stm32h7xx_hal.h"
+#elif defined(STM32N657xx)
+#include "stm32n6xx.h"
+#include "stm32n6xx_hal.h"
+#endif
 
 /* USER CODE BEGIN INCLUDE */
 

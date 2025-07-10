@@ -19,8 +19,13 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#ifdef STM32H7xx
 #include "stm32h7xx.h"
 #include "stm32h7xx_hal.h"
+#elif STM32N6xx
+#include "stm32n6xx.h"
+#include "stm32n6xx_hal.h"
+#endif
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_cdc.h"
@@ -63,6 +68,7 @@ USBD_StatusTypeDef USBD_Get_USB_Status(HAL_StatusTypeDef hal_status);
 *******************************************************************************/
 /* MSP Init */
 
+#ifdef STM32H7xx
 void
 HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
@@ -112,6 +118,106 @@ HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle) {
         /* USER CODE END USB_OTG_HS_MspDeInit 1 */
     }
 }
+
+#elif STM32N6xx
+void
+HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle) {
+    if (pcdHandle->Instance == USB1_OTG_HS) {
+        /* USER CODE BEGIN USB_OTG_HS_MspInit 0 */
+
+        /* USER CODE END USB_OTG_HS_MspInit 0 */
+        /* Enable VDDUSB */
+        __HAL_RCC_PWR_CLK_ENABLE();
+        HAL_PWREx_EnableVddUSBVMEN();
+        while (!__HAL_PWR_GET_FLAG(PWR_FLAG_USB33RDY));
+        HAL_PWREx_EnableVddUSB();
+
+        /** Initializes the peripherals clock
+        */
+        RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+        PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USBOTGHS1;
+        PeriphClkInitStruct.UsbOtgHs1ClockSelection = RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT;
+
+        if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
+            /* Initialization Error */
+            Error_Handler();
+        }
+
+        /** Set USB OTG HS PHY1 Reference Clock Source */
+        PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USBPHY1;
+        PeriphClkInitStruct.UsbPhy1ClockSelection = RCC_USBPHY1REFCLKSOURCE_HSE_DIRECT;
+
+        if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
+            /* Initialization Error */
+            Error_Handler();
+        }
+
+        __HAL_RCC_GPIOA_CLK_ENABLE();
+
+        LL_AHB5_GRP1_ForceReset(0x00800000);
+        __HAL_RCC_USB1_OTG_HS_FORCE_RESET();
+        __HAL_RCC_USB1_OTG_HS_PHY_FORCE_RESET();
+
+        LL_RCC_HSE_SelectHSEDiv2AsDiv2Clock();
+        LL_AHB5_GRP1_ReleaseReset(0x00800000);
+
+        /* Peripheral clock enable */
+        __HAL_RCC_USB1_OTG_HS_CLK_ENABLE();
+
+        /* Required few clock cycles before accessing USB PHY Controller Registers */
+        HAL_Delay(1);
+
+        USB1_HS_PHYC->USBPHYC_CR &= ~(0x7 << 0x4);
+
+        USB1_HS_PHYC->USBPHYC_CR |= (0x1 << 16) |
+                                    (0x2 << 4)  |
+                                    (0x1 << 2)  |
+                                    0x1U;
+
+        __HAL_RCC_USB1_OTG_HS_PHY_RELEASE_RESET();
+
+        /* Required few clock cycles before Releasing Reset */
+        HAL_Delay(1);
+
+        __HAL_RCC_USB1_OTG_HS_RELEASE_RESET();
+
+        /* Peripheral PHY clock enable */
+        __HAL_RCC_USB1_OTG_HS_PHY_CLK_ENABLE();
+
+        /* USB_OTG_HS interrupt Init */
+        HAL_NVIC_SetPriority(USB1_OTG_HS_IRQn, 7, 0);
+        HAL_NVIC_EnableIRQ(USB1_OTG_HS_IRQn);
+
+        /* USER CODE BEGIN USB_OTG_HS_MspInit 1 */
+
+        /* USER CODE END USB_OTG_HS_MspInit 1 */
+    }
+}
+
+void
+HAL_PCD_MspDeInit(PCD_HandleTypeDef* hpcd) {
+    if (hpcd->Instance == USB1_OTG_HS) {
+        /* USER CODE BEGIN USB1_OTG_HS_MspDeInit 0 */
+
+        /* USER CODE END USB1_OTG_HS_MspDeInit 0 */
+        /* Peripheral clock disable */
+        __HAL_RCC_USB1_OTG_HS_CLK_DISABLE();
+
+        /* Disable VDDUSB */
+        if (__HAL_RCC_PWR_IS_CLK_ENABLED()) {
+            __HAL_RCC_PWR_CLK_ENABLE();
+            HAL_PWREx_DisableVddUSB();
+            __HAL_RCC_PWR_CLK_DISABLE();
+        } else {
+            HAL_PWREx_DisableVddUSB();
+        }
+        /* USER CODE BEGIN USB1_OTG_HS_MspDeInit 1 */
+
+        /* USER CODE END USB1_OTG_HS_MspDeInit 1 */
+    }
+}
+
+#endif
 
 /**
   * @brief  Setup stage callback
@@ -326,11 +432,17 @@ USBD_LL_Init(USBD_HandleTypeDef* pdev) {
         hpcd_USB_OTG_HS.pData = pdev;
         pdev->pData = &hpcd_USB_OTG_HS;
 
+#ifdef STM32H7xx
         hpcd_USB_OTG_HS.Instance = USB_OTG_HS;
-        hpcd_USB_OTG_HS.Init.dev_endpoints = 9;
         hpcd_USB_OTG_HS.Init.speed = PCD_SPEED_FULL;
-        hpcd_USB_OTG_HS.Init.dma_enable = DISABLE;
         hpcd_USB_OTG_HS.Init.phy_itface = USB_OTG_EMBEDDED_PHY;
+#elif STM32N6xx
+        hpcd_USB_OTG_HS.Instance = USB1_OTG_HS;
+        hpcd_USB_OTG_HS.Init.speed = PCD_SPEED_HIGH;
+        hpcd_USB_OTG_HS.Init.phy_itface = USB_OTG_HS_EMBEDDED_PHY;
+#endif
+        hpcd_USB_OTG_HS.Init.dev_endpoints = 9;
+        hpcd_USB_OTG_HS.Init.dma_enable = DISABLE;
         hpcd_USB_OTG_HS.Init.Sof_enable = DISABLE;
         hpcd_USB_OTG_HS.Init.low_power_enable = DISABLE;
         hpcd_USB_OTG_HS.Init.lpm_enable = DISABLE;

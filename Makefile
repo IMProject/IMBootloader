@@ -60,8 +60,7 @@ export COMMON_INCS = \
 -IMonocypher/src \
 -IDrivers/CMSIS/Include \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
--IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
--IExternalDevices/Winbond/Inc/
+-IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
 
 #######################################
 # binaries
@@ -151,6 +150,9 @@ nucleo_h755zi:
 
 nucleo_h755zi_ram:
 	${MAKE} stm32h7xx_ram BOARD=NUCLEO_H755ZI BOARD_FILE_NAME=$@
+	
+nucleo_n657x0_q_ram:
+	${MAKE} stm32n6xx_ram BOARD=NUCLEO_N657X0_Q BOARD_FILE_NAME=$@
 
 pixhawk4:
 	${MAKE} stm32f7xx BOARD=PIXHAWK4 BOARD_FILE_NAME=$@
@@ -181,6 +183,9 @@ stm32h7xx_ram: $(MAKEFILE_LIST)
 
 stm32h7xx_ext: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
+	
+stm32n6xx_ram: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32n6xx LDSCRIPT=STM32N6xx_RAM.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
 
 stm32f7xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32f7xx LDSCRIPT=STM32F7xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@

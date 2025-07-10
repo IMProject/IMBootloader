@@ -62,6 +62,11 @@ ifeq ($(secure), true)
 	-DSECURED
 endif
 
+# Quick method to add the -mcmse flag for STM32N6xx MCUs (TrustZone support)
+ifeq (STM32N6xx, $(findstring STM32N6xx, $(LDSCRIPT)))
+	CFLAGS += -mcmse 
+endif
+
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
