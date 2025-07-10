@@ -53,27 +53,33 @@ static uint32_t type_program = FLASH_TYPEPROGRAM_FLASHWORD;
 #define FLASH_WORD_SIZE     (4U)                //!< Flash word size in bytes
 #endif
 
+#ifdef INTERNAL_FLASH
 HAL_StatusTypeDef ActivateProtection(FLASH_OBProgramInitTypeDef* ob_struct, uint32_t protect_address_start, uint32_t protect_address_end);
+#endif
 
 #ifdef EXTERNAL_FLASH
 bool
 FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
-    return W25q_dynamicErase(firmware_size, flash_address);
+    //return W25q_dynamicErase(firmware_size, flash_address);
+    return true;
 }
 
 bool
 FlashAdapter_blockErase(uint32_t address) {
-    return W25q_blockErase64k(address);
+    //return W25q_blockErase64k(address);
+    return true;
 }
 
 bool
 FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
-    return W25q_quadPageProgram(address, buffer, length);
+    //return W25q_quadPageProgram(address, buffer, length);
+    return true;
 }
 
 bool
 FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
-    return W25q_readBytes(address, buffer, length);
+    //return W25q_readBytes(address, buffer, length);
+    return true;
 }
 
 bool

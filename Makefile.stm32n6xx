@@ -1,0 +1,79 @@
+
+######################################
+# source
+######################################
+# C sources
+C_SOURCES = $(COMMON_SRCS)\
+Bootloader/STM32/Src/system_stm32n6xx.c \
+Bootloader/STM32/Src/stm32n6xx_hal_msp.c \
+Bootloader/STM32/Src/stm32n6xx_it.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_cortex.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_icache.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc_ex.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_gpio.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_dma.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_dma_ex.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pwr.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pwr_ex.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_exti.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pcd.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pcd_ex.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_ll_usb.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_usart.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_usart_ex.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart_ex.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart.c
+
+# ASM sources
+ASM_SOURCES =  \
+Startup/startup_stm32n657xx.s
+
+# C includes
+C_INCLUDES = $(COMMON_INCS) \
+-IDrivers/STM32N6xx_HAL_Driver/Inc \
+-IDrivers/STM32N6xx_HAL_Driver/Inc/Legacy \
+-IDrivers/CMSIS/Device/ST/STM32N6xx/Include \
+-IDrivers/CMSIS/Include
+ 
+#######################################
+# CFLAGS
+#######################################
+# cpu
+CPU = -mcpu=cortex-m55
+
+# fpu
+FPU = -mfpu=fpv5-d16
+
+# float-abi
+FLOAT-ABI = -mfloat-abi=hard
+
+# mcu
+MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+
+# macros for gcc
+# AS defines
+AS_DEFS = 
+
+# C defines
+C_DEFS = \
+-DUSE_HAL_DRIVER \
+-DSTM32N6xx \
+-DSTM32N657xx
+
+ifeq ($(BOARD), NUCLEO_N657X0_Q)
+  C_DEFS += \
+  -DUSE_NUCLEO_64 \
+  -DUSE_FULL_LL_DRIVER
+endif
+
+#Select USB High Speed
+USB=HS
+
+# AS includes
+AS_INCLUDES = 
+
+include Makefile.common
+
+# *** EOF ***

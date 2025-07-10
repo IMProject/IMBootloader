@@ -47,6 +47,8 @@
 
 typedef void (*pFunction)(void);
 
+static void JumpToAddress();
+
 int
 main(void) {
     HAL_Init();
@@ -56,7 +58,6 @@ main(void) {
     SecurityAdapter_init();
     BinaryUpdate_handleBootInfo();
     bool enter_bootloader_loop = false;
-    pFunction JumpToApplication;
 
 #ifdef SECURED
     if (!FlashAdapter_isFlashRDPProtected()) {
@@ -73,17 +74,21 @@ main(void) {
     }
 #endif
 
+#if defined(MAGIC_KEY_ADDRESS_RAM)
     // Check RAM KEY
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_RAM
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_RAM == MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
+#endif
 
+#if defined(MAGIC_KEY_ADDRESS_FLASH)
     // Check FLASH KEY
     // cppcheck-suppress misra-c2012-11.4; conversion is needed to get value that is stored at MAGIC_KEY_ADDRESS_FLASH
     if (*(uint64_t*)MAGIC_KEY_ADDRESS_FLASH != MAGIC_KEY_VALUE) {
         enter_bootloader_loop = true;
     }
+#endif
 
     // Check for skip flag
     if (BinaryUpdate_checkSkipLoopFlag()) {
@@ -113,23 +118,65 @@ main(void) {
         }
 
         GpioAdapter_led1Off();
+
+#if defined(STM32N657xx)
+        JumpToAddress();
+#else
         SystemAdapter_reset();
+#endif
+
     }
 
-    SysTick->CTRL = 0;
-    SysTick->LOAD = 0;
-    SysTick->VAL  = 0;
-
-    uint32_t jump_address = BinaryUpdate_getJumpAddress();
-
-    SCB->VTOR = jump_address;
-    // cppcheck-suppress misra-c2012-11.4; conversion is needed to jump to the application
-    JumpToApplication = (pFunction) (*(__IO uint32_t*) (jump_address + 4U));
-    // cppcheck-suppress misra-c2012-11.4; conversion is needed to jump to the application
-    __set_MSP(*(__IO uint32_t*) jump_address);
-    JumpToApplication();
+    JumpToAddress();
 
     return -1; //error
+}
+
+static void
+JumpToAddress() {
+
+    pFunction JumpToApplication;
+    uint32_t primask_bit;
+    uint32_t application_vector;
+    /* Suspend SysTick */
+    HAL_SuspendTick();
+
+#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1U)
+    /* if I-Cache is enabled, disable I-Cache-----------------------------------*/
+    if (SCB->CCR & SCB_CCR_IC_Msk) {
+        SCB_DisableICache();
+    }
+#endif /* defined(ICACHE_PRESENT) && (ICACHE_PRESENT == 1U) */
+
+#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
+    /* if D-Cache is enabled, disable D-Cache-----------------------------------*/
+    if (SCB->CCR & SCB_CCR_DC_Msk) {
+        SCB_DisableDCache();
+    }
+#endif /* defined(DCACHE_PRESENT) && (DCACHE_PRESENT == 1U) */
+
+    /* Initialize user application's Stack Pointer & Jump to user application  */
+    primask_bit = __get_PRIMASK();
+    __disable_irq();
+
+    application_vector = BinaryUpdate_getJumpAddress();
+
+    SCB->VTOR = (uint32_t)application_vector;
+    JumpToApplication = (pFunction) (*(__IO uint32_t*)(application_vector + 4));
+
+#if ((defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1)) || \
+       (defined (__ARM_ARCH_8_1M_MAIN__ ) && (__ARM_ARCH_8_1M_MAIN__ == 1)) || \
+       (defined (__ARM_ARCH_8M_BASE__ ) && (__ARM_ARCH_8M_BASE__ == 1))    )
+    /* on ARM v8m, set MSPLIM before setting MSP to avoid unwanted stack overflow faults */
+    __set_MSPLIM(0x00000000);
+#endif  /* __ARM_ARCH_8M_MAIN__ or __ARM_ARCH_8M_BASE__ */
+
+    __set_MSP(*(__IO uint32_t*)application_vector);
+
+    /* Re-enable the interrupts */
+    __set_PRIMASK(primask_bit);
+
+    JumpToApplication();
 }
 
 void

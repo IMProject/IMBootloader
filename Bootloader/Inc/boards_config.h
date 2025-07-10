@@ -72,6 +72,19 @@
 #define LED_ON                  GPIO_PIN_RESET
 #define LED_OFF                 GPIO_PIN_SET
 #define PWR_SUPPLY              PWR_DIRECT_SMPS_SUPPLY
+#elif defined(NUCLEO_N657X0_Q)
+#define LED1_Pin                GPIO_PIN_8      //!< Pin defined for blue LED
+#define LED1_Port               GPIOG
+#define LED2_Pin                GPIO_PIN_10      //!< Pin defined for red LED
+#define LED2_Port               GPIOG
+#define LED_ON                  GPIO_PIN_RESET
+#define LED_OFF                 GPIO_PIN_SET
+#define BL_BUTTON_Pin           GPIO_PIN_13      //!< Button for entering in BL if pressed at boot time
+#define BL_BUTTON_Port          GPIOC
+#define BL_BUTTON_ON            GPIO_PIN_SET
+#define BL_BUTTON_OFF           GPIO_PIN_RESET
+#define BL_BUTTON_PRESS_TIME    500u            //!< Time in [ms] needed for button to be pressed to enter in BL
+#define PWR_SUPPLY              PWR_DIRECT_SMPS_SUPPLY
 #else
 #define LED1_Pin                GPIO_PIN_13
 #define LED1_Port               GPIOC
