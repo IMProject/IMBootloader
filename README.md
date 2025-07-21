@@ -17,8 +17,9 @@ Each MCU has its own example of [IMLedBlink](https://github.com/IMProject/IMLedB
 #### Currently supported MCUs
 
 * STM32L4xx
-* STM32H7xx
 * STM32F7xx
+* STM32H7xx
+* STM32N657X0
 
 #### Currently supported boards
 
@@ -26,6 +27,7 @@ Each MCU has its own example of [IMLedBlink](https://github.com/IMProject/IMLedB
 | -------------------------------------------------------------------------- |:--------:|
 | [Mateksys h743-slim](http://www.mateksys.com/?portfolio=h743-slim)         |STM32H743 |
 | [NUCLEO-H755ZI-Q](https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html) |STM32H755ZI |
+| [NUCLEO-N657X0](https://www.st.com/en/evaluation-tools/nucleo-n657x0-q.html) |STM32N657X0 |
 | [Pixhawk 4](https://docs.px4.io/main/en/flight_controller/pixhawk4.html) |STM32F7xx |
 | [STM32H735G-DK](https://www.st.com/en/evaluation-tools/stm32h735g-dk.html) |STM32H735IG |
 
