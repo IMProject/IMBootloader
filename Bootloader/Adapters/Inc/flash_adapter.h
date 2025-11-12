@@ -40,9 +40,8 @@
 
 #ifdef EXTERNAL_FLASH // Selecting where will firmware go
 
-// TODO: add support for external flash chip
-#define FIRMWARE_FLASH_SIZE_LIMIT (100000U)
-#define PACKET_SIZE 256U //TODO: this time size is 256 and 64 byte package can fit in, Check in the future.
+#define FIRMWARE_FLASH_SIZE_LIMIT   (100000U)
+#define PACKET_SIZE                 (256U)
 
 #else
 #define FIRMWARE_FLASH_SIZE_LIMIT (FLASH_SIZE - 0x8000u)    //!< Max available flash size for firmware. Flash bank size - FW start address
@@ -68,9 +67,11 @@
 #define MAGIC_KEY_ADDRESS_FLASH     (0x08020200UL)          //!< Flash address in internal flash for communication between bootloader and firmware
 #define MAGIC_KEY_ADDRESS_RAM       (0x20070000UL)          //!< Flash address in ram for communication between bootloader and firmware
 #elif defined(STM32N6xx)
-#define FLASH_FIRMWARE_ADDRESS      (0x08020000UL)          //!< Flash address where firmware will be written
-#define FLASH_BOOTLOADER_ADDRESS    (0x08000000UL)          //!< Flash address where bootloader will be written
+#define FLASH_FIRMWARE_ADDRESS      (0x70100400UL)          //!< Flash address where firmware will be written
+#define FLASH_BOOTLOADER_ADDRESS    (0x70100400UL)          //!< Flash address where bootloader (SSBL) will be written
 #define RAM_FIRMWARE_ADDRESS        (0x34000000UL)          //!< RAM address where firmware will be written
+#define FLASH_ADDRESS_BASE          (0x70000000UL)          //!< Address where the external flash starts
+#define FLASH_ADDRESS_OFFSET        (0x400UL)               //!< For compatibility with the STM32 SigningTool header
 #else // UnitTest
 #define FLASH_FIRMWARE_ADDRESS      (0x08020000UL)          //!< Flash address where firmware will be written
 #define FLASH_BOOTLOADER_ADDRESS    (0x08000000UL)          //!< Flash address where bootloader will be written
@@ -92,5 +93,8 @@ bool FlashAdapter_setReadProtection(bool enable);
 /* proprietary code readout protection */
 bool FlashAdapter_setPCROP(bool enable, uint32_t protect_address_start, uint32_t protect_address_end);
 
+#ifdef EXTERNAL_FLASH
+void FlashAdapter_init(void);
+#endif
 
 #endif /* BOOTLOADER_INC_FLASH_ADAPTER_H_ */

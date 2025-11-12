@@ -47,6 +47,7 @@ GpioAdapter_init(void) {
     __HAL_RCC_GPIOF_CLK_ENABLE();
 #if defined(STM32N657xx)
     __HAL_RCC_GPIOG_CLK_ENABLE();
+    __HAL_RCC_GPION_CLK_ENABLE();
 #endif
 
 #if defined(LED1_Pin) && defined(LED1_Port) && defined(LED_OFF)

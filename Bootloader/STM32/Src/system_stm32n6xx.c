@@ -182,11 +182,10 @@ SystemInit(void) {
     SCB->VTOR = INTVECT_START;
 #endif  /* USER_VECT_TAB_ADDRESS */
 
-    /* RNG reset */
-    RCC->AHB3RSTSR = RCC_AHB3RSTSR_RNGRSTS;
-    RCC->AHB3RSTCR = RCC_AHB3RSTCR_RNGRSTC;
-    /* Deactivate RNG clock */
-    RCC->AHB3ENCR = RCC_AHB3ENCR_RNGENC;
+    /* System configuration setup */
+    RCC->APB4ENSR2 = RCC_APB4ENSR2_SYSCFGENS;
+    /* Delay after an RCC peripheral clock enabling */
+    (void)RCC->APB4ENR2;
 
     /* Clear SAU regions */
     SAU->RNR = 0;
@@ -234,9 +233,11 @@ SystemInit(void) {
     (void) RCC->APB4ENR2;
     RCC->APB4ENR2 &= ~(0x00000010UL);
 
+#if defined(EXTERNAL_FLASH) && defined(LDS_RAM_VERSION)
     /* XSPI2 & XSPIM reset                                  */
     RCC->AHB5RSTSR = RCC_AHB5RSTSR_XSPIMRSTS | RCC_AHB5RSTSR_XSPI2RSTS;
     RCC->AHB5RSTCR = RCC_AHB5RSTCR_XSPIMRSTC | RCC_AHB5RSTCR_XSPI2RSTC;
+#endif
 
 #if defined(USER_TZ_SAU_SETUP)
     /* SAU/IDAU, FPU and Interrupts secure/non-secure allocation settings */

@@ -38,7 +38,11 @@ static const uint64_t signature_magic_key = 0xDEC0DE5528101987;    //!< First 8 
 
 __attribute__ ((section(".bl_flash_signature"))) signature_S bl_flash_signature = {
     .magic_key = signature_magic_key,
-    .type = signatureType_BOOTLOADER_FLASH
+#if defined (EXTERNAL_FLASH)
+    .type = signatureType_BOOTLOADER_EXT_FLASH
+#else
+    .type = signatureType_BOOTLOADER_INT_FLASH
+#endif
 };
 
 __attribute__ ((section(".bl_ram_signature"))) signature_S bl_ram_signature = {
@@ -60,11 +64,14 @@ Signature_verification(const signature_S* signature) {
             case signatureType_FIRMWARE_RAM:
                 detected_binary = signatureType_FIRMWARE_RAM;
                 break;
-            case signatureType_BOOTLOADER_FLASH:
-                detected_binary = signatureType_BOOTLOADER_FLASH;
+            case signatureType_BOOTLOADER_INT_FLASH:
+                detected_binary = signatureType_BOOTLOADER_INT_FLASH;
                 break;
             case signatureType_BOOTLOADER_RAM:
                 detected_binary = signatureType_BOOTLOADER_RAM;
+                break;
+            case signatureType_BOOTLOADER_EXT_FLASH:
+                detected_binary = signatureType_BOOTLOADER_EXT_FLASH;
                 break;
             default:
                 detected_binary = signatureType_UNKNOWN;
