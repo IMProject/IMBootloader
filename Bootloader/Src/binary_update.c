@@ -58,7 +58,8 @@ BinaryUpdate_handleDetectedBinary(signatureType_E detected_binary) {
             s_address = FLASH_FIRMWARE_ADDRESS;
             break;
 
-        case signatureType_BOOTLOADER_FLASH:
+        case signatureType_BOOTLOADER_INT_FLASH:
+        case signatureType_BOOTLOADER_EXT_FLASH:
             s_address = FLASH_BOOTLOADER_ADDRESS;
             break;
 
@@ -86,12 +87,20 @@ BinaryUpdate_handleBootInfo(void) {
     switch (boot_info.jump_address) {
 
         case FLASH_FIRMWARE_ADDRESS:
+#ifndef STM32N6xx
         case FLASH_BOOTLOADER_ADDRESS:
+#endif
         case RAM_FIRMWARE_ADDRESS:
             break;
 
         default:
+#if defined(EXTERNAL_FLASH) && defined(LDS_RAM_VERSION) // FSBL
+            boot_info.jump_address = FLASH_BOOTLOADER_ADDRESS;
+#elif defined(EXTERNAL_FLASH) // SSBL
+            boot_info.jump_address = RAM_FIRMWARE_ADDRESS;
+#else
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
+#endif
             boot_info.skip_bl_loop = false;
             break;
     }
@@ -126,8 +135,15 @@ BinaryUpdate_erase(uint32_t firmware_size) {
         case signatureType_FIRMWARE_FLASH:
             success = FlashAdapter_erase(firmware_size, s_address);
             break;
-        case signatureType_BOOTLOADER_FLASH:
+        case signatureType_BOOTLOADER_INT_FLASH:
             if (boot_info.jump_address == RAM_FIRMWARE_ADDRESS) {
+                //Only allowed to erase if RAM version is running
+                success = FlashAdapter_erase(firmware_size, s_address);
+            }
+            break;
+
+        case signatureType_BOOTLOADER_EXT_FLASH:
+            if (boot_info.jump_address == FLASH_BOOTLOADER_ADDRESS) {
                 //Only allowed to erase if RAM version is running
                 success = FlashAdapter_erase(firmware_size, s_address);
             }
@@ -187,7 +203,8 @@ BinaryUpdate_write(uint8_t* write_buffer, const uint32_t packet_length) {
         switch (s_detected_binary) {
 
             case signatureType_FIRMWARE_FLASH:
-            case signatureType_BOOTLOADER_FLASH:
+            case signatureType_BOOTLOADER_INT_FLASH:
+            case signatureType_BOOTLOADER_EXT_FLASH:
             case signatureType_UNKNOWN:
                 success = BinaryUpdate_writeToFlash(data, data_length);
                 break;
@@ -230,8 +247,13 @@ BinaryUpdate_finish(void) {
             boot_info.skip_bl_loop = false;
             break;
 
-        case signatureType_BOOTLOADER_FLASH:
+        case signatureType_BOOTLOADER_INT_FLASH:
             boot_info.jump_address = FLASH_FIRMWARE_ADDRESS;
+            boot_info.skip_bl_loop = false;
+            break;
+
+        case signatureType_BOOTLOADER_EXT_FLASH:
+            boot_info.jump_address = FLASH_BOOTLOADER_ADDRESS;
             boot_info.skip_bl_loop = false;
             break;
 

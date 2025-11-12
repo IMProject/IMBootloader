@@ -120,10 +120,14 @@ TARGETS	= \
 	stm32f7xx_ram \
 	stm32h735g_dk \
 	stm32h735g_dk_ram \
+	stm32n6xx_ext \
+	stm32n6xx_ram \
 	matek_H7_slim \
 	matek_H7_slim_ram \
 	nucleo_h755zi \
 	nucleo_h755zi_ram \
+	nucleo_n657x0_q_ext \
+	nucleo_n657x0_q_ram \
 	pixhawk4 \
 	pixhawk4_ram
 
@@ -150,7 +154,10 @@ nucleo_h755zi:
 
 nucleo_h755zi_ram:
 	${MAKE} stm32h7xx_ram BOARD=NUCLEO_H755ZI BOARD_FILE_NAME=$@
-	
+
+nucleo_n657x0_q_ext:
+	${MAKE} stm32n6xx_ext BOARD=NUCLEO_N657X0_Q BOARD_FILE_NAME=$@
+
 nucleo_n657x0_q_ram:
 	${MAKE} stm32n6xx_ram BOARD=NUCLEO_N657X0_Q BOARD_FILE_NAME=$@
 
@@ -177,12 +184,15 @@ stm32l4xx: $(MAKEFILE_LIST)
 
 stm32h7xx: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
+	
+stm32h7xx_ext: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
 
 stm32h7xx_ram: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx_RAM.ld FLASH=INTERNAL_FLASH MCU_FILE_NAME=$@
-
-stm32h7xx_ext: $(MAKEFILE_LIST)
-	${MAKE} -f Makefile.stm32h7xx LDSCRIPT=STM32H7xx.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
+	
+stm32n6xx_ext: $(MAKEFILE_LIST)
+	${MAKE} -f Makefile.stm32n6xx LDSCRIPT=STM32N6xx_EXT_FLASH.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@
 	
 stm32n6xx_ram: $(MAKEFILE_LIST)
 	${MAKE} -f Makefile.stm32n6xx LDSCRIPT=STM32N6xx_RAM.ld FLASH=EXTERNAL_FLASH MCU_FILE_NAME=$@

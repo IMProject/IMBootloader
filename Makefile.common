@@ -40,6 +40,21 @@ else
 	-IBootloader/STM32/UsbDevice/HS
 endif
 
+ifeq ($(FLASH),EXTERNAL_FLASH)
+	C_SOURCES += \
+	Bootloader/STM32/ExtMemManager/extmem_manager.c \
+	Middlewares/ST/STM32_ExtMem_Manager/boot/stm32_boot_lrun.c \
+	Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp/stm32_sfdp_data.c \
+	Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp/stm32_sfdp_driver.c \
+	Middlewares/ST/STM32_ExtMem_Manager/sal/stm32_sal_xspi.c \
+	Middlewares/ST/STM32_ExtMem_Manager/stm32_extmem.c 
+	
+		C_INCLUDES += \
+	-IBootloader/STM32/ExtMemManager \
+	-IMiddlewares/ST/STM32_ExtMem_Manager \
+	-IMiddlewares/ST/STM32_ExtMem_Manager/nor_sfdp
+endif
+
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 

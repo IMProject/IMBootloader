@@ -24,7 +24,8 @@ Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_ll_usb.c \
 Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_usart.c \
 Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_usart_ex.c \
 Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart_ex.c \
-Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart.c
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart.c \
+Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_xspi.c \
 
 # ASM sources
 ASM_SOURCES =  \

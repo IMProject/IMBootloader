@@ -59,6 +59,10 @@ main(void) {
     BinaryUpdate_handleBootInfo();
     bool enter_bootloader_loop = false;
 
+#if defined(EXTERNAL_FLASH) && defined(LDS_RAM_VERSION)
+    FlashAdapter_init();
+#endif
+
 #ifdef SECURED
     if (!FlashAdapter_isFlashRDPProtected()) {
 
@@ -119,9 +123,7 @@ main(void) {
 
         GpioAdapter_led1Off();
 
-#if defined(STM32N657xx)
-        JumpToAddress();
-#else
+#if !defined(STM32N657xx)
         SystemAdapter_reset();
 #endif
 

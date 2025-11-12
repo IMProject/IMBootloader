@@ -58,28 +58,111 @@ HAL_StatusTypeDef ActivateProtection(FLASH_OBProgramInitTypeDef* ob_struct, uint
 #endif
 
 #ifdef EXTERNAL_FLASH
+
+#define MX25UM51245G_SECTOR_SIZE 0xFFF
+
+#include "extmem_manager.h"
+#include "stm32_sfdp_driver_api.h"
+
+extern BOOTStatus_TypeDef MapMemory(void);
+
+extern EXTMEM_DefinitionTypeDef extmem_list_config[1];
+
+XSPI_HandleTypeDef hxspi2;
+
+void
+FlashAdapter_init(void) {
+    XSPIM_CfgTypeDef sXspiManagerCfg = {0};
+
+    /* XSPI2 parameter configuration*/
+    hxspi2.Instance = XSPI2;
+    hxspi2.Init.FifoThresholdByte = 4;
+    hxspi2.Init.MemoryMode = HAL_XSPI_SINGLE_MEM;
+    hxspi2.Init.MemoryType = HAL_XSPI_MEMTYPE_MACRONIX;
+    hxspi2.Init.MemorySize = HAL_XSPI_SIZE_1GB;
+    hxspi2.Init.ChipSelectHighTimeCycle = 1;
+    hxspi2.Init.FreeRunningClock = HAL_XSPI_FREERUNCLK_DISABLE;
+    hxspi2.Init.ClockMode = HAL_XSPI_CLOCK_MODE_0;
+    hxspi2.Init.WrapSize = HAL_XSPI_WRAP_NOT_SUPPORTED;
+    hxspi2.Init.ClockPrescaler = 0;
+    hxspi2.Init.SampleShifting = HAL_XSPI_SAMPLE_SHIFT_NONE;
+    hxspi2.Init.DelayHoldQuarterCycle = HAL_XSPI_DHQC_ENABLE;
+    hxspi2.Init.ChipSelectBoundary = HAL_XSPI_BONDARYOF_NONE;
+    hxspi2.Init.MaxTran = 0;
+    hxspi2.Init.Refresh = 0;
+    hxspi2.Init.MemorySelect = HAL_XSPI_CSSEL_NCS1;
+    if (HAL_XSPI_Init(&hxspi2) != HAL_OK) {
+        Error_Handler();
+    }
+    sXspiManagerCfg.nCSOverride = HAL_XSPI_CSSEL_OVR_NCS1;
+    sXspiManagerCfg.IOPort = HAL_XSPIM_IOPORT_2;
+    sXspiManagerCfg.Req2AckTime = 1;
+    if (HAL_XSPIM_Config(&hxspi2, &sXspiManagerCfg, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) {
+        Error_Handler();
+    }
+
+    MX_EXTMEM_MANAGER_Init();
+    MapMemory();
+}
+
 bool
 FlashAdapter_erase(uint32_t firmware_size, uint32_t flash_address) {
-    //return W25q_dynamicErase(firmware_size, flash_address);
-    return true;
+
+    bool success = false;
+
+    uint32_t address = (flash_address - FLASH_ADDRESS_BASE - FLASH_ADDRESS_OFFSET);
+
+    EXTMEM_DRIVER_NOR_SFDP_Disable_MemoryMappedMode(&(extmem_list_config->NorSfdpObject));
+
+    EXTMEM_StatusTypeDef retr = EXTMEM_EraseSector(EXTMEMORY_1, address, firmware_size + FLASH_ADDRESS_OFFSET);
+
+    if (EXTMEM_OK == retr) {
+        success = true;
+    }
+
+    EXTMEM_DRIVER_NOR_SFDP_Enable_MemoryMappedMode(&(extmem_list_config->NorSfdpObject));
+
+    return success;
 }
 
 bool
 FlashAdapter_blockErase(uint32_t address) {
-    //return W25q_blockErase64k(address);
-    return true;
+    return false;
 }
 
 bool
 FlashAdapter_program(uint32_t address, uint8_t* buffer, uint32_t length) {
-    //return W25q_quadPageProgram(address, buffer, length);
-    return true;
+
+    bool success = false;
+    EXTMEM_DRIVER_NOR_SFDP_StatusTypeDef ret = EXTMEM_DRIVER_NOR_SFDP_OK;
+
+    address -= FLASH_ADDRESS_BASE;
+
+    ret =  EXTMEM_DRIVER_NOR_SFDP_Disable_MemoryMappedMode(&(extmem_list_config->NorSfdpObject));
+
+    if (EXTMEM_DRIVER_NOR_SFDP_OK == ret) {
+        ret = EXTMEM_DRIVER_NOR_SFDP_Write(&(extmem_list_config->NorSfdpObject), address, buffer, length);
+
+        if (EXTMEM_DRIVER_NOR_SFDP_OK == ret) {
+            EXTMEM_DRIVER_NOR_SFDP_Enable_MemoryMappedMode(&(extmem_list_config->NorSfdpObject));
+        }
+    }
+
+    if (EXTMEM_DRIVER_NOR_SFDP_OK == ret) {
+        success = true;
+    }
+
+    return success;
 }
 
 bool
 FlashAdapter_readBytes(uint32_t address, uint8_t* buffer, uint32_t length) {
-    //return W25q_readBytes(address, buffer, length);
-    return true;
+
+    bool success = true;
+    // cppcheck-suppress misra-c2012-11.6; address is received as uint32_t
+    (void*)memcpy((void*)buffer, (void*)address, length);
+
+    return success;
 }
 
 bool
