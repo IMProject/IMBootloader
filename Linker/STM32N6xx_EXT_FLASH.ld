@@ -44,7 +44,6 @@ _Min_Stack_Size = 0x1600; /* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  SIGNATURE (rx)  : ORIGIN = 0x701003C0, LENGTH = 64 /* Never written to the FLASH, it is for binary signature. */
   ROM       (xrw) : ORIGIN = 0x70100400, LENGTH = 255K
   
   AXISRAM1  (xrw) : ORIGIN = 0x34000000, LENGTH = 1024K
