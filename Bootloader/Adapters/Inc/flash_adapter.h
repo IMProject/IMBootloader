@@ -40,7 +40,7 @@
 
 #ifdef EXTERNAL_FLASH // Selecting where will firmware go
 
-#define FIRMWARE_FLASH_SIZE_LIMIT   (100000U)
+#define FIRMWARE_FLASH_SIZE_LIMIT   (2097152U) // 2048 KiB
 #define PACKET_SIZE                 (256U)
 
 #else
